@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="wXmxqU" name="Test" projectType="audioplug" version="1.0.0"
+              bundleIdentifier="com.yourcompany.Test" includeBinaryInAppConfig="1"
+              buildVST="1" buildVST3="0" buildAU="0" buildRTAS="0" buildAAX="0"
+              pluginName="Test" pluginDesc="Test" pluginManufacturer="yourcompany"
+              pluginManufacturerCode="Manu" pluginCode="Plug" pluginChannelConfigs="{2, 2}"
+              pluginIsSynth="0" pluginWantsMidiIn="0" pluginProducesMidiOut="0"
+              pluginSilenceInIsSilenceOut="0" pluginEditorRequiresKeys="0"
+              pluginAUExportPrefix="TestAU" pluginRTASCategory="" aaxIdentifier="com.yourcompany.Test"
+              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="3.1.0">
+  <MAINGROUP id="LjRzU7" name="Test">
+    <GROUP id="{AA9D50C4-6679-8428-0DA5-B16FD306B740}" name="Source">
+      <FILE id="bEU9Su" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="i8sf1G" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="Qu0bUK" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="cJp2ow" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <VS2013 targetFolder="Builds/VisualStudio2013" vstFolder="C:\SDKs\VST3 SDK">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="1" optimisation="1" targetName="Test"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="0" optimisation="2" targetName="Test"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_video" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_opengl" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../../juce/modules"/>
+      </MODULEPATHS>
+    </VS2013>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_devices" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_formats" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_core" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_cryptography" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_events" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_gui_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_opengl" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_video" showAllCode="1" useLocalCopy="0"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_QUICKTIME="disabled"/>
+</JUCERPROJECT>
