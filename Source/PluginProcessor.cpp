@@ -15,9 +15,8 @@
 //==============================================================================
 TestAudioProcessor::TestAudioProcessor()
 {
-	setParameter(0, 1.0f);
+	setParameter(0, 0.7f);
 	setParameter(1, 0.5f);
-
 }
 
 TestAudioProcessor::~TestAudioProcessor()
@@ -37,6 +36,9 @@ int TestAudioProcessor::getNumParameters()
 
 float TestAudioProcessor::getParameter(int index)
 {
+	if (index == 1){
+		return pan;
+	} 
 	return gain;
 }
 
@@ -44,8 +46,7 @@ void TestAudioProcessor::setParameter(int index, float newValue)
 {
 	if (index == 1){
 		pan = newValue;
-	}
-	else {
+	} else {
 		gain = newValue;
 	}
 }
