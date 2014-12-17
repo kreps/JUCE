@@ -13,9 +13,10 @@ BEGIN
   BEGIN
     BLOCK "040904E4"
     BEGIN
-      VALUE "FileDescription",  "Test\0"
+      VALUE "CompanyName",  "Raw Material Software Ltd.\0"
+      VALUE "FileDescription",  "JuceDemoPlugin\0"
       VALUE "FileVersion",  "1.0.0\0"
-      VALUE "ProductName",  "Test\0"
+      VALUE "ProductName",  "JuceDemoPlugin\0"
       VALUE "ProductVersion",  "1.0.0\0"
     END
   END
