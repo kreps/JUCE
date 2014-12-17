@@ -52,7 +52,7 @@ public:
     void paint (Graphics& g);
     void resized();
     void sliderValueChanged (Slider* sliderThatWasMoved);
-
+TooltipWindow tooltipWindow;
 
 
 private:

@@ -44,22 +44,22 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     gainSlider->setTooltip (TRANS("Gain"));
     gainSlider->setRange (0, 1, 0.01);
     gainSlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    gainSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    gainSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
     gainSlider->setColour (Slider::rotarySliderOutlineColourId, Colour (0x66000000));
     gainSlider->addListener (this);
 
     addAndMakeVisible (delaySlider = new Slider ("delay"));
-    delaySlider->setTooltip (TRANS("delay\n"));
-    delaySlider->setRange (0, 1, 0.01);
+    delaySlider->setTooltip (TRANS("Delay gain\n"));
+    delaySlider->setRange (0, 1, 0.1);
     delaySlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    delaySlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    delaySlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
     delaySlider->addListener (this);
 
     addAndMakeVisible (panSlider = new Slider ("pan"));
     panSlider->setTooltip (TRANS("pan"));
-    panSlider->setRange (0, 1, 0);
+    panSlider->setRange (0, 1, 0.1);
     panSlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    panSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    panSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
     panSlider->addListener (this);
 
 
@@ -77,6 +77,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
              ownerFilter->lastUIHeight);
 
     startTimer (50);
+	//addAndMakeVisible(tooltipWindow = new TooltipWindow());
     //[/Constructor]
 }
 
@@ -112,9 +113,9 @@ void JuceDemoPluginAudioProcessorEditor::paint (Graphics& g)
 void JuceDemoPluginAudioProcessorEditor::resized()
 {
     infoLabel->setBounds (10, 4, 400, 25);
-    gainSlider->setBounds (0, 30, 60, 60);
-    delaySlider->setBounds (120, 30, 60, 60);
-    panSlider->setBounds (60, 30, 60, 60);
+    gainSlider->setBounds (0, 30, 90, 90);
+    delaySlider->setBounds (200, 30, 90, 90);
+    panSlider->setBounds (100, 30, 90, 90);
     //[UserResized] Add your own custom resize handling here..
     resizer->setBounds (getWidth() - 16, getHeight() - 16, 16, 16);
 
@@ -261,18 +262,20 @@ BEGIN_JUCER_METADATA
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <SLIDER name="gainSlider" id="c31acc4ca22491a9" memberName="gainSlider"
-          virtualName="" explicitFocusOrder="0" pos="0 30 60 60" tooltip="Gain"
+          virtualName="" explicitFocusOrder="0" pos="0 30 90 90" tooltip="Gain"
           rotaryslideroutline="66000000" min="0" max="1" int="0.01" style="RotaryVerticalDrag"
-          textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="80"
+          textBoxPos="TextBoxBelow" textBoxEditable="1" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1"/>
   <SLIDER name="delay" id="37878e5e9fd60a08" memberName="delaySlider" virtualName=""
-          explicitFocusOrder="0" pos="120 30 60 60" tooltip="delay&#10;"
-          min="0" max="1" int="0.01" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+          explicitFocusOrder="0" pos="200 30 90 90" tooltip="Delay gain&#10;"
+          min="0" max="1" int="0.10000000000000001" style="RotaryVerticalDrag"
+          textBoxPos="TextBoxBelow" textBoxEditable="1" textBoxWidth="80"
+          textBoxHeight="20" skewFactor="1"/>
   <SLIDER name="pan" id="324eec4d274919f3" memberName="panSlider" virtualName=""
-          explicitFocusOrder="0" pos="60 30 60 60" tooltip="pan" min="0"
-          max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+          explicitFocusOrder="0" pos="100 30 90 90" tooltip="pan" min="0"
+          max="1" int="0.10000000000000001" style="RotaryVerticalDrag"
+          textBoxPos="TextBoxBelow" textBoxEditable="1" textBoxWidth="80"
+          textBoxHeight="20" skewFactor="1"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
