@@ -29,7 +29,7 @@ public:
     void releaseResources() override;
 	void processBlock (AudioSampleBuffer&, MidiBuffer&) override;
 	float gain;
-
+	float pan;
     //==============================================================================
     AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override;
