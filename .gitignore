@@ -45,3 +45,4 @@ Temporary Items
 Builds/VisualStudio2013/Debug/Test.tlog/unsuccessfulbuild
 Source/PluginEditor.zip
 Builds/
+*.TMP
