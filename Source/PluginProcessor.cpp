@@ -251,9 +251,12 @@ void JuceDemoPluginAudioProcessor::reset()
 	delayBuffer.clear();
 }
 
+
 void JuceDemoPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
 	const int numSamples = buffer.getNumSamples();
+	const int pp = buffer.getNumSamples();
+	
 	int channel, dp = 0;
 
 	// Go through the incoming data, and apply our gain to it...
@@ -277,10 +280,11 @@ void JuceDemoPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, Midi
 	//pan0 -> l1 r0
 	//pan1 -> l0 r1
 	// Apply our delay effect to the new output..
+	
 	for (channel = 0; channel < getNumInputChannels(); ++channel)
 	{
 		float* channelData = buffer.getWritePointer (channel);
-
+		
 
 		//delay
 		float* delayData = delayBuffer.getWritePointer (jmin (channel, delayBuffer.getNumChannels() - 1));
@@ -288,6 +292,7 @@ void JuceDemoPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, Midi
 
 		for (int i = 0; i < numSamples; ++i)
 		{
+			test[i] = channelData[i];
 			//pan
 			if (channel== 0){ //lef tchannel
 				channelData[i] =  channelData[i]*lGain;

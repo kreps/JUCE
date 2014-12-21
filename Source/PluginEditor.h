@@ -37,7 +37,8 @@
 */
 class JuceDemoPluginAudioProcessorEditor  : public AudioProcessorEditor,
                                             public Timer,
-                                            public SliderListener
+                                            public SliderListener,
+                                            public ButtonListener
 {
 public:
     //==============================================================================
@@ -52,7 +53,19 @@ public:
     void paint (Graphics& g);
     void resized();
     void sliderValueChanged (Slider* sliderThatWasMoved);
-TooltipWindow tooltipWindow;
+    void buttonClicked (Button* buttonThatWasClicked);
+
+    // Binary resources:
+    static const char* offMaya_png;
+    static const int offMaya_pngSize;
+    static const char* onMaya_png;
+    static const int onMaya_pngSize;
+    static const char* downMaya_png;
+    static const int downMaya_pngSize;
+    static const char* mayaKnobtest_png;
+    static const int mayaKnobtest_pngSize;
+    static const char* untitled1_png;
+    static const int untitled1_pngSize;
 
 
 private:
@@ -75,6 +88,9 @@ private:
     ScopedPointer<Slider> gainSlider;
     ScopedPointer<Slider> delaySlider;
     ScopedPointer<Slider> panSlider;
+    ScopedPointer<ImageButton> imageButton;
+    ScopedPointer<ToggleButton> bypassButton;
+    Image cachedImage_untitled1_png;
 
 
     //==============================================================================

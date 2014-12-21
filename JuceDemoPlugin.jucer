@@ -2,17 +2,17 @@
 
 <JUCERPROJECT id="0nRd9LLGO" name="JuceDemoPlugin" projectType="audioplug"
               version="1.0.0" juceLinkage="amalg_multi" buildVST="1" buildRTAS="0"
-              buildAU="1" pluginName="Juce Demo Plugin" pluginDesc="Juce Demo Plugin"
+              buildAU="0" pluginName="Juce Demo Plugin" pluginDesc="Juce Demo Plugin"
               pluginManufacturer="Raw Material Software" pluginManufacturerCode="RawM"
               pluginCode="Jcdm" pluginChannelConfigs="{1, 1}, {2, 2}" pluginIsSynth="0"
               pluginWantsMidiIn="1" pluginProducesMidiOut="1" pluginSilenceInIsSilenceOut="0"
               pluginTailLength="0" pluginEditorRequiresKeys="1" pluginAUExportPrefix="JuceDemoProjectAU"
               pluginAUViewClass="JuceDemoProjectAU_V1" pluginRTASCategory=""
               bundleIdentifier="com.juce.JuceDemoPlugin" jucerVersion="3.1.0"
-              companyName="Raw Material Software Ltd." aaxIdentifier="com.yourcompany.JuceDemoPlugin"
+              companyName="MoYa Sound Ltd." aaxIdentifier="com.yourcompany.JuceDemoPlugin"
               buildAAX="0" pluginAAXCategory="AAX_ePlugInCategory_Dynamics"
-              includeBinaryInAppConfig="1" buildVST3="1" pluginManufacturerEmail="support@yourcompany.com"
-              companyWebsite="www.juce.com" companyEmail="info@juce.com">
+              includeBinaryInAppConfig="1" buildVST3="0" pluginManufacturerEmail="support@yourcompany.com"
+              companyWebsite="www.moya.com" companyEmail="info@moya.com">
   <EXPORTFORMATS>
     <VS2010 targetFolder="Builds/VisualStudio2010" vstFolder="c:\SDKs\vstsdk2.4"
             vst3Folder="c:\SDKs\VST3 SDK">
@@ -37,6 +37,29 @@
         <MODULEPATH id="juce_audio_basics" path="c:/juce/modules"/>
       </MODULEPATHS>
     </VS2010>
+    <VS2012 targetFolder="Builds/VisualStudio2012" vstFolder="c:\SDKs\VST3 SDK"
+            vst3Folder="c:\SDKs\VST3 SDK">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="1" optimisation="1" targetName="JuceDemoPlugin"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="0" optimisation="2" targetName="JuceDemoPlugin"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_gui_extra" path="c:/juce/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="c:/juce/modules"/>
+        <MODULEPATH id="juce_graphics" path="c:/juce/modules"/>
+        <MODULEPATH id="juce_events" path="c:/juce/modules"/>
+        <MODULEPATH id="juce_data_structures" path="c:/juce/modules"/>
+        <MODULEPATH id="juce_core" path="c:/juce/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="c:/juce/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="c:/juce/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="c:/juce/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="c:/juce/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="c:/juce/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="c:/juce/modules"/>
+      </MODULEPATHS>
+    </VS2012>
   </EXPORTFORMATS>
   <MAINGROUP id="dYAMo6Ykd" name="JuceDemoPlugin">
     <FILE id="gFFr0hbSp" name="PluginProcessor.cpp" compile="1" resource="0"
