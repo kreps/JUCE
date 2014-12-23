@@ -88,7 +88,7 @@ private:
     ScopedPointer<Slider> gainSlider;
     ScopedPointer<Slider> delaySlider;
     ScopedPointer<Slider> panSlider;
-    ScopedPointer<ImageButton> imageButton;
+    ScopedPointer<ImageButton> bypassButtonImg;
     ScopedPointer<ToggleButton> bypassButton;
     Image cachedImage_untitled1_png;
 

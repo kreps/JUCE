@@ -46,3 +46,4 @@ Builds/VisualStudio2013/Debug/Test.tlog/unsuccessfulbuild
 Source/PluginEditor.zip
 *.TMP
 Builds/VisualStudio2013/Debug/
+*.opensdf

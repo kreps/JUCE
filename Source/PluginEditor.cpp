@@ -62,13 +62,13 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     panSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
     panSlider->addListener (this);
 
-    addAndMakeVisible (imageButton = new ImageButton ("new button"));
-    imageButton->addListener (this);
+    addAndMakeVisible (bypassButtonImg = new ImageButton ("new button"));
+    bypassButtonImg->addListener (this);
 
-    imageButton->setImages (false, true, true,
-                            ImageCache::getFromMemory (onMaya_png, onMaya_pngSize), 1.000f, Colour (0x00ac4b4b),
-                            Image(), 1.000f, Colour (0x00953434),
-                            ImageCache::getFromMemory (offMaya_png, offMaya_pngSize), 1.000f, Colour (0x008b3a3a));
+    bypassButtonImg->setImages (false, true, true,
+                                ImageCache::getFromMemory (onMaya_png, onMaya_pngSize), 1.000f, Colour (0x00ac4b4b),
+                                Image(), 1.000f, Colour (0x00953434),
+                                ImageCache::getFromMemory (offMaya_png, offMaya_pngSize), 1.000f, Colour (0x008b3a3a));
     addAndMakeVisible (bypassButton = new ToggleButton ("new toggle button"));
     bypassButton->setButtonText (TRANS("bypass"));
     bypassButton->addListener (this);
@@ -78,7 +78,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     //[UserPreSize]
     addAndMakeVisible (resizer = new ResizableCornerComponent (this, &resizeLimits));
     resizeLimits.setSizeLimits (150, 150, 800, 300);
-	imageButton->setClickingTogglesState(true);
+	bypassButtonImg->setClickingTogglesState(true);
     //[/UserPreSize]
 
     setSize (400, 200);
@@ -104,7 +104,7 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
     gainSlider = nullptr;
     delaySlider = nullptr;
     panSlider = nullptr;
-    imageButton = nullptr;
+    bypassButtonImg = nullptr;
     bypassButton = nullptr;
 
 
@@ -116,6 +116,8 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
 void JuceDemoPluginAudioProcessorEditor::paint (Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
+    g.setGradientFill (ColourGradient (Colours::white, 0, 0, Colours::grey, 0, (float) getHeight(), false));
+    g.fillAll();
     //[/UserPrePaint]
 
     g.fillAll (Colour (0xffc6c6c6));
@@ -132,8 +134,7 @@ void JuceDemoPluginAudioProcessorEditor::paint (Graphics& g)
 	for (int i = 0; i < 500; i){
 		g.drawVerticalLine(i,100,100+100*tt[i]);
 	}*/
-    g.setGradientFill (ColourGradient (Colours::white, 0, 0, Colours::grey, 0, (float) getHeight(), false));
-    g.fillAll();
+
     //[/UserPaint]
 }
 
@@ -146,7 +147,7 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     gainSlider->setBounds (0, 30, 90, 90);
     delaySlider->setBounds (200, 30, 90, 90);
     panSlider->setBounds (100, 30, 90, 90);
-    imageButton->setBounds (312, 24, 60, 60);
+    bypassButtonImg->setBounds (312, 24, 60, 60);
     bypassButton->setBounds (16, 128, 64, 24);
     //[UserResized] Add your own custom resize handling here..
     resizer->setBounds (getWidth() - 16, getHeight() - 16, 16, 16);
@@ -195,14 +196,16 @@ void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasCli
     //[UserbuttonClicked_Pre]
     //[/UserbuttonClicked_Pre]
 
-    if (buttonThatWasClicked == imageButton)
+    if (buttonThatWasClicked == bypassButtonImg)
     {
-        //[UserButtonCode_imageButton] -- add your button handler code here..
-        //[/UserButtonCode_imageButton]
+        //[UserButtonCode_bypassButtonImg] -- add your button handler code here..
+        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::bypassParam, (float)bypassButtonImg->getToggleState());
+        //[/UserButtonCode_bypassButtonImg]
     }
     else if (buttonThatWasClicked == bypassButton)
     {
         //[UserButtonCode_bypassButton] -- add your button handler code here..
+        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::bypassParam, (float)bypassButton->getToggleState());
         //[/UserButtonCode_bypassButton]
     }
 
@@ -229,6 +232,8 @@ void JuceDemoPluginAudioProcessorEditor::timerCallback()
     gainSlider->setValue (ourProcessor->m_fGain);
     delaySlider->setValue (ourProcessor->m_fDelay);
 	panSlider->setValue(ourProcessor->m_fPan);
+    bypassButton->setToggleState((bool)ourProcessor->m_fBypass,juce::sendNotification);
+    bypassButtonImg->setToggleState((bool)ourProcessor->m_fBypass, juce::sendNotification);
 }
 
 // quick-and-dirty function to format a timecode string
@@ -332,7 +337,7 @@ BEGIN_JUCER_METADATA
           max="1" int="0.10000000000000001" style="RotaryVerticalDrag"
           textBoxPos="TextBoxBelow" textBoxEditable="1" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1"/>
-  <IMAGEBUTTON name="new button" id="b5ee6118cc15876e" memberName="imageButton"
+  <IMAGEBUTTON name="new button" id="b5ee6118cc15876e" memberName="bypassButtonImg"
                virtualName="" explicitFocusOrder="0" pos="312 24 60 60" buttonText="new button"
                connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
                resourceNormal="onMaya_png" opacityNormal="1" colourNormal="ac4b4b"

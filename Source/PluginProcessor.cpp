@@ -13,8 +13,9 @@ It contains the basic startup code for a Juce application.
 
 AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
+const float defaultBypass = 0.0f;
 const float defaultGain = 1.0f;
-const float defaultDelay = 0.5f;
+const float defaultDelay = 0.0f;
 const float defaultPan = 0.5f;
 
 //==============================================================================
@@ -25,6 +26,7 @@ JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
 	m_fGain = defaultGain;
 	m_fDelay = defaultDelay;
 	m_fPan = defaultPan;
+    m_fBypass = defaultBypass;
 
 	lastUIWidth = 400;
 	lastUIHeight = 200;
@@ -43,18 +45,24 @@ int JuceDemoPluginAudioProcessor::getNumParameters()
 	return totalNumParams;
 }
 
-float JuceDemoPluginAudioProcessor::getParameter (int index)
+float JuceDemoPluginAudioProcessor::getParameter(int index)
 {
-	// This method will be called by the host, probably on the audio thread, so
-	// it's absolutely time-critical. Don't use critical sections or anything
-	// UI-related, or anything at all that may block in any way!
-	switch (index)
-	{
-	case gainParam:     return m_fGain;
-	case delayParam:    return m_fDelay;
-	case panParam:    return m_fPan;
-	default:            return 0.0f;
-	}
+    // This method will be called by the host, probably on the audio thread, so
+    // it's absolutely time-critical. Don't use critical sections or anything
+    // UI-related, or anything at all that may block in any way!
+    switch (index)
+    {
+        case bypassParam:   
+            return m_fBypass;
+        case gainParam:     
+            return m_fGain;
+        case delayParam:    
+            return m_fDelay;
+        case panParam:      
+            return m_fPan;
+        default:            
+            return 0.0f;
+    }
 }
 
 void JuceDemoPluginAudioProcessor::setParameter (int index, float newValue)
@@ -64,37 +72,49 @@ void JuceDemoPluginAudioProcessor::setParameter (int index, float newValue)
 	// UI-related, or anything at all that may block in any way!
 	switch (index)
 	{
-	case gainParam:     m_fGain = newValue;  break;
-	case delayParam:    m_fDelay = newValue;  break;
-	case panParam:    m_fPan = newValue;  break;
-	default:            break;
-	}
+        case bypassParam:
+            m_fBypass   = newValue; 
+            break;
+        case gainParam:     
+            m_fGain     = newValue;  
+            break;
+        case delayParam:    
+            m_fDelay    = newValue;  
+            break;
+        case panParam:    
+            m_fPan      = newValue;  
+            break;
+        default:            
+            break;
+    }
 }
 
 float JuceDemoPluginAudioProcessor::getParameterDefaultValue (int index)
 {
 	switch (index)
 	{
-	case gainParam:     return defaultGain;
-	case delayParam:    return defaultDelay;
-	case panParam:    return defaultPan;
-	default:            break;
+        case bypassParam: return defaultBypass;
+        case gainParam:     return defaultGain;
+        case delayParam:    return defaultDelay;
+        case panParam:    return defaultPan;
+        default:            break;
 	}
 
 	return 0.0f;
 }
 
-const String JuceDemoPluginAudioProcessor::getParameterName (int index)
+const String JuceDemoPluginAudioProcessor::getParameterName(int index)
 {
-	switch (index)
-	{
-	case gainParam:     return "gain";
-	case delayParam:    return "delay";
-	case panParam:    return "pan";
-	default:            break;
-	}
+    switch (index)
+    {
+        case bypassParam:     return "Bypass";
+        case gainParam:     return "Gain";
+        case delayParam:    return "Delay";
+        case panParam:    return "Pan";
+        default:            break;
+    }
 
-	return String::empty;
+    return String::empty;
 }
 
 const String JuceDemoPluginAudioProcessor::getParameterText (int index)
@@ -127,6 +147,11 @@ void JuceDemoPluginAudioProcessor::reset()
 
 void JuceDemoPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
+    if (m_fBypass==1.0f)
+    {
+        return;
+    }
+
 	const int numSamples = buffer.getNumSamples();
 	
 	int channel, dp = 0;

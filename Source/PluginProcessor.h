@@ -83,14 +83,16 @@ public:
     //==============================================================================
     enum Parameters
     {
-        gainParam = 0,
+        bypassParam = 0,
+        gainParam,
         delayParam,
 		panParam,
 
         totalNumParams
     };
 
-    float m_fGain, m_fDelay, m_fPan;
+    float m_fBypass,m_fGain, m_fDelay, m_fPan;
+
 
 private:
     //==============================================================================
