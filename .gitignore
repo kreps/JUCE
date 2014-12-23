@@ -44,5 +44,5 @@ Temporary Items
 .apdisk
 Builds/VisualStudio2013/Debug/Test.tlog/unsuccessfulbuild
 Source/PluginEditor.zip
-Builds/
 *.TMP
+Builds/VisualStudio2013/Debug/

@@ -118,14 +118,11 @@ void JuceDemoPluginAudioProcessorEditor::paint (Graphics& g)
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
-    g.fillAll (Colours::white);
-
-    g.setColour (Colour (0xff2ba52a));
-    g.fillRect (12, 132, 172, 28);
+    g.fillAll (Colour (0xffc6c6c6));
 
     g.setColour (Colours::black);
     g.drawImage (cachedImage_untitled1_png,
-                 12, 140, 51, 13,
+                 316, 84, 51, 13,
                  0, 0, cachedImage_untitled1_png.getWidth(), cachedImage_untitled1_png.getHeight());
 
     //[UserPaint] Add your own custom painting code here..
@@ -149,8 +146,8 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     gainSlider->setBounds (0, 30, 90, 90);
     delaySlider->setBounds (200, 30, 90, 90);
     panSlider->setBounds (100, 30, 90, 90);
-    imageButton->setBounds (424, 40, 60, 60);
-    bypassButton->setBounds (320, 56, 64, 24);
+    imageButton->setBounds (312, 24, 60, 60);
+    bypassButton->setBounds (16, 128, 64, 24);
     //[UserResized] Add your own custom resize handling here..
     resizer->setBounds (getWidth() - 16, getHeight() - 16, 16, 16);
 
@@ -312,9 +309,8 @@ BEGIN_JUCER_METADATA
                  variableInitialisers="AudioProcessorEditor (ownerFilter)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="0"
                  initialWidth="400" initialHeight="200">
-  <BACKGROUND backgroundColour="ffffffff">
-    <RECT pos="12 132 172 28" fill="solid: ff2ba52a" hasStroke="0"/>
-    <IMAGE pos="12 140 51 13" resource="untitled1_png" opacity="1" mode="0"/>
+  <BACKGROUND backgroundColour="ffc6c6c6">
+    <IMAGE pos="316 84 51 13" resource="untitled1_png" opacity="1" mode="0"/>
   </BACKGROUND>
   <LABEL name="" id="3084384ee25f6d12" memberName="infoLabel" virtualName=""
          explicitFocusOrder="0" pos="10 4 400 25" textCol="ff0000ff" edTextCol="ff000000"
@@ -337,13 +333,13 @@ BEGIN_JUCER_METADATA
           textBoxPos="TextBoxBelow" textBoxEditable="1" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1"/>
   <IMAGEBUTTON name="new button" id="b5ee6118cc15876e" memberName="imageButton"
-               virtualName="" explicitFocusOrder="0" pos="424 40 60 60" buttonText="new button"
+               virtualName="" explicitFocusOrder="0" pos="312 24 60 60" buttonText="new button"
                connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
                resourceNormal="onMaya_png" opacityNormal="1" colourNormal="ac4b4b"
                resourceOver="" opacityOver="1" colourOver="953434" resourceDown="offMaya_png"
                opacityDown="1" colourDown="8b3a3a"/>
   <TOGGLEBUTTON name="new toggle button" id="d59c4ede9f259185" memberName="bypassButton"
-                virtualName="" explicitFocusOrder="0" pos="320 56 64 24" buttonText="bypass"
+                virtualName="" explicitFocusOrder="0" pos="16 128 64 24" buttonText="bypass"
                 connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
 </JUCER_COMPONENT>
 
