@@ -7,7 +7,7 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 3.1.1
 
   ------------------------------------------------------------------------------
 
@@ -129,8 +129,8 @@ void JuceDemoPluginAudioProcessorEditor::paint (Graphics& g)
                  0, 0, cachedImage_untitled1_png.getWidth(), cachedImage_untitled1_png.getHeight());
 
     //[UserPaint] Add your own custom painting code here..
-	/*JuceDemoPluginAudioProcessor* p = getProcessor(); 
-	
+	/*JuceDemoPluginAudioProcessor* p = getProcessor();
+
 	float* tt = p->test;
 	for (int i = 0; i < 500; i){
 		g.drawVerticalLine(i,100,100+100*tt[i]);
@@ -142,6 +142,9 @@ void JuceDemoPluginAudioProcessorEditor::paint (Graphics& g)
 
 void JuceDemoPluginAudioProcessorEditor::resized()
 {
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
     infoLabel->setBounds (10, 4, 400, 25);
     gainSlider->setBounds (0, 30, 90, 90);
     delaySlider->setBounds (200, 30, 90, 90);
@@ -222,14 +225,13 @@ void JuceDemoPluginAudioProcessorEditor::timerCallback()
     AudioPlayHead::CurrentPositionInfo newPos (ourProcessor->lastPosInfo);
 
     if (lastDisplayedPosition != newPos)
-        displayPositionInfo (newPos);
+    {
+        displayPositionInfo(newPos);
+    }
 
-    gainSlider->setValue (ourProcessor->gain);
-    delaySlider->setValue (ourProcessor->delay);
-	panSlider->setValue(ourProcessor->pan);
-	ourProcessor->test;
-	 
-
+    gainSlider->setValue (ourProcessor->m_fGain);
+    delaySlider->setValue (ourProcessor->m_fDelay);
+	panSlider->setValue(ourProcessor->m_fPan);
 }
 
 // quick-and-dirty function to format a timecode string
@@ -283,7 +285,7 @@ void JuceDemoPluginAudioProcessorEditor::displayPositionInfo (const AudioPlayHea
                 << "  -  " << timeToTimecodeString (pos.timeInSeconds)
                 << "  -  " << ppqToBarsBeatsString (pos.ppqPosition, pos.ppqPositionOfLastBarStart,
                                                     pos.timeSigNumerator, pos.timeSigDenominator);
-	
+
     if (pos.isRecording)
         displayText << "  (recording)";
     else if (pos.isPlaying)

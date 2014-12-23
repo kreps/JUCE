@@ -13,125 +13,6 @@ It contains the basic startup code for a Juce application.
 
 AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
-
-//==============================================================================
-/** A demo synth sound that's just a basic sine wave.. */
-//class SineWaveSound : public SynthesiserSound
-//{
-//public:
-//	SineWaveSound() {}
-//
-//	bool appliesToNote (int /*midiNoteNumber*/) override  { return true; }
-//	bool appliesToChannel (int /*midiChannel*/) override  { return true; }
-//};
-
-//==============================================================================
-/** A simple demo synth voice that just plays a sine wave.. */
-//class SineWaveVoice  : public SynthesiserVoice
-//{
-//public:
-//	SineWaveVoice()
-//		: angleDelta (0.0),
-//		tailOff (0.0)
-//	{
-//	}
-//
-//	bool canPlaySound (SynthesiserSound* sound) override
-//	{
-//		return dynamic_cast<SineWaveSound*> (sound) != nullptr;
-//	}
-//
-//	void startNote (int midiNoteNumber, float velocity,
-//		SynthesiserSound* /*sound*/,
-//		int /*currentPitchWheelPosition*/) override
-//	{
-//		currentAngle = 0.0;
-//		level = velocity * 0.15;
-//		tailOff = 0.0;
-//
-//		double cyclesPerSecond = MidiMessage::getMidiNoteInHertz (midiNoteNumber);
-//		double cyclesPerSample = cyclesPerSecond / getSampleRate();
-//
-//		angleDelta = cyclesPerSample * 2.0 * double_Pi;
-//	}
-//
-//	void stopNote (float /*velocity*/, bool allowTailOff) override
-//	{
-//		if (allowTailOff)
-//		{
-//			// start a tail-off by setting this flag. The render callback will pick up on
-//			// this and do a fade out, calling clearCurrentNote() when it's finished.
-//
-//			if (tailOff == 0.0) // we only need to begin a tail-off if it's not already doing so - the
-//				// stopNote method could be called more than once.
-//				tailOff = 1.0;
-//		}
-//		else
-//		{
-//			// we're being told to stop playing immediately, so reset everything..
-//
-//			clearCurrentNote();
-//			angleDelta = 0.0;
-//		}
-//	}
-//
-//	void pitchWheelMoved (int /*newValue*/) override
-//	{
-//		// can't be bothered implementing this for the demo!
-//	}
-//
-//	void controllerMoved (int /*controllerNumber*/, int /*newValue*/) override
-//	{
-//		// not interested in controllers in this case.
-//	}
-//
-//	void renderNextBlock (AudioSampleBuffer& outputBuffer, int startSample, int numSamples) override
-//	{
-//		if (angleDelta != 0.0)
-//		{
-//			if (tailOff > 0)
-//			{
-//				while (--numSamples >= 0)
-//				{
-//					const float currentSample = (float) (sin (currentAngle) * level * tailOff);
-//
-//					for (int i = outputBuffer.getNumChannels(); --i >= 0;)
-//						outputBuffer.addSample (i, startSample, currentSample);
-//
-//					currentAngle += angleDelta;
-//					++startSample;
-//
-//					tailOff *= 0.99;
-//
-//					if (tailOff <= 0.005)
-//					{
-//						clearCurrentNote();
-//
-//						angleDelta = 0.0;
-//						break;
-//					}
-//				}
-//			}
-//			else
-//			{
-//				while (--numSamples >= 0)
-//				{
-//					const float currentSample = (float) (sin (currentAngle) * level);
-//
-//					for (int i = outputBuffer.getNumChannels(); --i >= 0;)
-//						outputBuffer.addSample (i, startSample, currentSample);
-//
-//					currentAngle += angleDelta;
-//					++startSample;
-//				}
-//			}
-//		}
-//	}
-//
-//private:
-//	double currentAngle, angleDelta, level, tailOff;
-//};
-
 const float defaultGain = 1.0f;
 const float defaultDelay = 0.5f;
 const float defaultPan = 0.5f;
@@ -141,21 +22,15 @@ JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
 	: delayBuffer (2, 12000)
 {
 	// Set up some default values..
-	gain = defaultGain;
-	delay = defaultDelay;
-	pan = defaultPan;
+	m_fGain = defaultGain;
+	m_fDelay = defaultDelay;
+	m_fPan = defaultPan;
 
 	lastUIWidth = 400;
 	lastUIHeight = 200;
 
 	lastPosInfo.resetToDefault();
 	delayPosition = 0;
-
-	// Initialise the synth...
-	//for (int i = 4; --i >= 0;)
-	//	synth.addVoice (new SineWaveVoice());   // These voices will play our custom sine-wave sounds..
-
-	//synth.addSound (new SineWaveSound());
 }
 
 JuceDemoPluginAudioProcessor::~JuceDemoPluginAudioProcessor()
@@ -175,9 +50,9 @@ float JuceDemoPluginAudioProcessor::getParameter (int index)
 	// UI-related, or anything at all that may block in any way!
 	switch (index)
 	{
-	case gainParam:     return gain;
-	case delayParam:    return delay;
-	case panParam:    return pan;
+	case gainParam:     return m_fGain;
+	case delayParam:    return m_fDelay;
+	case panParam:    return m_fPan;
 	default:            return 0.0f;
 	}
 }
@@ -189,9 +64,9 @@ void JuceDemoPluginAudioProcessor::setParameter (int index, float newValue)
 	// UI-related, or anything at all that may block in any way!
 	switch (index)
 	{
-	case gainParam:     gain = newValue;  break;
-	case delayParam:    delay = newValue;  break;
-	case panParam:    pan = newValue;  break;
+	case gainParam:     m_fGain = newValue;  break;
+	case delayParam:    m_fDelay = newValue;  break;
+	case panParam:    m_fPan = newValue;  break;
 	default:            break;
 	}
 }
@@ -232,8 +107,6 @@ void JuceDemoPluginAudioProcessor::prepareToPlay (double sampleRate, int /*sampl
 {
 	// Use this method as the place to do any pre-playback
 	// initialisation that you need..
-	synth.setCurrentPlaybackSampleRate (sampleRate);
-	keyboardState.reset();
 	delayBuffer.clear();
 }
 
@@ -241,7 +114,7 @@ void JuceDemoPluginAudioProcessor::releaseResources()
 {
 	// When playback stops, you can use this as an opportunity to free up any
 	// spare memory, etc.
-	keyboardState.reset();
+	//keyboardState.reset();
 }
 
 void JuceDemoPluginAudioProcessor::reset()
@@ -255,27 +128,22 @@ void JuceDemoPluginAudioProcessor::reset()
 void JuceDemoPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
 	const int numSamples = buffer.getNumSamples();
-	const int pp = buffer.getNumSamples();
 	
 	int channel, dp = 0;
 
 	// Go through the incoming data, and apply our gain to it...
-	for (channel = 0; channel < getNumInputChannels(); ++channel)
-		buffer.applyGain (channel, 0, buffer.getNumSamples(), gain);
+    for (channel = 0; channel < getNumInputChannels(); ++channel)
+    {
+        buffer.applyGain(channel, 0, buffer.getNumSamples(), this->m_fGain);//apply gain parameter
+    }
 
-	// Now pass any incoming midi messages to our keyboard state object, and let it
-	// add messages to the buffer if the user is clicking on the on-screen keys
-	keyboardState.processNextMidiBuffer (midiMessages, 0, numSamples, true);
-
-	// and now get the synth to process these midi events and generate its output.
-	synth.renderNextBlock (buffer, midiMessages, 0, numSamples);
 	float lGain = 1;
 	float rGain = 1;
-	if (pan < 0.5f){
-		rGain = 1-  (0.5f- pan)*2;
+	if (m_fPan < 0.5f){
+		rGain = 1-  (0.5f- m_fPan)*2;
 	}
-	if (pan > 0.5f){
-		lGain =1- (pan-0.5f)*2;
+	if (m_fPan > 0.5f){
+		lGain =1- (m_fPan-0.5f)*2;
 	}
 	//pan0 -> l1 r0
 	//pan1 -> l0 r1
@@ -287,12 +155,11 @@ void JuceDemoPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, Midi
 		
 
 		//delay
-		float* delayData = delayBuffer.getWritePointer (jmin (channel, delayBuffer.getNumChannels() - 1));
+		float* delayData = delayBuffer.getWritePointer (juce::jmin (channel, delayBuffer.getNumChannels() - 1));
 		dp = delayPosition;
 
 		for (int i = 0; i < numSamples; ++i)
 		{
-			test[i] = channelData[i];
 			//pan
 			if (channel== 0){ //lef tchannel
 				channelData[i] =  channelData[i]*lGain;
@@ -302,7 +169,7 @@ void JuceDemoPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, Midi
 			}
 			const float in = channelData[i];
 			channelData[i] += delayData[dp];
-			delayData[dp] = (delayData[dp] + in) * delay;
+			delayData[dp] = (delayData[dp] + in) * m_fDelay;
 			if (++dp >= delayBuffer.getNumSamples())
 				dp = 0;
 		}
@@ -349,9 +216,9 @@ void JuceDemoPluginAudioProcessor::getStateInformation (MemoryBlock& destData)
 	// add some attributes to it..
 	xml.setAttribute ("uiWidth", lastUIWidth);
 	xml.setAttribute ("uiHeight", lastUIHeight);
-	xml.setAttribute ("gain", gain);
-	xml.setAttribute ("delay", delay);
-	xml.setAttribute ("pan", pan);
+	xml.setAttribute ("gain", m_fGain);
+	xml.setAttribute ("delay", m_fDelay);
+	xml.setAttribute ("pan", m_fPan);
 
 	// then use this helper function to stuff it into the binary blob and return it..
 	copyXmlToBinary (xml, destData);
@@ -374,9 +241,9 @@ void JuceDemoPluginAudioProcessor::setStateInformation (const void* data, int si
 			lastUIWidth  = xmlState->getIntAttribute ("uiWidth", lastUIWidth);
 			lastUIHeight = xmlState->getIntAttribute ("uiHeight", lastUIHeight);
 
-			gain  = (float) xmlState->getDoubleAttribute ("gain", gain);
-			delay = (float) xmlState->getDoubleAttribute ("delay", delay);
-			pan = (float) xmlState->getDoubleAttribute ("pan", pan);
+			m_fGain  = (float) xmlState->getDoubleAttribute ("gain", m_fGain);
+			m_fDelay = (float) xmlState->getDoubleAttribute ("delay", m_fDelay);
+			m_fPan = (float) xmlState->getDoubleAttribute ("pan", m_fPan);
 		}
 	}
 }
