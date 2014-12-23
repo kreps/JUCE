@@ -66,6 +66,10 @@ public:
     static const int mayaKnobtest_pngSize;
     static const char* untitled1_png;
     static const int untitled1_pngSize;
+    static const char* vibratingsilveryspeakeranimatedgif_gif;
+    static const int vibratingsilveryspeakeranimatedgif_gifSize;
+    static const char* download_jpg;
+    static const int download_jpgSize;
 
 
 private:
@@ -90,6 +94,7 @@ private:
     ScopedPointer<Slider> panSlider;
     ScopedPointer<ImageButton> bypassButtonImg;
     ScopedPointer<ToggleButton> bypassButton;
+    ScopedPointer<Label> gainInfoLabel;
     Image cachedImage_untitled1_png;
 
 
