@@ -7,7 +7,7 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.1
+  Created with Introjucer version: 3.1.0
 
   ------------------------------------------------------------------------------
 
@@ -31,6 +31,14 @@
 JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemoPluginAudioProcessor* ownerFilter)
     : AudioProcessorEditor (ownerFilter)
 {
+    addAndMakeVisible (label = new Label ("new label",
+                                          TRANS("pan")));
+    label->setFont (Font ("Aharoni", 12.00f, Font::plain));
+    label->setJustificationType (Justification::centred);
+    label->setEditable (false, false, false);
+    label->setColour (TextEditor::textColourId, Colours::black);
+    label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
     addAndMakeVisible (infoLabel = new Label (String::empty,
                                               TRANS("aaa")));
     infoLabel->setFont (Font (15.00f, Font::plain));
@@ -42,7 +50,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 
     addAndMakeVisible (gainSlider = new Slider ("gainSlider"));
     gainSlider->setTooltip (TRANS("Gain"));
-    gainSlider->setRange (0, 1, 0.01);
+    gainSlider->setRange (0, 1, 0);
     gainSlider->setSliderStyle (Slider::RotaryVerticalDrag);
     gainSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
     gainSlider->setColour (Slider::rotarySliderOutlineColourId, Colour (0x66000000));
@@ -57,9 +65,9 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 
     addAndMakeVisible (panSlider = new Slider ("pan"));
     panSlider->setTooltip (TRANS("pan"));
-    panSlider->setRange (0, 1, 0.1);
+    panSlider->setRange (0, 1, 0);
     panSlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    panSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
+    panSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
     panSlider->addListener (this);
 
     addAndMakeVisible (bypassButtonImg = new ImageButton ("new button"));
@@ -74,12 +82,29 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     bypassButton->addListener (this);
 
     addAndMakeVisible (gainInfoLabel = new Label ("new label",
-                                                  TRANS("0.0\n")));
-    gainInfoLabel->setFont (Font ("Book Antiqua", 15.00f, Font::plain));
-    gainInfoLabel->setJustificationType (Justification::centredRight);
+                                                  TRANS("0.0\n"
+                                                  "dB\n")));
+    gainInfoLabel->setFont (Font ("Aharoni", 12.00f, Font::plain));
+    gainInfoLabel->setJustificationType (Justification::centred);
     gainInfoLabel->setEditable (false, false, false);
     gainInfoLabel->setColour (TextEditor::textColourId, Colours::black);
     gainInfoLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (leftGainInfoLabel = new Label ("new label",
+                                                      TRANS("10.0 dB\n")));
+    leftGainInfoLabel->setFont (Font ("Aharoni", 12.00f, Font::plain));
+    leftGainInfoLabel->setJustificationType (Justification::centred);
+    leftGainInfoLabel->setEditable (false, false, false);
+    leftGainInfoLabel->setColour (TextEditor::textColourId, Colours::black);
+    leftGainInfoLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (rightGainInfoLabel = new Label ("new label",
+                                                       TRANS("10.0 dB\n")));
+    rightGainInfoLabel->setFont (Font ("Aharoni", 12.00f, Font::plain));
+    rightGainInfoLabel->setJustificationType (Justification::centred);
+    rightGainInfoLabel->setEditable (false, false, false);
+    rightGainInfoLabel->setColour (TextEditor::textColourId, Colours::black);
+    rightGainInfoLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     cachedImage_untitled1_png = ImageCache::getFromMemory (untitled1_png, untitled1_pngSize);
 
@@ -94,11 +119,13 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 
     //[Constructor] You can add your own custom stuff here..
     // set our component's initial size to be the last one that was stored in the filter's settings
-    setSize(ownerFilter->lastUIWidth,
-            ownerFilter->lastUIHeight);
+    setSize(ownerFilter->lastUIWidth, ownerFilter->lastUIHeight);
     setSize(800, 300);
 
     startTimer(50);
+	gainSlider->setDoubleClickReturnValue(true,1.0f);
+	panSlider->setDoubleClickReturnValue(true,0.5f);
+
     //addAndMakeVisible(tooltipWindow = new TooltipWindow());
     //[/Constructor]
 }
@@ -108,6 +135,7 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
+    label = nullptr;
     infoLabel = nullptr;
     gainSlider = nullptr;
     delaySlider = nullptr;
@@ -115,6 +143,8 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
     bypassButtonImg = nullptr;
     bypassButton = nullptr;
     gainInfoLabel = nullptr;
+    leftGainInfoLabel = nullptr;
+    rightGainInfoLabel = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -136,12 +166,6 @@ void JuceDemoPluginAudioProcessorEditor::paint (Graphics& g)
                  316, 84, 51, 13,
                  0, 0, cachedImage_untitled1_png.getWidth(), cachedImage_untitled1_png.getHeight());
 
-    g.setColour (Colours::black);
-    g.setFont (Font ("Book Antiqua", 15.00f, Font::plain));
-    g.drawText (TRANS("dB"),
-                50, 94, 32, 30,
-                Justification::centred, true);
-
     //[UserPaint] Add your own custom painting code here..
     /*JuceDemoPluginAudioProcessor* p = getProcessor();
 
@@ -155,16 +179,16 @@ void JuceDemoPluginAudioProcessorEditor::paint (Graphics& g)
 
 void JuceDemoPluginAudioProcessorEditor::resized()
 {
-    //[UserPreResize] Add your own custom resize code here..
-    //[/UserPreResize]
-
+    label->setBounds (60, 76, 150, 24);
     infoLabel->setBounds (10, 4, 400, 25);
     gainSlider->setBounds (10, 30, 70, 70);
     delaySlider->setBounds (200, 30, 90, 90);
-    panSlider->setBounds (100, 30, 90, 90);
+    panSlider->setBounds (100, 30, 70, 70);
     bypassButtonImg->setBounds (312, 24, 60, 60);
     bypassButton->setBounds (312, 104, 64, 24);
-    gainInfoLabel->setBounds (10, 96, 50, 24);
+    gainInfoLabel->setBounds (10, 100, 70, 30);
+    leftGainInfoLabel->setBounds (100, 100, 35, 30);
+    rightGainInfoLabel->setBounds (133, 100, 35, 30);
     //[UserResized] Add your own custom resize handling here..
     resizer->setBounds(getWidth() - 16, getHeight() - 16, 16, 16);
 
@@ -233,6 +257,7 @@ void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasCli
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 
+
 // This timer periodically checks whether any of the filter's parameters have changed...
 void JuceDemoPluginAudioProcessorEditor::timerCallback()
 {
@@ -246,23 +271,51 @@ void JuceDemoPluginAudioProcessorEditor::timerCallback()
     }
 
     gainSlider->setValue(ourProcessor->m_fGain);
-    float dBs = Decibels::gainToDecibels(ourProcessor->m_fGain);
-    float dBsRoundedOnedecimal = std::floor(dBs * 10 + 0.5) / 10;
+
+	//set db display
+	String dbString = amountToDb(ourProcessor->m_fGain);
+    gainInfoLabel->setText(dbString, dontSendNotification);
+
+    delaySlider->setValue(ourProcessor->m_fDelay);
+
+	panSlider->setValue(ourProcessor->m_fPan);
+	float pan = ourProcessor->m_fPan;
+
+	float leftGain = 1.0f;
+	float rightGain = 1.0f;
+	if (pan > 0.5f){
+		leftGain = 1 - ((pan-0.5f)*2);
+	}
+	if (pan < 0.5f){
+		rightGain -= (0.5f-pan)*2;
+	}
+	//0 - 0.5 = left 100
+	//0.5 - 1 = right 100
+	dbString = amountToDb(leftGain);
+	leftGainInfoLabel->setText(dbString,dontSendNotification);
+	dbString = amountToDb(rightGain);
+	rightGainInfoLabel->setText(dbString,dontSendNotification);
+	bypassButton->setToggleState((bool)ourProcessor->m_fBypass, juce::sendNotification);
+    bypassButtonImg->setToggleState((bool)ourProcessor->m_fBypass, juce::sendNotification);
+}
+
+String JuceDemoPluginAudioProcessorEditor::amountToDb(float amount)
+{
+	float dBs = Decibels::gainToDecibels(amount);
+    float dBsRoundedOnedecimal = std::floor(dBs * 10.0f + 0.5f) / 10.0f;
     String dbString = juce::String(dBsRoundedOnedecimal);
     if (dbString.contains(".") == false)
     {
         dbString += ".0";
     }
-    if (dBsRoundedOnedecimal == 100.0f)
+    if (dBsRoundedOnedecimal == -100.0f)
     {
         dbString = "-inF";
     }
-    gainInfoLabel->setText(dbString, dontSendNotification);
-    delaySlider->setValue(ourProcessor->m_fDelay);
-    panSlider->setValue(ourProcessor->m_fPan);
-    bypassButton->setToggleState((bool)ourProcessor->m_fBypass, juce::sendNotification);
-    bypassButtonImg->setToggleState((bool)ourProcessor->m_fBypass, juce::sendNotification);
+	dbString += "\ndB";
+	return dbString;
 }
+
 
 // quick-and-dirty function to format a timecode string
 static const String timeToTimecodeString(const double seconds)
@@ -344,9 +397,12 @@ BEGIN_JUCER_METADATA
                  initialWidth="400" initialHeight="200">
   <BACKGROUND backgroundColour="ff808080">
     <IMAGE pos="316 84 51 13" resource="untitled1_png" opacity="1" mode="0"/>
-    <TEXT pos="50 94 32 30" fill="solid: ff000000" hasStroke="0" text="dB"
-          fontname="Book Antiqua" fontsize="15" bold="0" italic="0" justification="36"/>
   </BACKGROUND>
+  <LABEL name="new label" id="8b8d009f45dc12c7" memberName="label" virtualName=""
+         explicitFocusOrder="0" pos="60 76 150 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="pan" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Aharoni" fontsize="12" bold="0"
+         italic="0" justification="36"/>
   <LABEL name="" id="3084384ee25f6d12" memberName="infoLabel" virtualName=""
          explicitFocusOrder="0" pos="10 4 400 25" textCol="ff0000ff" edTextCol="ff000000"
          edBkgCol="0" labelText="aaa" editableSingleClick="0" editableDoubleClick="0"
@@ -354,7 +410,7 @@ BEGIN_JUCER_METADATA
          bold="0" italic="0" justification="33"/>
   <SLIDER name="gainSlider" id="c31acc4ca22491a9" memberName="gainSlider"
           virtualName="" explicitFocusOrder="0" pos="10 30 70 70" tooltip="Gain"
-          rotaryslideroutline="66000000" min="0" max="1" int="0.01" style="RotaryVerticalDrag"
+          rotaryslideroutline="66000000" min="0" max="1" int="0" style="RotaryVerticalDrag"
           textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1"/>
   <SLIDER name="delay" id="37878e5e9fd60a08" memberName="delaySlider" virtualName=""
@@ -363,10 +419,9 @@ BEGIN_JUCER_METADATA
           textBoxPos="TextBoxBelow" textBoxEditable="1" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1"/>
   <SLIDER name="pan" id="324eec4d274919f3" memberName="panSlider" virtualName=""
-          explicitFocusOrder="0" pos="100 30 90 90" tooltip="pan" min="0"
-          max="1" int="0.10000000000000001" style="RotaryVerticalDrag"
-          textBoxPos="TextBoxBelow" textBoxEditable="1" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="1"/>
+          explicitFocusOrder="0" pos="100 30 70 70" tooltip="pan" min="0"
+          max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <IMAGEBUTTON name="new button" id="b5ee6118cc15876e" memberName="bypassButtonImg"
                virtualName="" explicitFocusOrder="0" pos="312 24 60 60" buttonText="new button"
                connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
@@ -377,10 +432,20 @@ BEGIN_JUCER_METADATA
                 virtualName="" explicitFocusOrder="0" pos="312 104 64 24" buttonText="bypass"
                 connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
   <LABEL name="new label" id="dde6ff72637f37e7" memberName="gainInfoLabel"
-         virtualName="" explicitFocusOrder="0" pos="10 96 50 24" edTextCol="ff000000"
-         edBkgCol="0" labelText="0.0&#10;" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Book Antiqua" fontsize="15"
-         bold="0" italic="0" justification="34"/>
+         virtualName="" explicitFocusOrder="0" pos="10 100 70 30" edTextCol="ff000000"
+         edBkgCol="0" labelText="0.0&#10;dB&#10;" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
+         fontsize="12" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="64ddab567eb77e3c" memberName="leftGainInfoLabel"
+         virtualName="" explicitFocusOrder="0" pos="100 100 35 30" edTextCol="ff000000"
+         edBkgCol="0" labelText="10.0 dB&#10;" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
+         fontsize="12" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="b95fe3ac1ed884d0" memberName="rightGainInfoLabel"
+         virtualName="" explicitFocusOrder="0" pos="133 100 35 30" edTextCol="ff000000"
+         edBkgCol="0" labelText="10.0 dB&#10;" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
+         fontsize="12" bold="0" italic="0" justification="36"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

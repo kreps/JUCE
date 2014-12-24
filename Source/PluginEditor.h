@@ -7,7 +7,7 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.1
+  Created with Introjucer version: 3.1.0
 
   ------------------------------------------------------------------------------
 
@@ -48,6 +48,7 @@ public:
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
     void timerCallback();
+	String amountToDb(float amount);
     //[/UserMethods]
 
     void paint (Graphics& g);
@@ -85,9 +86,11 @@ private:
     }
 
     void displayPositionInfo (const AudioPlayHead::CurrentPositionInfo& pos);
+
     //[/UserVariables]
 
     //==============================================================================
+    ScopedPointer<Label> label;
     ScopedPointer<Label> infoLabel;
     ScopedPointer<Slider> gainSlider;
     ScopedPointer<Slider> delaySlider;
@@ -95,6 +98,8 @@ private:
     ScopedPointer<ImageButton> bypassButtonImg;
     ScopedPointer<ToggleButton> bypassButton;
     ScopedPointer<Label> gainInfoLabel;
+    ScopedPointer<Label> leftGainInfoLabel;
+    ScopedPointer<Label> rightGainInfoLabel;
     Image cachedImage_untitled1_png;
 
 

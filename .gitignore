@@ -48,3 +48,7 @@ Source/PluginEditor.zip
 Builds/VisualStudio2013/Debug/
 *.opensdf
 Builds/VisualStudio2012/Debug/
+Builds/VisualStudio2010/Debug/
+*.sdf
+Builds/VisualStudio2012/x64/Debug/
+Builds/VisualStudio2012/Release/
