@@ -7,7 +7,7 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 3.1.1
 
   ------------------------------------------------------------------------------
 
@@ -38,7 +38,8 @@
 class JuceDemoPluginAudioProcessorEditor  : public AudioProcessorEditor,
                                             public Timer,
                                             public SliderListener,
-                                            public ButtonListener
+                                            public ButtonListener,
+                                            public ComboBoxListener
 {
 public:
     //==============================================================================
@@ -55,6 +56,7 @@ public:
     void resized();
     void sliderValueChanged (Slider* sliderThatWasMoved);
     void buttonClicked (Button* buttonThatWasClicked);
+    void comboBoxChanged (ComboBox* comboBoxThatHasChanged);
 
     // Binary resources:
     static const char* offMaya_png;
@@ -87,6 +89,7 @@ private:
 
     void displayPositionInfo (const AudioPlayHead::CurrentPositionInfo& pos);
 
+	
     //[/UserVariables]
 
     //==============================================================================
@@ -100,6 +103,8 @@ private:
     ScopedPointer<Label> gainInfoLabel;
     ScopedPointer<Label> leftGainInfoLabel;
     ScopedPointer<Label> rightGainInfoLabel;
+    ScopedPointer<ComboBox> lafBox;
+    ScopedPointer<TextButton> textButton;
     Image cachedImage_untitled1_png;
 
 
