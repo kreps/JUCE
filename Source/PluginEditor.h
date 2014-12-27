@@ -38,8 +38,7 @@
 class JuceDemoPluginAudioProcessorEditor  : public AudioProcessorEditor,
                                             public Timer,
                                             public SliderListener,
-                                            public ButtonListener,
-                                            public ComboBoxListener
+                                            public ButtonListener
 {
 public:
     //==============================================================================
@@ -56,7 +55,6 @@ public:
     void resized();
     void sliderValueChanged (Slider* sliderThatWasMoved);
     void buttonClicked (Button* buttonThatWasClicked);
-    void comboBoxChanged (ComboBox* comboBoxThatHasChanged);
 
     // Binary resources:
     static const char* offMaya_png;
@@ -89,22 +87,17 @@ private:
 
     void displayPositionInfo (const AudioPlayHead::CurrentPositionInfo& pos);
 
-	
+
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<Label> label;
+    ScopedPointer<Slider> panSlider;
     ScopedPointer<Label> infoLabel;
     ScopedPointer<Slider> gainSlider;
     ScopedPointer<Slider> delaySlider;
-    ScopedPointer<Slider> panSlider;
-    ScopedPointer<ImageButton> bypassButtonImg;
     ScopedPointer<ToggleButton> bypassButton;
     ScopedPointer<Label> gainInfoLabel;
-    ScopedPointer<Label> leftGainInfoLabel;
-    ScopedPointer<Label> rightGainInfoLabel;
-    ScopedPointer<ComboBox> lafBox;
-    ScopedPointer<TextButton> textButton;
+    ScopedPointer<Label> panInfoLabel;
     Image cachedImage_untitled1_png;
 
 

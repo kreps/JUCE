@@ -34,7 +34,7 @@
  */
 struct CustomLookAndFeel    : public LookAndFeel_V3
 {
-    void drawRoundThumb (Graphics& g, const float x, const float y,
+	void drawRoundThumb (Graphics& g, const float x, const float y,
                          const float diameter, const Colour& colour, float outlineThickness)
     {
         const Rectangle<float> a (x, y, diameter, diameter);
@@ -116,7 +116,7 @@ struct CustomLookAndFeel    : public LookAndFeel_V3
 
         if (ticked)
         {
-            const Path tick (LookAndFeel_V2::getTickShape (6.0f));
+            const Path tick (LookAndFeel_V3::getTickShape (6.0f));
             g.setColour (isEnabled ? findColour (TextButton::buttonOnColourId) : Colours::grey);
 
             const float scale = 9.0f;
@@ -162,7 +162,7 @@ struct CustomLookAndFeel    : public LookAndFeel_V3
         else
         {
             // Just call the base class for the demo
-            LookAndFeel_V2::drawLinearSliderThumb (g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, slider);
+            LookAndFeel_V3::drawLinearSliderThumb (g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, slider);
         }
     }
 
@@ -275,6 +275,7 @@ struct CustomLookAndFeel    : public LookAndFeel_V3
         g.setColour (slider.findColour (Slider::rotarySliderOutlineColourId));
         g.fillPath (needle, AffineTransform::rotation (angle, r.getCentreX(), r.getCentreY()));
     }
+
 };
 
 //==============================================================================
@@ -364,7 +365,7 @@ struct SquareLookAndFeel    : public CustomLookAndFeel
         else
         {
             // Just call the base class for the demo
-            LookAndFeel_V2::drawLinearSliderThumb (g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, slider);
+            LookAndFeel_V3::drawLinearSliderThumb (g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, slider);
         }
     }
 
@@ -410,7 +411,7 @@ struct SquareLookAndFeel    : public CustomLookAndFeel
 void setupCustomLookAndFeelColours (LookAndFeel& laf)
     {
         laf.setColour (Slider::thumbColourId, Colour::greyLevel (0.95f));
-        laf.setColour (Slider::textBoxOutlineColourId, Colours::transparentWhite);
+		laf.setColour (Slider::textBoxOutlineColourId, Colours::black);
         laf.setColour (Slider::rotarySliderFillColourId, Colour (0xff00b5f6));
         laf.setColour (Slider::rotarySliderOutlineColourId, Colours::white);
 
@@ -426,26 +427,23 @@ void setupCustomLookAndFeelColours (LookAndFeel& laf)
 JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemoPluginAudioProcessor* ownerFilter)
     : AudioProcessorEditor (ownerFilter)
 {
-	//[Customlaf]
-	CustomLookAndFeel* laf = new CustomLookAndFeel();
-	setupCustomLookAndFeelColours(*laf);
-	this->setLookAndFeel(laf);
-	
-	//[/Customlaf]
-    addAndMakeVisible (label = new Label ("new label",
-                                          TRANS("pan")));
-    label->setFont (Font ("Aharoni", 12.00f, Font::plain));
-    label->setJustificationType (Justification::centred);
-    label->setEditable (false, false, false);
-    label->setColour (TextEditor::textColourId, Colours::black);
-    label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    addAndMakeVisible (panSlider = new Slider ("pan"));
+    panSlider->setTooltip (TRANS("pan"));
+    panSlider->setRange (0, 1, 0);
+    panSlider->setSliderStyle (Slider::RotaryVerticalDrag);
+    panSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    panSlider->setColour (Slider::backgroundColourId, Colour (0x00c95c5c));
+    panSlider->setColour (Slider::textBoxTextColourId, Colours::white);
+    panSlider->setColour (Slider::textBoxHighlightColourId, Colour (0xff1111ee));
+    panSlider->setColour (Slider::textBoxOutlineColourId, Colours::grey);
+    panSlider->addListener (this);
 
     addAndMakeVisible (infoLabel = new Label (String::empty,
                                               TRANS("aaa")));
     infoLabel->setFont (Font (15.00f, Font::plain));
     infoLabel->setJustificationType (Justification::centredLeft);
     infoLabel->setEditable (false, false, false);
-    infoLabel->setColour (Label::textColourId, Colours::blue);
+    infoLabel->setColour (Label::textColourId, Colours::white);
     infoLabel->setColour (TextEditor::textColourId, Colours::black);
     infoLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
@@ -454,75 +452,47 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     gainSlider->setRange (0, 1, 0);
     gainSlider->setSliderStyle (Slider::RotaryVerticalDrag);
     gainSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
-    gainSlider->setColour (Slider::rotarySliderOutlineColourId, Colour (0x66000000));
     gainSlider->addListener (this);
+    gainSlider->setSkewFactor (0.3);
 
     addAndMakeVisible (delaySlider = new Slider ("delay"));
     delaySlider->setTooltip (TRANS("Delay gain\n"));
     delaySlider->setRange (0, 1, 0.1);
     delaySlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    delaySlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
+    delaySlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    delaySlider->setColour (Slider::trackColourId, Colours::white);
+    delaySlider->setColour (Slider::textBoxHighlightColourId, Colour (0xff1111ee));
+    delaySlider->setColour (Slider::textBoxOutlineColourId, Colours::grey);
     delaySlider->addListener (this);
 
-    addAndMakeVisible (panSlider = new Slider ("pan"));
-    panSlider->setTooltip (TRANS("pan"));
-    panSlider->setRange (0, 1, 0);
-    panSlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    panSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
-    panSlider->addListener (this);
-
-    addAndMakeVisible (bypassButtonImg = new ImageButton ("new button"));
-    bypassButtonImg->addListener (this);
-
-    bypassButtonImg->setImages (false, true, true,
-                                ImageCache::getFromMemory (onMaya_png, onMaya_pngSize), 1.000f, Colour (0x00ac4b4b),
-                                Image(), 1.000f, Colour (0x00953434),
-                                ImageCache::getFromMemory (offMaya_png, offMaya_pngSize), 1.000f, Colour (0x008b3a3a));
     addAndMakeVisible (bypassButton = new ToggleButton ("new toggle button"));
     bypassButton->setButtonText (TRANS("bypass"));
     bypassButton->addListener (this);
 
     addAndMakeVisible (gainInfoLabel = new Label ("new label",
-                                                  TRANS("0.0\n"
-                                                  "dB\n")));
+                                                  TRANS("0.0 dB\n")));
     gainInfoLabel->setFont (Font ("Aharoni", 12.00f, Font::plain));
     gainInfoLabel->setJustificationType (Justification::centred);
     gainInfoLabel->setEditable (false, false, false);
+    gainInfoLabel->setColour (Label::textColourId, Colour (0xff323232));
     gainInfoLabel->setColour (TextEditor::textColourId, Colours::black);
     gainInfoLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (leftGainInfoLabel = new Label ("new label",
-                                                      TRANS("10.0 dB\n")));
-    leftGainInfoLabel->setFont (Font ("Aharoni", 12.00f, Font::plain));
-    leftGainInfoLabel->setJustificationType (Justification::centred);
-    leftGainInfoLabel->setEditable (false, false, false);
-    leftGainInfoLabel->setColour (TextEditor::textColourId, Colours::black);
-    leftGainInfoLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
-    addAndMakeVisible (rightGainInfoLabel = new Label ("new label",
-                                                       TRANS("10.0 dB\n")));
-    rightGainInfoLabel->setFont (Font ("Aharoni", 12.00f, Font::plain));
-    rightGainInfoLabel->setJustificationType (Justification::centred);
-    rightGainInfoLabel->setEditable (false, false, false);
-    rightGainInfoLabel->setColour (TextEditor::textColourId, Colours::black);
-    rightGainInfoLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
-    addAndMakeVisible (lafBox = new ComboBox ("new combo box"));
-    lafBox->setEditableText (false);
-    lafBox->setJustificationType (Justification::centredLeft);
-    lafBox->setTextWhenNothingSelected (String::empty);
-    lafBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
-    lafBox->addListener (this);
-
-    addAndMakeVisible (textButton = new TextButton ("new button"));
-    textButton->addListener (this);
+    addAndMakeVisible (panInfoLabel = new Label ("new label",
+                                                 TRANS("Pan")));
+    panInfoLabel->setFont (Font ("Aharoni", 12.00f, Font::plain));
+    panInfoLabel->setJustificationType (Justification::centred);
+    panInfoLabel->setEditable (false, false, false);
+    panInfoLabel->setColour (Label::textColourId, Colour (0xff282828));
+    panInfoLabel->setColour (TextEditor::textColourId, Colours::black);
+    panInfoLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     cachedImage_untitled1_png = ImageCache::getFromMemory (untitled1_png, untitled1_pngSize);
 
     //[UserPreSize]
     addAndMakeVisible(resizer = new ResizableCornerComponent(this, &resizeLimits));
     resizeLimits.setSizeLimits(150, 150, 800, 300);
-    bypassButtonImg->setClickingTogglesState(true);
+
     //[/UserPreSize]
 
     setSize (400, 200);
@@ -534,9 +504,11 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     setSize(800, 300);
 
     startTimer(50);
-	gainSlider->setDoubleClickReturnValue(true,1.0f);
+	gainSlider->setDoubleClickReturnValue(true,0.0f);
 	panSlider->setDoubleClickReturnValue(true,0.5f);
-
+	CustomLookAndFeel* laf = new CustomLookAndFeel();
+	setupCustomLookAndFeelColours(*laf);
+	this->setLookAndFeel(laf);
     //addAndMakeVisible(tooltipWindow = new TooltipWindow());
     //[/Constructor]
 }
@@ -546,18 +518,13 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
-    label = nullptr;
+    panSlider = nullptr;
     infoLabel = nullptr;
     gainSlider = nullptr;
     delaySlider = nullptr;
-    panSlider = nullptr;
-    bypassButtonImg = nullptr;
     bypassButton = nullptr;
     gainInfoLabel = nullptr;
-    leftGainInfoLabel = nullptr;
-    rightGainInfoLabel = nullptr;
-    lafBox = nullptr;
-    textButton = nullptr;
+    panInfoLabel = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -572,12 +539,15 @@ void JuceDemoPluginAudioProcessorEditor::paint (Graphics& g)
     g.fillAll();
     //[/UserPrePaint]
 
-    g.fillAll (Colours::grey);
+    g.fillAll (Colour (0xff848484));
 
     g.setColour (Colours::black);
     g.drawImage (cachedImage_untitled1_png,
                  316, 84, 51, 13,
                  0, 0, cachedImage_untitled1_png.getWidth(), cachedImage_untitled1_png.getHeight());
+
+    g.setColour (Colour (0xff2a9fa5));
+    g.fillRoundedRectangle (0.0f, 30.0f, 90.0f, 100.0f, 10.000f);
 
     //[UserPaint] Add your own custom painting code here..
     /*JuceDemoPluginAudioProcessor* p = getProcessor();
@@ -595,18 +565,13 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    label->setBounds (60, 76, 150, 24);
-    infoLabel->setBounds (10, 4, 400, 25);
-    gainSlider->setBounds (10, 30, 70, 70);
-    delaySlider->setBounds (200, 30, 90, 90);
     panSlider->setBounds (100, 30, 70, 70);
-    bypassButtonImg->setBounds (312, 24, 60, 60);
+    infoLabel->setBounds (10, 4, 400, 25);
+    gainSlider->setBounds (10, 40, 70, 50);
+    delaySlider->setBounds (200, 30, 90, 90);
     bypassButton->setBounds (312, 104, 64, 24);
     gainInfoLabel->setBounds (10, 100, 70, 30);
-    leftGainInfoLabel->setBounds (100, 100, 35, 30);
-    rightGainInfoLabel->setBounds (133, 100, 35, 30);
-    lafBox->setBounds (40, 160, 150, 24);
-    textButton->setBounds (224, 152, 150, 104);
+    panInfoLabel->setBounds (100, 100, 70, 30);
     //[UserResized] Add your own custom resize handling here..
     resizer->setBounds(getWidth() - 16, getHeight() - 16, 16, 16);
 
@@ -620,7 +585,14 @@ void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatW
     //[UsersliderValueChanged_Pre]
     //[/UsersliderValueChanged_Pre]
 
-    if (sliderThatWasMoved == gainSlider)
+    if (sliderThatWasMoved == panSlider)
+    {
+        //[UserSliderCode_panSlider] -- add your slider handling code here..
+        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::panParam,
+                                                  (float)panSlider->getValue());
+        //[/UserSliderCode_panSlider]
+    }
+    else if (sliderThatWasMoved == gainSlider)
     {
         //[UserSliderCode_gainSlider] -- add your slider handling code here..
         // It's vital to use setParameterNotifyingHost to change any parameters that are automatable
@@ -637,13 +609,6 @@ void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatW
                                                   (float)delaySlider->getValue());
         //[/UserSliderCode_delaySlider]
     }
-    else if (sliderThatWasMoved == panSlider)
-    {
-        //[UserSliderCode_panSlider] -- add your slider handling code here..
-        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::panParam,
-                                                  (float)panSlider->getValue());
-        //[/UserSliderCode_panSlider]
-    }
 
     //[UsersliderValueChanged_Post]
     //[/UsersliderValueChanged_Post]
@@ -654,44 +619,15 @@ void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasCli
     //[UserbuttonClicked_Pre]
     //[/UserbuttonClicked_Pre]
 
-    if (buttonThatWasClicked == bypassButtonImg)
-    {
-        //[UserButtonCode_bypassButtonImg] -- add your button handler code here..
-        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::bypassParam, (float)bypassButtonImg->getToggleState());
-        //[/UserButtonCode_bypassButtonImg]
-    }
-    else if (buttonThatWasClicked == bypassButton)
+    if (buttonThatWasClicked == bypassButton)
     {
         //[UserButtonCode_bypassButton] -- add your button handler code here..
         getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::bypassParam, (float)bypassButton->getToggleState());
         //[/UserButtonCode_bypassButton]
     }
-    else if (buttonThatWasClicked == textButton)
-    {
-        //[UserButtonCode_textButton] -- add your button handler code here..
-		/*textButton->setLookAndFeel(this->getLookAndFeel());
-		gainSlider->setLookAndFeel(new 11CustomLookAndFeel());
-		panSlider->setLookAndFeel(new SquareLookAndFeel());*/
-        //[/UserButtonCode_textButton]
-    }
 
     //[UserbuttonClicked_Post]
     //[/UserbuttonClicked_Post]
-}
-
-void JuceDemoPluginAudioProcessorEditor::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
-{
-    //[UsercomboBoxChanged_Pre]
-    //[/UsercomboBoxChanged_Pre]
-
-    if (comboBoxThatHasChanged == lafBox)
-    {
-        //[UserComboBoxCode_lafBox] -- add your combo box handling code here..
-        //[/UserComboBoxCode_lafBox]
-    }
-
-    //[UsercomboBoxChanged_Post]
-    //[/UsercomboBoxChanged_Post]
 }
 
 
@@ -724,20 +660,34 @@ void JuceDemoPluginAudioProcessorEditor::timerCallback()
 
 	float leftGain = 1.0f;
 	float rightGain = 1.0f;
+	String panString = "0.0\nC";
 	if (pan > 0.5f){
-		leftGain = 1 - ((pan-0.5f)*2);
+		leftGain = 1 - (pan-0.5f)*2.0f;
+		float panvalue = std::floor((pan-0.5f)*100.0f * 10.0f + 0.5f) / 10.0f;
+		panString = String(panvalue);
+		if (panString.contains(".") == false)
+		{
+			panString += ".0";
+		}
+		panString+="\nR";
 	}
 	if (pan < 0.5f){
-		rightGain -= (0.5f-pan)*2;
+		rightGain -= (0.5f-pan)*2.0f;
+		float panvalue = std::floor((0.5f-pan)*100.0f * 10.0f + 0.5f) / 10.0f;
+		panString = String(panvalue);
+		if (panString.contains(".") == false)
+		{
+			panString += ".0";
+		}
+		panString+="\nL";
 	}
+
 	//0 - 0.5 = left 100
 	//0.5 - 1 = right 100
-	dbString = amountToDb(leftGain);
-	leftGainInfoLabel->setText(dbString,dontSendNotification);
-	dbString = amountToDb(rightGain);
-	rightGainInfoLabel->setText(dbString,dontSendNotification);
+	//dbString = amountToDb(leftGain);
+	panInfoLabel->setText(panString,dontSendNotification);
+	//rightGainInfoLabel->setText(String(rightGain*50)+ "\nRight",dontSendNotification);
 	bypassButton->setToggleState((bool)ourProcessor->m_fBypass, juce::sendNotification);
-    bypassButtonImg->setToggleState((bool)ourProcessor->m_fBypass, juce::sendNotification);
 }
 
 String JuceDemoPluginAudioProcessorEditor::amountToDb(float amount)
@@ -836,63 +786,43 @@ BEGIN_JUCER_METADATA
                  variableInitialisers="AudioProcessorEditor (ownerFilter)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="0"
                  initialWidth="400" initialHeight="200">
-  <BACKGROUND backgroundColour="ff808080">
+  <BACKGROUND backgroundColour="ff848484">
     <IMAGE pos="316 84 51 13" resource="untitled1_png" opacity="1" mode="0"/>
+    <ROUNDRECT pos="0 30 90 100" cornerSize="10" fill="solid: ff2a9fa5" hasStroke="0"/>
   </BACKGROUND>
-  <LABEL name="new label" id="8b8d009f45dc12c7" memberName="label" virtualName=""
-         explicitFocusOrder="0" pos="60 76 150 24" edTextCol="ff000000"
-         edBkgCol="0" labelText="pan" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Aharoni" fontsize="12" bold="0"
-         italic="0" justification="36"/>
+  <SLIDER name="pan" id="324eec4d274919f3" memberName="panSlider" virtualName=""
+          explicitFocusOrder="0" pos="100 30 70 70" tooltip="pan" bkgcol="c95c5c"
+          textboxtext="ffffffff" textboxhighlight="ff1111ee" textboxoutline="ff808080"
+          min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="" id="3084384ee25f6d12" memberName="infoLabel" virtualName=""
-         explicitFocusOrder="0" pos="10 4 400 25" textCol="ff0000ff" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="10 4 400 25" textCol="ffffffff" edTextCol="ff000000"
          edBkgCol="0" labelText="aaa" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <SLIDER name="gainSlider" id="c31acc4ca22491a9" memberName="gainSlider"
-          virtualName="" explicitFocusOrder="0" pos="10 30 70 70" tooltip="Gain"
-          rotaryslideroutline="66000000" min="0" max="1" int="0" style="RotaryVerticalDrag"
-          textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="1"/>
+          virtualName="" explicitFocusOrder="0" pos="10 40 70 50" tooltip="Gain"
+          min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.29999999999999999"/>
   <SLIDER name="delay" id="37878e5e9fd60a08" memberName="delaySlider" virtualName=""
           explicitFocusOrder="0" pos="200 30 90 90" tooltip="Delay gain&#10;"
+          trackcol="ffffffff" textboxhighlight="ff1111ee" textboxoutline="ff808080"
           min="0" max="1" int="0.10000000000000001" style="RotaryVerticalDrag"
-          textBoxPos="TextBoxBelow" textBoxEditable="1" textBoxWidth="80"
+          textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1"/>
-  <SLIDER name="pan" id="324eec4d274919f3" memberName="panSlider" virtualName=""
-          explicitFocusOrder="0" pos="100 30 70 70" tooltip="pan" min="0"
-          max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <IMAGEBUTTON name="new button" id="b5ee6118cc15876e" memberName="bypassButtonImg"
-               virtualName="" explicitFocusOrder="0" pos="312 24 60 60" buttonText="new button"
-               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
-               resourceNormal="onMaya_png" opacityNormal="1" colourNormal="ac4b4b"
-               resourceOver="" opacityOver="1" colourOver="953434" resourceDown="offMaya_png"
-               opacityDown="1" colourDown="8b3a3a"/>
   <TOGGLEBUTTON name="new toggle button" id="d59c4ede9f259185" memberName="bypassButton"
                 virtualName="" explicitFocusOrder="0" pos="312 104 64 24" buttonText="bypass"
                 connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
   <LABEL name="new label" id="dde6ff72637f37e7" memberName="gainInfoLabel"
-         virtualName="" explicitFocusOrder="0" pos="10 100 70 30" edTextCol="ff000000"
-         edBkgCol="0" labelText="0.0&#10;dB&#10;" editableSingleClick="0"
+         virtualName="" explicitFocusOrder="0" pos="10 100 70 30" textCol="ff323232"
+         edTextCol="ff000000" edBkgCol="0" labelText="0.0 dB&#10;" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="12" bold="0" italic="0" justification="36"/>
-  <LABEL name="new label" id="64ddab567eb77e3c" memberName="leftGainInfoLabel"
-         virtualName="" explicitFocusOrder="0" pos="100 100 35 30" edTextCol="ff000000"
-         edBkgCol="0" labelText="10.0 dB&#10;" editableSingleClick="0"
+  <LABEL name="new label" id="64ddab567eb77e3c" memberName="panInfoLabel"
+         virtualName="" explicitFocusOrder="0" pos="100 100 70 30" textCol="ff282828"
+         edTextCol="ff000000" edBkgCol="0" labelText="Pan" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="12" bold="0" italic="0" justification="36"/>
-  <LABEL name="new label" id="b95fe3ac1ed884d0" memberName="rightGainInfoLabel"
-         virtualName="" explicitFocusOrder="0" pos="133 100 35 30" edTextCol="ff000000"
-         edBkgCol="0" labelText="10.0 dB&#10;" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
-         fontsize="12" bold="0" italic="0" justification="36"/>
-  <COMBOBOX name="new combo box" id="43c60f5227b763f7" memberName="lafBox"
-            virtualName="" explicitFocusOrder="0" pos="40 160 150 24" editable="0"
-            layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
-  <TEXTBUTTON name="new button" id="8970f44e7a7ca0b" memberName="textButton"
-              virtualName="" explicitFocusOrder="0" pos="224 152 150 104" buttonText="new button"
-              connectedEdges="0" needsCallback="1" radioGroupId="0"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
