@@ -1,1 +1,6 @@
-*Gain slider skew 0.3
+*Leaked objects LookAndFeel_V2 ???
+*Rotary slider access juce resource image and draw image background
+*Mid-Side processing
+*Delay length 
++Gain slider skew 0.3
++CustomLookAndFeel

@@ -56,21 +56,6 @@ public:
     void sliderValueChanged (Slider* sliderThatWasMoved);
     void buttonClicked (Button* buttonThatWasClicked);
 
-    // Binary resources:
-    static const char* offMaya_png;
-    static const int offMaya_pngSize;
-    static const char* onMaya_png;
-    static const int onMaya_pngSize;
-    static const char* downMaya_png;
-    static const int downMaya_pngSize;
-    static const char* mayaKnobtest_png;
-    static const int mayaKnobtest_pngSize;
-    static const char* untitled1_png;
-    static const int untitled1_pngSize;
-    static const char* vibratingsilveryspeakeranimatedgif_gif;
-    static const int vibratingsilveryspeakeranimatedgif_gifSize;
-    static const char* download_jpg;
-    static const int download_jpgSize;
 
 
 private:
@@ -98,8 +83,9 @@ private:
     ScopedPointer<ToggleButton> bypassButton;
     ScopedPointer<Label> gainInfoLabel;
     ScopedPointer<Label> panInfoLabel;
-    Image cachedImage_untitled1_png;
-
+    ScopedPointer<Label> delayAmountInfoLabel;
+    ScopedPointer<TextButton> textButton;
+	ScopedPointer<TooltipWindow> tooltipWindow;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuceDemoPluginAudioProcessorEditor)
