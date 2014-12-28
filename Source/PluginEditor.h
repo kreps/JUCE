@@ -56,13 +56,15 @@ public:
     void sliderValueChanged (Slider* sliderThatWasMoved);
     void buttonClicked (Button* buttonThatWasClicked);
 
+    // Binary resources:
+    static const char* images_jpg;
+    static const int images_jpgSize;
 
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     ScopedPointer<ResizableCornerComponent> resizer;
     ComponentBoundsConstrainer resizeLimits;
-
     AudioPlayHead::CurrentPositionInfo lastDisplayedPosition;
 
     JuceDemoPluginAudioProcessor* getProcessor() const
@@ -85,7 +87,7 @@ private:
     ScopedPointer<Label> panInfoLabel;
     ScopedPointer<Label> delayAmountInfoLabel;
     ScopedPointer<TextButton> textButton;
-	ScopedPointer<TooltipWindow> tooltipWindow;
+
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuceDemoPluginAudioProcessorEditor)

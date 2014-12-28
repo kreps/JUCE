@@ -32,7 +32,7 @@
     It's a good idea not to hard code your colours, use the findColour method along with appropriate
     ColourIds so you can set these on a per-component basis.
  */
-struct CustomLookAndFeel    : public LookAndFeel_V3
+struct CustomLookAndFeel    : public LookAndFeel_V2
 {
 	void drawRoundThumb (Graphics& g, const float x, const float y,
                          const float diameter, const Colour& colour, float outlineThickness)
@@ -200,7 +200,7 @@ struct CustomLookAndFeel    : public LookAndFeel_V3
         else
         {
             // Just call the base class for the demo
-            LookAndFeel_V3::drawLinearSliderThumb (g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, slider);
+            LookAndFeel_V2::drawLinearSliderThumb (g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, slider);
         }
     }
 
@@ -296,6 +296,8 @@ struct CustomLookAndFeel    : public LookAndFeel_V3
             Path filledArc;
             //filledArc.addPieSegment (rx, ry, rw, rw, rotaryStartAngle, angle, 0.0);
 			filledArc.addEllipse (rx, ry, rw, rw);
+
+			g.setGradientFill(ColourGradient(Colours::white,0,0,Colours::black,100,100,true));
 			g.fillPath (filledArc);
         }
 
@@ -307,12 +309,26 @@ struct CustomLookAndFeel    : public LookAndFeel_V3
         }
 		Path needle;
 		Rectangle<float> r (rx, ry, rw, rw);
-		Rectangle<float> r2 (0.0f,0.0f, rw*0.1f,rw * 0.5f);
+		Rectangle<float> r2 (0.0f,0.0f, rw*0.1f,rw * 0.3f);
         needle.addRectangle (r2.withPosition (Point<float> (r.getCentreX() - (r2.getWidth() / 2.0f), r.getY())));
 
-        g.setColour (slider.findColour (Slider::rotarySliderOutlineColourId));
+        //g.setColour (slider.findColour (Slider::rotarySliderOutlineColourId));
+		g.setColour(Colours::black);
         g.fillPath (needle, AffineTransform::rotation (angle, r.getCentreX(), r.getCentreY()));
     }
+
+//	void drawTooltip (Graphics& g, const String& text, int width, int height)
+//	{
+//		g.fillAll (findColour (TooltipWindow::backgroundColourId));
+//
+//#if ! JUCE_MAC // The mac windows already have a non-optional 1 pix outline, so don't double it here..
+//		g.setColour (findColour (TooltipWindow::outlineColourId));
+//		g.drawRect (0, 0, width, height, 1);
+//#endif
+//
+//		LookAndFeelHelpers::layoutTooltipText (text, findColour (TooltipWindow::textColourId))
+//			.draw (g, Rectangle<float> ((float) width, (float) height));
+//	}
 
 };
 
@@ -438,7 +454,7 @@ struct SquareLookAndFeel    : public CustomLookAndFeel
         else
         {
             // Just call the base class for the demo
-            LookAndFeel_V3::drawLinearSliderThumb (g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, slider);
+            LookAndFeel_V2::drawLinearSliderThumb (g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, slider);
         }
     }
 
@@ -521,7 +537,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     infoLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (gainSlider = new Slider ("gainSlider"));
-    gainSlider->setTooltip (TRANS("Gain"));
+    gainSlider->setTooltip (TRANS("gain"));
     gainSlider->setRange (0, 1, 0);
     gainSlider->setSliderStyle (Slider::RotaryVerticalDrag);
     gainSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
@@ -529,7 +545,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     gainSlider->setSkewFactor (0.3);
 
     addAndMakeVisible (delaySlider = new Slider ("delay"));
-    delaySlider->setTooltip (TRANS("Delay gain\n"));
+    delaySlider->setTooltip (TRANS("delay gain\n"));
     delaySlider->setRange (0, 1, 0.1);
     delaySlider->setSliderStyle (Slider::RotaryVerticalDrag);
     delaySlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
@@ -591,11 +607,12 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 	//cutom rotary start and end position
 	gainSlider->setRotaryParameters(1.0f*3.14f+0.1f,(12.0f/4.0f)*3.14f-0.1f,true);
 	panSlider->setDoubleClickReturnValue(true,0.5f);
-	CustomLookAndFeel* laf = new CustomLookAndFeel();
+	LookAndFeel *laf = new CustomLookAndFeel();
+	//SquareLookAndFeel* laf = new SquareLookAndFeel();
 	setupCustomLookAndFeelColours(*laf);
 	LookAndFeel::setDefaultLookAndFeel(laf);
 	laf->setDefaultSansSerifTypefaceName("Aharoni");
-    addAndMakeVisible(tooltipWindow = new TooltipWindow());
+    //addAndMakeVisible(tooltipWindow = new TooltipWindow());
     //[/Constructor]
 }
 
@@ -629,15 +646,15 @@ void JuceDemoPluginAudioProcessorEditor::paint (Graphics& g)
     g.fillAll();
     //[/UserPrePaint]
 
-    g.fillAll (Colour (0xff848484));
+    g.fillAll (Colour (0xff777777));
 
-    g.setColour (Colour (0xff2a9fa5));
+    g.setColour (Colours::beige);
     g.fillRoundedRectangle (10.0f, 30.0f, 80.0f, 100.0f, 10.000f);
 
-    g.setColour (Colour (0xff2a9fa5));
+    g.setColour (Colours::beige);
     g.fillRoundedRectangle (110.0f, 30.0f, 80.0f, 100.0f, 10.000f);
 
-    g.setColour (Colour (0xff2a9fa5));
+    g.setColour (Colours::beige);
     g.fillRoundedRectangle (210.0f, 30.0f, 80.0f, 100.0f, 10.000f);
 
     //[UserPaint] Add your own custom painting code here..
@@ -884,10 +901,10 @@ BEGIN_JUCER_METADATA
                  variableInitialisers="AudioProcessorEditor (ownerFilter)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="0"
                  initialWidth="400" initialHeight="200">
-  <BACKGROUND backgroundColour="ff848484">
-    <ROUNDRECT pos="10 30 80 100" cornerSize="10" fill="solid: ff2a9fa5" hasStroke="0"/>
-    <ROUNDRECT pos="110 30 80 100" cornerSize="10" fill="solid: ff2a9fa5" hasStroke="0"/>
-    <ROUNDRECT pos="210 30 80 100" cornerSize="10" fill="solid: ff2a9fa5" hasStroke="0"/>
+  <BACKGROUND backgroundColour="ff777777">
+    <ROUNDRECT pos="10 30 80 100" cornerSize="10" fill="solid: fff5f5dc" hasStroke="0"/>
+    <ROUNDRECT pos="110 30 80 100" cornerSize="10" fill="solid: fff5f5dc" hasStroke="0"/>
+    <ROUNDRECT pos="210 30 80 100" cornerSize="10" fill="solid: fff5f5dc" hasStroke="0"/>
   </BACKGROUND>
   <SLIDER name="pan" id="324eec4d274919f3" memberName="panSlider" virtualName=""
           explicitFocusOrder="0" pos="120 40 60 60" tooltip="pan" bkgcol="c95c5c"
@@ -900,11 +917,11 @@ BEGIN_JUCER_METADATA
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <SLIDER name="gainSlider" id="c31acc4ca22491a9" memberName="gainSlider"
-          virtualName="" explicitFocusOrder="0" pos="20 40 60 60" tooltip="Gain"
+          virtualName="" explicitFocusOrder="0" pos="20 40 60 60" tooltip="gain"
           min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.29999999999999999"/>
   <SLIDER name="delay" id="37878e5e9fd60a08" memberName="delaySlider" virtualName=""
-          explicitFocusOrder="0" pos="220 40 60 60" tooltip="Delay gain&#10;"
+          explicitFocusOrder="0" pos="220 40 60 60" tooltip="delay gain&#10;"
           trackcol="ffffffff" textboxhighlight="ff1111ee" textboxoutline="ff808080"
           min="0" max="1" int="0.10000000000000001" style="RotaryVerticalDrag"
           textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="80"
@@ -935,6 +952,34 @@ BEGIN_JUCER_METADATA
 END_JUCER_METADATA
 */
 #endif
+
+//==============================================================================
+// Binary resources - be careful not to edit any of these sections!
+
+// JUCER_RESOURCE: images_jpg, 1141, "../../../Desktop/images.jpg"
+static const unsigned char resource_JuceDemoPluginAudioProcessorEditor_images_jpg[] = { 255,216,255,224,0,16,74,70,73,70,0,1,1,0,0,1,0,1,0,0,255,219,0,132,0,9,6,7,8,7,6,9,8,7,8,10,10,9,11,13,22,15,13,
+12,12,13,27,20,21,16,22,32,29,34,34,32,29,31,31,36,40,52,44,36,38,49,39,31,31,45,61,45,49,53,55,58,58,58,35,43,63,68,63,56,67,52,57,58,55,1,10,10,10,13,12,13,26,15,15,26,55,37,31,37,55,55,55,55,55,55,
+55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,255,192,0,17,8,0,95,0,95,3,1,34,0,2,17,1,3,17,1,255,196,0,27,0,1,0,3,
+1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,4,5,6,3,2,7,255,196,0,52,16,0,1,3,2,4,2,8,5,3,5,0,0,0,0,0,0,1,0,2,3,4,17,5,18,33,49,65,97,6,19,50,66,81,113,129,145,34,98,177,193,240,20,146,161,35,51,82,83,162,255,196,0,
+20,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,196,0,22,17,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,17,1,255,218,0,12,3,1,0,2,17,3,17,0,63,0,233,209,20,32,148,68,64,54,68,80,130,81,20,32,148,65,178,112,65,8,121,
+41,66,128,136,161,4,175,151,189,172,26,163,220,26,46,179,234,170,217,1,103,88,225,158,71,101,141,190,39,127,178,11,78,153,220,14,80,188,29,51,91,218,115,189,137,83,73,12,147,222,66,64,107,117,115,222,
+108,214,250,173,106,108,23,245,86,202,217,158,15,121,173,107,7,253,27,255,0,8,49,133,92,96,255,0,118,222,119,10,203,39,58,95,226,10,253,111,69,178,180,150,190,70,31,153,161,195,220,109,236,185,234,154,
+106,172,50,64,30,44,215,106,8,213,175,252,247,66,182,90,224,237,70,161,21,10,90,129,32,206,221,8,237,3,193,95,107,131,133,198,200,37,17,60,208,17,62,136,57,32,173,80,255,0,139,93,154,177,233,98,21,248,
+128,154,92,183,15,45,140,184,95,171,104,7,51,185,119,189,0,94,242,226,49,73,52,148,237,6,249,178,146,79,29,254,139,215,162,12,21,24,132,48,187,126,166,32,121,230,57,157,238,24,71,170,14,137,180,226,8,
+24,247,51,40,104,188,113,158,231,51,243,120,159,65,206,206,7,136,135,212,152,28,117,26,133,163,93,68,101,105,0,110,185,211,134,86,81,98,49,85,196,199,57,140,119,245,0,255,0,30,40,58,28,66,184,68,235,23,
+44,170,129,13,100,47,99,219,120,221,218,3,135,204,57,170,117,145,87,215,86,58,70,67,35,33,205,240,151,11,92,45,76,58,130,70,0,30,16,113,50,177,248,117,123,227,121,184,107,172,72,239,55,199,238,181,233,
+221,169,111,142,161,120,244,182,17,28,165,195,118,49,205,253,164,217,82,162,196,99,53,17,211,155,231,4,48,155,241,181,254,136,99,101,17,66,9,78,8,136,50,170,168,225,235,36,156,68,209,48,7,226,3,95,127,
+69,71,163,213,205,195,122,75,15,89,163,36,136,101,62,38,51,114,7,60,133,231,209,109,206,219,58,252,10,230,177,170,41,70,87,211,56,199,52,78,18,193,32,238,144,131,246,89,158,208,220,194,196,110,185,78,
+147,87,202,105,223,20,68,128,225,99,101,155,209,62,150,195,89,72,40,234,135,85,44,34,206,143,140,92,173,197,158,4,108,52,54,181,214,149,108,12,170,110,120,220,215,180,236,224,110,10,8,232,198,37,47,80,
+200,102,36,134,139,11,174,178,39,199,144,189,197,173,104,23,36,236,2,228,105,32,101,40,47,145,205,99,27,187,156,108,2,243,198,113,246,152,141,29,45,206,97,241,95,75,142,126,13,243,237,109,181,202,12,126,
+147,212,137,250,226,52,50,102,181,251,165,238,54,7,203,48,10,41,40,160,18,197,43,162,111,92,209,219,35,95,117,66,35,250,250,195,218,49,192,243,214,60,139,102,127,223,243,193,110,64,221,75,143,162,15,85,
+54,69,30,104,38,200,137,230,131,229,205,14,105,5,83,168,132,57,165,146,13,56,21,123,117,14,104,112,177,23,65,203,98,24,43,100,120,150,206,108,141,213,179,196,108,230,251,108,166,157,216,180,71,224,172,
+130,111,154,88,172,255,0,87,54,196,174,137,240,145,171,79,186,243,116,36,155,186,48,124,197,208,103,69,21,125,67,129,158,177,140,35,253,17,217,223,184,220,143,69,236,202,70,196,50,70,220,160,155,146,117,
+46,62,39,197,92,17,56,13,27,111,225,122,54,30,47,55,242,65,227,4,32,12,172,22,111,18,173,139,1,110,8,0,110,131,78,73,116,19,232,155,162,126,108,129,193,19,154,108,16,16,162,112,65,28,84,165,145,1,20,41,
+64,68,58,4,221,1,2,40,65,255,217,0,0};
+
+const char* JuceDemoPluginAudioProcessorEditor::images_jpg = (const char*) resource_JuceDemoPluginAudioProcessorEditor_images_jpg;
+const int JuceDemoPluginAudioProcessorEditor::images_jpgSize = 1141;
 
 
 //[EndFile] You can add extra defines here...
