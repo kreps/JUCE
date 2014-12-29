@@ -16,6 +16,7 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 const float defaultBypass = 0.0f;
 const float defaultGain = 1.0f;
 const float defaultDelay = 0.0f;
+const float defaultDelayTime = 0.01f;
 const float defaultPan = 0.5f;
 
 //==============================================================================
@@ -25,6 +26,7 @@ JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
 	// Set up some default values..
 	m_fGain = defaultGain;
 	m_fDelay = defaultDelay;
+	m_fDelayTime = defaultDelayTime;
 	m_fPan = defaultPan;
     m_fBypass = defaultBypass;
 
@@ -32,7 +34,7 @@ JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
 	lastUIHeight = 200;
 
 	lastPosInfo.resetToDefault();
-	delayPosition = 0;
+	delayPosition = m_fDelayTime;
 }
 
 JuceDemoPluginAudioProcessor::~JuceDemoPluginAudioProcessor()
@@ -58,6 +60,8 @@ float JuceDemoPluginAudioProcessor::getParameter(int index)
             return m_fGain;
         case delayParam:    
             return m_fDelay;
+			 case delayTimeParam:    
+            return m_fDelayTime;
         case panParam:      
             return m_fPan;
         default:            
@@ -81,6 +85,9 @@ void JuceDemoPluginAudioProcessor::setParameter (int index, float newValue)
         case delayParam:    
             m_fDelay    = newValue;  
             break;
+case delayTimeParam:    
+            m_fDelayTime    = newValue;  
+            break;
         case panParam:    
             m_fPan      = newValue;  
             break;
@@ -96,6 +103,7 @@ float JuceDemoPluginAudioProcessor::getParameterDefaultValue (int index)
         case bypassParam: return defaultBypass;
         case gainParam:     return defaultGain;
         case delayParam:    return defaultDelay;
+			case delayTimeParam:    return defaultDelayTime;
         case panParam:    return defaultPan;
         default:            break;
 	}
@@ -110,6 +118,7 @@ const String JuceDemoPluginAudioProcessor::getParameterName(int index)
         case bypassParam:     return "Bypass";
         case gainParam:     return "Gain";
         case delayParam:    return "Delay";
+			case delayTimeParam:    return "Delay time";
         case panParam:    return "Pan";
         default:            break;
     }
@@ -243,6 +252,7 @@ void JuceDemoPluginAudioProcessor::getStateInformation (MemoryBlock& destData)
 	xml.setAttribute ("uiHeight", lastUIHeight);
 	xml.setAttribute ("gain", m_fGain);
 	xml.setAttribute ("delay", m_fDelay);
+	xml.setAttribute ("delayTime", m_fDelayTime);
 	xml.setAttribute ("pan", m_fPan);
 
 	// then use this helper function to stuff it into the binary blob and return it..
@@ -268,6 +278,7 @@ void JuceDemoPluginAudioProcessor::setStateInformation (const void* data, int si
 
 			m_fGain  = (float) xmlState->getDoubleAttribute ("gain", m_fGain);
 			m_fDelay = (float) xmlState->getDoubleAttribute ("delay", m_fDelay);
+			m_fDelayTime = (float) xmlState->getDoubleAttribute ("delayTime", m_fDelay);
 			m_fPan = (float) xmlState->getDoubleAttribute ("pan", m_fPan);
 		}
 	}

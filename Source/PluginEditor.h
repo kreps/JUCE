@@ -78,6 +78,7 @@ private:
     //[/UserVariables]
 
     //==============================================================================
+    ScopedPointer<Label> label;
     ScopedPointer<Slider> panSlider;
     ScopedPointer<Label> infoLabel;
     ScopedPointer<Slider> gainSlider;
@@ -87,6 +88,8 @@ private:
     ScopedPointer<Label> panInfoLabel;
     ScopedPointer<Label> delayAmountInfoLabel;
     ScopedPointer<TextButton> textButton;
+    ScopedPointer<Slider> delayTimeSlider;
+    ScopedPointer<Label> delayAmountInfoLabel2;
 
 
     //==============================================================================
