@@ -1,6 +1,8 @@
 *Leaked objects LookAndFeel_V2 ???
 *Rotary slider access juce resource image and draw image background
-*Mid-Side processing
 *Delay length 
+*c++ tutorial++
+
 +Gain slider skew 0.3
 +CustomLookAndFeel
++Mid-Side processing
