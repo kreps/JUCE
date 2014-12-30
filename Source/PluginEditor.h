@@ -90,6 +90,10 @@ private:
     ScopedPointer<TextButton> textButton;
     ScopedPointer<Slider> delayTimeSlider;
     ScopedPointer<Label> delayAmountInfoLabel2;
+    ScopedPointer<Label> label2;
+    ScopedPointer<Label> label3;
+    ScopedPointer<Slider> midSideSlider;
+    ScopedPointer<Label> label4;
 
 
     //==============================================================================

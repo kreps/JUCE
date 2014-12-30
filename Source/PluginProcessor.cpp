@@ -18,6 +18,7 @@ const float defaultGain = 1.0f;
 const float defaultDelay = 0.0f;
 const float defaultDelayTime = 0.01f;
 const float defaultPan = 0.5f;
+const float defaultMidSide = 0.5f;
 
 //==============================================================================
 JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
@@ -29,12 +30,13 @@ JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
 	m_fDelayTime = defaultDelayTime;
 	m_fPan = defaultPan;
     m_fBypass = defaultBypass;
+    m_fMidSideParam= defaultMidSide;
 
 	lastUIWidth = 400;
 	lastUIHeight = 200;
 
 	lastPosInfo.resetToDefault();
-	delayPosition = m_fDelayTime;
+	delayPosition = 0;
 }
 
 JuceDemoPluginAudioProcessor::~JuceDemoPluginAudioProcessor()
@@ -54,17 +56,19 @@ float JuceDemoPluginAudioProcessor::getParameter(int index)
     // UI-related, or anything at all that may block in any way!
     switch (index)
     {
-        case bypassParam:   
+        case bypassParam:
             return m_fBypass;
-        case gainParam:     
+        case gainParam:
             return m_fGain;
-        case delayParam:    
+        case delayParam:
             return m_fDelay;
-			 case delayTimeParam:    
+        case delayTimeParam:
             return m_fDelayTime;
-        case panParam:      
+        case panParam:
             return m_fPan;
-        default:            
+        case midSideParam:
+            return m_fMidSideParam;
+        default:
             return 0.0f;
     }
 }
@@ -85,11 +89,14 @@ void JuceDemoPluginAudioProcessor::setParameter (int index, float newValue)
         case delayParam:    
             m_fDelay    = newValue;  
             break;
-case delayTimeParam:    
+        case delayTimeParam:
             m_fDelayTime    = newValue;  
             break;
         case panParam:    
             m_fPan      = newValue;  
+            break;
+        case midSideParam:
+            m_fMidSideParam = newValue;
             break;
         default:            
             break;
@@ -103,8 +110,9 @@ float JuceDemoPluginAudioProcessor::getParameterDefaultValue (int index)
         case bypassParam: return defaultBypass;
         case gainParam:     return defaultGain;
         case delayParam:    return defaultDelay;
-			case delayTimeParam:    return defaultDelayTime;
+        case delayTimeParam:    return defaultDelayTime;
         case panParam:    return defaultPan;
+        case midSideParam:    return defaultMidSide;
         default:            break;
 	}
 
@@ -115,11 +123,12 @@ const String JuceDemoPluginAudioProcessor::getParameterName(int index)
 {
     switch (index)
     {
-        case bypassParam:     return "Bypass";
-        case gainParam:     return "Gain";
-        case delayParam:    return "Delay";
-			case delayTimeParam:    return "Delay time";
-        case panParam:    return "Pan";
+        case bypassParam:     return "bypass";
+        case gainParam:     return "gain";
+        case delayParam:    return "delay";
+        case delayTimeParam:    return "delay time";
+        case panParam:    return "pan";
+        case midSideParam:    return "mid/side";
         default:            break;
     }
 
@@ -156,7 +165,7 @@ void JuceDemoPluginAudioProcessor::reset()
 
 void JuceDemoPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
-    if (m_fBypass==1.0f)
+    if (m_fBypass==1.0f || getNumInputChannels() < 2)
     {
         return;
     }
@@ -166,10 +175,10 @@ void JuceDemoPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, Midi
 	int channel, dp = 0;
 
 	// Go through the incoming data, and apply our gain to it...
-    for (channel = 0; channel < getNumInputChannels(); ++channel)
-    {
-        buffer.applyGain(channel, 0, buffer.getNumSamples(), this->m_fGain);//apply gain parameter
-    }
+    //for (channel = 0; channel < getNumInputChannels(); ++channel)
+    //{
+    //    buffer.applyGain(channel, 0, buffer.getNumSamples(), this->m_fGain);//apply gain parameter
+    //}
 
 	float lGain = 1;
 	float rGain = 1;
@@ -179,37 +188,43 @@ void JuceDemoPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, Midi
 	if (m_fPan > 0.5f){
 		lGain =1- (m_fPan-0.5f)*2;
 	}
+
+    float* leftData = buffer.getWritePointer(0);
+    float* rightData = buffer.getWritePointer(1);
+    for (int i = 0; i < numSamples; ++i)
+    {
+        //float coef_S = m_fMidSideParam*0.5;
+
+        float m = (1.0f - m_fMidSideParam)*(leftData[i] + rightData[i]) / 2;
+        float s = ((rightData[i] - leftData[i]) / 2) * m_fMidSideParam;
+
+        leftData[i] = (m - s)*lGain*m_fGain;
+        rightData[i] = (m + s)*rGain*m_fGain;
+    }
 	//pan0 -> l1 r0
 	//pan1 -> l0 r1
 	// Apply our delay effect to the new output..
 	
-	for (channel = 0; channel < getNumInputChannels(); ++channel)
-	{
-		float* channelData = buffer.getWritePointer (channel);
-		
+	//for (channel = 0; channel < getNumInputChannels(); ++channel)
+	//{
+	//	float* channelData = buffer.getWritePointer (channel);
+	//	
 
-		//delay
-		float* delayData = delayBuffer.getWritePointer (juce::jmin (channel, delayBuffer.getNumChannels() - 1));
-		dp = delayPosition;
+	//	//delay
+	//	float* delayData = delayBuffer.getWritePointer (juce::jmin (channel, delayBuffer.getNumChannels() - 1));
+	//	dp = delayPosition;
 
-		for (int i = 0; i < numSamples; ++i)
-		{
-			//pan
-			if (channel== 0){ //lef tchannel
-				channelData[i] =  channelData[i]*lGain;
-			}
-			if (channel== 1){ //right channel
-				channelData[i] =  channelData[i]*rGain;
-			}
-			const float in = channelData[i];
-			channelData[i] += delayData[dp];
-			delayData[dp] = (delayData[dp] + in) * m_fDelay;
-			if (++dp >= delayBuffer.getNumSamples())
-				dp = 0;
-		}
-	}
+	//	for (int i = 0; i < numSamples; ++i)
+	//	{
+	//		const float in = channelData[i];
+	//		channelData[i] += delayData[dp];
+	//		delayData[dp] = (delayData[dp] + in) * m_fDelay;
+	//		if (++dp >= delayBuffer.getNumSamples())
+	//			dp = 0;
+	//	}
+	//}
 
-	delayPosition = dp;
+	//delayPosition = dp;
 
 	// In case we have more outputs than inputs, we'll clear any output
 	// channels that didn't contain input data, (because these aren't

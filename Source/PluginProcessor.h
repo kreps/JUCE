@@ -88,11 +88,12 @@ public:
         delayParam,
 		delayTimeParam,
 		panParam,
+        midSideParam,
 
         totalNumParams
     };
 
-    float m_fBypass,m_fGain, m_fDelay, m_fPan,m_fDelayTime;
+    float m_fBypass,m_fGain, m_fDelay, m_fPan,m_fDelayTime,m_fMidSideParam;
 
 
 private:
