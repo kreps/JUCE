@@ -2,6 +2,7 @@
 *Rotary slider access juce resource image and draw image background
 *Delay length 
 *c++ tutorial++
+*implement mda detune
 
 +Gain slider skew 0.3
 +CustomLookAndFeel

@@ -87,7 +87,6 @@ private:
     ScopedPointer<Label> gainInfoLabel;
     ScopedPointer<Label> panInfoLabel;
     ScopedPointer<Label> delayAmountInfoLabel;
-    ScopedPointer<TextButton> textButton;
     ScopedPointer<Slider> delayTimeSlider;
     ScopedPointer<Label> delayAmountInfoLabel2;
     ScopedPointer<Label> label2;

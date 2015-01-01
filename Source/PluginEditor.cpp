@@ -301,10 +301,10 @@ struct CustomLookAndFeel    : public LookAndFeel_V2
         }
 
         {
-            const float lineThickness = jmin (15.0f, jmin (width, height) * 0.45f) * 0.1f;
+            /*const float lineThickness = jmin (15.0f, jmin (width, height) * 0.45f) * 0.1f;
             Path outlineArc;
 			outlineArc.addEllipse(rx, ry, rw, rw);
-            g.strokePath (outlineArc, PathStrokeType (lineThickness));
+            g.strokePath (outlineArc, PathStrokeType (lineThickness));*/
         }
 		Path needle;
 		Rectangle<float> r (rx, ry, rw, rw);
@@ -529,7 +529,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     panSlider->setTooltip (TRANS("pan"));
     panSlider->setRange (0, 1, 0);
     panSlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    panSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    panSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
     panSlider->setColour (Slider::backgroundColourId, Colour (0x00c95c5c));
     panSlider->setColour (Slider::textBoxTextColourId, Colours::white);
     panSlider->setColour (Slider::textBoxHighlightColourId, Colour (0xff1111ee));
@@ -549,15 +549,15 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     gainSlider->setTooltip (TRANS("gain"));
     gainSlider->setRange (0, 1, 0);
     gainSlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    gainSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    gainSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
     gainSlider->addListener (this);
     gainSlider->setSkewFactor (0.3);
 
     addAndMakeVisible (delaySlider = new Slider ("delay"));
     delaySlider->setTooltip (TRANS("delay gain\n"));
-    delaySlider->setRange (0, 1, 0.1);
+    delaySlider->setRange (0, 1, 0);
     delaySlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    delaySlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    delaySlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
     delaySlider->setColour (Slider::trackColourId, Colours::white);
     delaySlider->setColour (Slider::textBoxHighlightColourId, Colour (0xff1111ee));
     delaySlider->setColour (Slider::textBoxOutlineColourId, Colours::grey);
@@ -593,9 +593,6 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     delayAmountInfoLabel->setColour (Label::textColourId, Colour (0xff282828));
     delayAmountInfoLabel->setColour (TextEditor::textColourId, Colours::black);
     delayAmountInfoLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
-    addAndMakeVisible (textButton = new TextButton ("new button"));
-    textButton->addListener (this);
 
     addAndMakeVisible (delayTimeSlider = new Slider ("new slider"));
     delayTimeSlider->setRange (0, 10000, 0);
@@ -689,7 +686,6 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
     gainInfoLabel = nullptr;
     panInfoLabel = nullptr;
     delayAmountInfoLabel = nullptr;
-    textButton = nullptr;
     delayTimeSlider = nullptr;
     delayAmountInfoLabel2 = nullptr;
     label2 = nullptr;
@@ -750,7 +746,6 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     gainInfoLabel->setBounds (10, 110, 80, 30);
     panInfoLabel->setBounds (110, 110, 80, 30);
     delayAmountInfoLabel->setBounds (210, 110, 80, 30);
-    textButton->setBounds (200, 224, 150, 24);
     delayTimeSlider->setBounds (300, 55, 60, 60);
     delayAmountInfoLabel2->setBounds (290, 110, 80, 30);
     label2->setBounds (110, 35, 80, 30);
@@ -821,11 +816,6 @@ void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasCli
         //[UserButtonCode_bypassButton] -- add your button handler code here..
         getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::bypassParam, (float)bypassButton->getToggleState());
         //[/UserButtonCode_bypassButton]
-    }
-    else if (buttonThatWasClicked == textButton)
-    {
-        //[UserButtonCode_textButton] -- add your button handler code here..
-        //[/UserButtonCode_textButton]
     }
 
     //[UserbuttonClicked_Post]
@@ -1004,7 +994,7 @@ BEGIN_JUCER_METADATA
   <SLIDER name="pan" id="324eec4d274919f3" memberName="panSlider" virtualName=""
           explicitFocusOrder="0" pos="120 55 60 60" tooltip="pan" bkgcol="c95c5c"
           textboxtext="ffffffff" textboxhighlight="ff1111ee" textboxoutline="ff808080"
-          min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
+          min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="" id="3084384ee25f6d12" memberName="infoLabel" virtualName=""
          explicitFocusOrder="0" pos="10 4 400 25" textCol="ffffffff" edTextCol="ff000000"
@@ -1013,14 +1003,13 @@ BEGIN_JUCER_METADATA
          bold="0" italic="0" justification="33"/>
   <SLIDER name="gainSlider" id="c31acc4ca22491a9" memberName="gainSlider"
           virtualName="" explicitFocusOrder="0" pos="20 55 60 60" tooltip="gain"
-          min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
+          min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.29999999999999999"/>
   <SLIDER name="delay" id="37878e5e9fd60a08" memberName="delaySlider" virtualName=""
           explicitFocusOrder="0" pos="220 55 60 60" tooltip="delay gain&#10;"
           trackcol="ffffffff" textboxhighlight="ff1111ee" textboxoutline="ff808080"
-          min="0" max="1" int="0.10000000000000001" style="RotaryVerticalDrag"
-          textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="1"/>
+          min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <TOGGLEBUTTON name="new toggle button" id="d59c4ede9f259185" memberName="bypassButton"
                 virtualName="" explicitFocusOrder="0" pos="192 184 64 24" buttonText="bypass"
                 connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
@@ -1039,9 +1028,6 @@ BEGIN_JUCER_METADATA
          edTextCol="ff000000" edBkgCol="0" labelText="amount" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
-  <TEXTBUTTON name="new button" id="f224485d1aa5be5d" memberName="textButton"
-              virtualName="" explicitFocusOrder="0" pos="200 224 150 24" buttonText="new button"
-              connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <SLIDER name="new slider" id="ead45d255e5f5831" memberName="delayTimeSlider"
           virtualName="" explicitFocusOrder="0" pos="300 55 60 60" min="0"
           max="10000" int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
