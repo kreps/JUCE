@@ -93,6 +93,8 @@ private:
     ScopedPointer<Label> label3;
     ScopedPointer<Slider> midSideSlider;
     ScopedPointer<Label> label4;
+    ScopedPointer<Slider> saturationSlider;
+    ScopedPointer<Label> label5;
 
 
     //==============================================================================

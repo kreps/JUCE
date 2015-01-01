@@ -642,6 +642,21 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     label4->setColour (TextEditor::textColourId, Colours::black);
     label4->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
+    addAndMakeVisible (saturationSlider = new Slider ("mid/side slider"));
+    saturationSlider->setRange (0.001, 1, 0);
+    saturationSlider->setSliderStyle (Slider::RotaryVerticalDrag);
+    saturationSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
+    saturationSlider->addListener (this);
+
+    addAndMakeVisible (label5 = new Label ("new label",
+                                           TRANS("test threshold distortion")));
+    label5->setFont (Font ("Aharoni", 10.00f, Font::plain));
+    label5->setJustificationType (Justification::centred);
+    label5->setEditable (false, false, false);
+    label5->setColour (Label::textColourId, Colour (0xff363636));
+    label5->setColour (TextEditor::textColourId, Colours::black);
+    label5->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
 
     //[UserPreSize]
     addAndMakeVisible(resizer = new ResizableCornerComponent(this, &resizeLimits));
@@ -692,6 +707,8 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
     label3 = nullptr;
     midSideSlider = nullptr;
     label4 = nullptr;
+    saturationSlider = nullptr;
+    label5 = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -721,6 +738,9 @@ void JuceDemoPluginAudioProcessorEditor::paint (Graphics& g)
     g.setColour (Colour (0xff878787));
     g.fillRoundedRectangle (10.0f, 150.0f, 80.0f, 100.0f, 10.000f);
 
+    g.setColour (Colour (0xff878787));
+    g.fillRoundedRectangle (110.0f, 150.0f, 80.0f, 100.0f, 10.000f);
+
     //[UserPaint] Add your own custom painting code here..
     /*JuceDemoPluginAudioProcessor* p = getProcessor();
 
@@ -742,7 +762,7 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     infoLabel->setBounds (10, 4, 400, 25);
     gainSlider->setBounds (20, 55, 60, 60);
     delaySlider->setBounds (220, 55, 60, 60);
-    bypassButton->setBounds (192, 184, 64, 24);
+    bypassButton->setBounds (272, 184, 64, 24);
     gainInfoLabel->setBounds (10, 110, 80, 30);
     panInfoLabel->setBounds (110, 110, 80, 30);
     delayAmountInfoLabel->setBounds (210, 110, 80, 30);
@@ -752,6 +772,8 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     label3->setBounds (10, 35, 80, 30);
     midSideSlider->setBounds (20, 165, 60, 75);
     label4->setBounds (10, 145, 80, 30);
+    saturationSlider->setBounds (120, 165, 60, 75);
+    label5->setBounds (110, 144, 80, 30);
     //[UserResized] Add your own custom resize handling here..
     resizer->setBounds(getWidth() - 16, getHeight() - 16, 16, 16);
 
@@ -800,6 +822,13 @@ void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatW
         getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::midSideParam,
                                                   (float)midSideSlider->getValue());
         //[/UserSliderCode_midSideSlider]
+    }
+    else if (sliderThatWasMoved == saturationSlider)
+    {
+        //[UserSliderCode_saturationSlider] -- add your slider handling code here..
+		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::thresholdParam,
+                                                  (float)saturationSlider->getValue());
+        //[/UserSliderCode_saturationSlider]
     }
 
     //[UsersliderValueChanged_Post]
@@ -985,6 +1014,7 @@ BEGIN_JUCER_METADATA
     <ROUNDRECT pos="110 40 80 100" cornerSize="10" fill="solid: ff878787" hasStroke="0"/>
     <ROUNDRECT pos="210 40 160 100" cornerSize="10" fill="solid: ff878787" hasStroke="0"/>
     <ROUNDRECT pos="10 150 80 100" cornerSize="10" fill="solid: ff878787" hasStroke="0"/>
+    <ROUNDRECT pos="110 150 80 100" cornerSize="10" fill="solid: ff878787" hasStroke="0"/>
   </BACKGROUND>
   <LABEL name="new label" id="b192efc88f0f8308" memberName="label" virtualName=""
          explicitFocusOrder="0" pos="210 35 160 30" textCol="ff363636"
@@ -1011,7 +1041,7 @@ BEGIN_JUCER_METADATA
           min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <TOGGLEBUTTON name="new toggle button" id="d59c4ede9f259185" memberName="bypassButton"
-                virtualName="" explicitFocusOrder="0" pos="192 184 64 24" buttonText="bypass"
+                virtualName="" explicitFocusOrder="0" pos="272 184 64 24" buttonText="bypass"
                 connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
   <LABEL name="new label" id="dde6ff72637f37e7" memberName="gainInfoLabel"
          virtualName="" explicitFocusOrder="0" pos="10 110 80 30" textCol="ff323232"
@@ -1056,6 +1086,15 @@ BEGIN_JUCER_METADATA
          edTextCol="ff000000" edBkgCol="0" labelText="mid/side" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
+  <SLIDER name="mid/side slider" id="2a577f0fc0372cc6" memberName="saturationSlider"
+          virtualName="" explicitFocusOrder="0" pos="120 165 60 75" min="0.001"
+          max="1" int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+  <LABEL name="new label" id="eda4710f044030be" memberName="label5" virtualName=""
+         explicitFocusOrder="0" pos="110 144 80 30" textCol="ff363636"
+         edTextCol="ff000000" edBkgCol="0" labelText="test threshold distortion"
+         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
+         fontname="Aharoni" fontsize="10" bold="0" italic="0" justification="36"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

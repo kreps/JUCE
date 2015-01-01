@@ -59,13 +59,15 @@ public:
     int getNumPrograms() override                                               { return 1; }
     int getCurrentProgram() override                                            { return 0; }
     void setCurrentProgram (int /*index*/) override                             {}
-    const String getProgramName (int /*index*/) override                        { return "Default"; }
+    const String getProgramName (int /*index*/) override                        { return "Default2"; }
     void changeProgramName (int /*index*/, const String& /*newName*/) override  {}
 
     //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
-
+	float Saturate(float input, float threshold);
+	float sigmoid(float input);
+	float distortion(float input, float threashold);
     //==============================================================================
     // These properties are public so that our editor component can access them
     // A bit of a hacky way to do it, but it's only a demo! Obviously in your own
@@ -89,6 +91,7 @@ public:
 		delayTimeParam,
 		panParam,
         midSideParam,
+		thresholdParam,
 
         totalNumParams
 	};
@@ -97,7 +100,7 @@ public:
 		RIGHT_CHANNEL
 	};
 
-    float m_fBypass,m_fGain, m_fDelay, m_fPan,m_fDelayTime,m_fMidSideParam;
+    float m_fBypass,m_fGain, m_fDelay, m_fPan,m_fDelayTime,m_fMidSideParam,m_fThreshold;
 
 
 private:

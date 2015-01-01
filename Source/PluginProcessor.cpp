@@ -32,7 +32,7 @@ JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
 	m_fPan = kfDefaultPan;
 	m_fBypass = kfDefaultBypass;
 	m_fMidSideParam = kfDefaultMidSide;
-
+	m_fThreshold = 1.0f;
 	lastUIWidth = 400;
 	lastUIHeight = 200;
 
@@ -68,6 +68,8 @@ float JuceDemoPluginAudioProcessor::getParameter(int index)
 		return m_fPan;
 	case midSideParam:
 		return m_fMidSideParam;
+	case thresholdParam:
+		return m_fThreshold;
 	default:
 		return 0.0f;
 	}
@@ -98,6 +100,8 @@ void JuceDemoPluginAudioProcessor::setParameter(int index, float newValue)
 	case midSideParam:
 		m_fMidSideParam = newValue;
 		break;
+	case thresholdParam:
+		m_fThreshold = newValue;
 	default:
 		break;
 	}
@@ -113,6 +117,7 @@ float JuceDemoPluginAudioProcessor::getParameterDefaultValue(int index)
 	case delayTimeParam:    return kfDefaultDelayTime;
 	case panParam:    return kfDefaultPan;
 	case midSideParam:    return kfDefaultMidSide;
+	case thresholdParam: return 1.0f;
 	default:            break;
 	}
 
@@ -129,6 +134,7 @@ const String JuceDemoPluginAudioProcessor::getParameterName(int index)
 	case delayTimeParam:    return "delay time";
 	case panParam:    return "pan";
 	case midSideParam:    return "mid/side";
+	case thresholdParam: return "threshold";
 	default:            break;
 	}
 
@@ -162,6 +168,47 @@ void JuceDemoPluginAudioProcessor::reset()
 	delayBuffer.clear();
 }
 
+float JuceDemoPluginAudioProcessor::sigmoid(float x) 
+{ 
+	if(fabs(x)<1) 
+		return x*(1.5f - 0.5f*x*x); 
+	else 
+		return x > 0.f ? 1.f : -1.f; 
+}
+
+float JuceDemoPluginAudioProcessor::distortion(float in, float threshold)
+{
+  if (in>threshold || in<-threshold)
+  {
+    in= (in + fabs(fabs(fmod(in - threshold, threshold*4)) - threshold*2) - threshold)/2.0f;
+  }
+  return in;
+}
+
+float JuceDemoPluginAudioProcessor::Saturate(float x, float t) { 
+	if(abs(x)<t) 
+		return x; 
+	else { 
+		if(x > 0.0f) 
+		    return   t + (1.f-t)*sigmoid((x-t)/((1-t)*1.5f)); 
+		else
+			return -(t + (1.f-t)*sigmoid((-x-t)/((1-t)*1.5f))); } } 
+
+
+//float JuceDemoPluginAudioProcessor::Saturate(float x, float t)
+//{
+//	//threshold
+//	//t = 0.5f;
+//	if(fabs(x)<t)
+//		return x;
+//	else
+//	{
+//		if(x > 0.f)
+//			return t + (1.f-t)*tanh((x-t)/(1-t));
+//		else
+//			return -(t + (1.f-t)*tanh((-x-t)/(1-t)));
+//	}
+//}
 
 void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
@@ -209,8 +256,8 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 			float m = fMidGain*(leftData[i] + rightData[i]) / 2;
 			float s = fSideGain*((rightData[i] - leftData[i]) / 2);
 
-			leftData[i] = (m - s)*lGain*m_fGain;
-			rightData[i] = (m + s)*rGain*m_fGain;
+			leftData[i] = distortion((m - s)*lGain*m_fGain,m_fThreshold);
+			rightData[i] = distortion((m + s)*rGain*m_fGain,m_fThreshold);
 
 			//delay implementation
 			const float inLeft = leftData[i];
