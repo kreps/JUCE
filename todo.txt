@@ -4,7 +4,6 @@
 *c++ tutorial++
 *implement mda detune
 
-
 +Delay length 
 +Gain slider skew 0.3
 +CustomLookAndFeel
