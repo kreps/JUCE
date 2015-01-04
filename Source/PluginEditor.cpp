@@ -649,7 +649,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     saturationSlider->addListener (this);
 
     addAndMakeVisible (label5 = new Label ("new label",
-                                           TRANS("test threshold distortion")));
+                                           TRANS("distortion")));
     label5->setFont (Font ("Aharoni", 10.00f, Font::plain));
     label5->setJustificationType (Justification::centred);
     label5->setEditable (false, false, false);
@@ -1126,9 +1126,9 @@ BEGIN_JUCER_METADATA
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="eda4710f044030be" memberName="label5" virtualName=""
          explicitFocusOrder="0" pos="110 144 80 30" textCol="ff363636"
-         edTextCol="ff000000" edBkgCol="0" labelText="test threshold distortion"
-         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
-         fontname="Aharoni" fontsize="10" bold="0" italic="0" justification="36"/>
+         edTextCol="ff000000" edBkgCol="0" labelText="distortion" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
+         fontsize="10" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="f53c45ed3e69f449" memberName="label6" virtualName=""
          explicitFocusOrder="0" pos="210 145 80 30" textCol="ff363636"
          edTextCol="ff000000" edBkgCol="0" labelText="hi pass filter"
