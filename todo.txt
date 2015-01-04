@@ -4,6 +4,7 @@
 *c++ tutorial++
 *implement mda detune
 
++JUCE IIRfilter implementation
 +Delay length 
 +Gain slider skew 0.3
 +CustomLookAndFeel

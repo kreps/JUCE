@@ -95,6 +95,8 @@ private:
     ScopedPointer<Label> label4;
     ScopedPointer<Slider> saturationSlider;
     ScopedPointer<Label> label5;
+    ScopedPointer<Label> label6;
+    ScopedPointer<Slider> hpfSlider;
 
 
     //==============================================================================

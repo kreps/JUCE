@@ -92,6 +92,7 @@ public:
 		panParam,
         midSideParam,
 		thresholdParam,
+		hpfParam,
 
         totalNumParams
 	};
@@ -101,7 +102,10 @@ public:
 	};
 
     float m_fBypass,m_fGain, m_fDelay, m_fPan,m_fDelayTime,m_fMidSideParam,m_fThreshold;
-
+	IIRFilter m_filterL,m_filterR;
+	IIRCoefficients m_ic;
+	double m_dSampleRate;
+	double m_dFreq;
 
 private:
     //==============================================================================

@@ -39,6 +39,11 @@ JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
 
 	lastPosInfo.resetToDefault();
 	delayPosition = 0;
+	m_dSampleRate = getSampleRate();
+	m_dFreq = 0;
+	m_ic = IIRCoefficients::makeHighPass (m_dSampleRate, m_dFreq);
+	m_filterL.setCoefficients( m_ic );
+	m_filterR.setCoefficients( m_ic );
 }
 
 JuceDemoPluginAudioProcessor::~JuceDemoPluginAudioProcessor()
@@ -71,6 +76,8 @@ float JuceDemoPluginAudioProcessor::getParameter(int index)
 		return m_fMidSideParam;
 	case thresholdParam:
 		return m_fThreshold;
+	case hpfParam:
+		return m_dFreq;
 	default:
 		return 0.0f;
 	}
@@ -103,6 +110,10 @@ void JuceDemoPluginAudioProcessor::setParameter(int index, float newValue)
 		break;
 	case thresholdParam:
 		m_fThreshold = newValue;
+		break;
+	case hpfParam:
+		m_dFreq = newValue;
+		break;
 	default:
 		break;
 	}
@@ -119,6 +130,7 @@ float JuceDemoPluginAudioProcessor::getParameterDefaultValue(int index)
 	case panParam:    return kfDefaultPan;
 	case midSideParam:    return kfDefaultMidSide;
 	case thresholdParam: return 1.0f;
+	case hpfParam: return 0.0;
 	default:            break;
 	}
 
@@ -129,14 +141,15 @@ const String JuceDemoPluginAudioProcessor::getParameterName(int index)
 {
 	switch (index)
 	{
-	case bypassParam:     return "bypass";
-	case gainParam:     return "gain";
-	case delayParam:    return "delay";
+	case bypassParam:		return "bypass";
+	case gainParam:			return "gain";
+	case delayParam:		return "delay";
 	case delayTimeParam:    return "delay time";
-	case panParam:    return "pan";
-	case midSideParam:    return "mid/side";
-	case thresholdParam: return "threshold";
-	default:            break;
+	case panParam:			return "pan";
+	case midSideParam:		return "mid/side";
+	case thresholdParam:	return "threshold";
+	case hpfParam:			return "hpf";
+	default:				break;
 	}
 
 	return String::empty;
@@ -213,6 +226,7 @@ float JuceDemoPluginAudioProcessor::Saturate(float x, float t) {
 
 void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
+
 	if (m_fBypass == 1.0f || getNumInputChannels() < 2)
 	{
 		return;
@@ -248,8 +262,12 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 		float* leftDelayData = delayBuffer.getWritePointer (LEFT_CHANNEL);
 		float* rightDelayData = delayBuffer.getWritePointer (RIGHT_CHANNEL);
 		dp = delayPosition;
-
-
+		m_ic = IIRCoefficients::makeHighPass (getSampleRate(), m_dFreq);
+		m_filterL.setCoefficients( m_ic );
+		m_filterR.setCoefficients( m_ic );
+		m_filterL.processSamples(leftData,numSamples);
+		m_filterR.processSamples(rightData,numSamples);
+		
 		for (int i = 0; i < numSamples; ++i)
 		{
 			//float coef_S = m_fMidSideParam*0.5;
@@ -269,6 +287,7 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 			rightData[i] += rightDelayData[dp];
 			rightDelayData[dp] = (inRight) * m_fDelay;
 
+			
 			if (++dp >= static_cast<int>(m_fDelayTime * knMaxDelayBufferLength))
 				dp = 0;
 		}
