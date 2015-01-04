@@ -595,7 +595,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     delayAmountInfoLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (delayTimeSlider = new Slider ("new slider"));
-    delayTimeSlider->setRange (0, 10000, 0);
+    delayTimeSlider->setRange (0, 1, 0);
     delayTimeSlider->setSliderStyle (Slider::RotaryVerticalDrag);
     delayTimeSlider->setTextBoxStyle (Slider::TextBoxBelow, true, 80, 20);
     delayTimeSlider->addListener (this);
@@ -814,6 +814,8 @@ void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatW
     else if (sliderThatWasMoved == delayTimeSlider)
     {
         //[UserSliderCode_delayTimeSlider] -- add your slider handling code here..
+		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::delayTimeParam,
+			(float)delayTimeSlider->getValue());
         //[/UserSliderCode_delayTimeSlider]
     }
     else if (sliderThatWasMoved == midSideSlider)
@@ -1060,7 +1062,7 @@ BEGIN_JUCER_METADATA
          fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="new slider" id="ead45d255e5f5831" memberName="delayTimeSlider"
           virtualName="" explicitFocusOrder="0" pos="300 55 60 60" min="0"
-          max="10000" int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
+          max="1" int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
           textBoxEditable="0" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="3b34631ac55e0fe6" memberName="delayAmountInfoLabel2"
          virtualName="" explicitFocusOrder="0" pos="290 110 80 30" textCol="ff282828"

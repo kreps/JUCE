@@ -19,11 +19,12 @@ const float kfDefaultDelay = 0.0f;
 const float kfDefaultDelayTime = 0.01f;
 const float kfDefaultPan = 0.5f;
 const float kfDefaultMidSide = 0.5f;
+const int knMaxDelayBufferLength= 24000;
 
 
 //==============================================================================
 JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
-	: delayBuffer(2, 12000)
+	: delayBuffer(2, knMaxDelayBufferLength)
 {
 	// Set up some default values..
 	m_fGain = kfDefaultGain;
@@ -262,13 +263,13 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 			//delay implementation
 			const float inLeft = leftData[i];
 			leftData[i] += leftDelayData[dp];
-			leftDelayData[dp] = (leftDelayData[dp] + inLeft) * m_fDelay;
+			leftDelayData[dp] = ( inLeft) * m_fDelay;
 
 			const float inRight = rightData[i];
 			rightData[i] += rightDelayData[dp];
-			rightDelayData[dp] = (rightDelayData[dp] + inRight) * m_fDelay;
+			rightDelayData[dp] = (inRight) * m_fDelay;
 
-			if (++dp >= delayBuffer.getNumSamples())
+			if (++dp >= static_cast<int>(m_fDelayTime * knMaxDelayBufferLength))
 				dp = 0;
 		}
 		delayPosition = dp;

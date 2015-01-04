@@ -1,9 +1,11 @@
+*Delay time change glitch fix
 *Leaked objects LookAndFeel_V2 ???
 *Rotary slider access juce resource image and draw image background
-*Delay length 
 *c++ tutorial++
 *implement mda detune
 
+
++Delay length 
 +Gain slider skew 0.3
 +CustomLookAndFeel
 +Mid-Side processing
