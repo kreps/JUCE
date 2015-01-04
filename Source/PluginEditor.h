@@ -59,6 +59,8 @@ public:
     // Binary resources:
     static const char* images_jpg;
     static const int images_jpgSize;
+    static const char* btn_jpeg;
+    static const int btn_jpegSize;
 
 
 private:
@@ -97,6 +99,8 @@ private:
     ScopedPointer<Label> label5;
     ScopedPointer<Label> label6;
     ScopedPointer<Slider> hpfSlider;
+    ScopedPointer<ImageButton> imageButton;
+    ScopedPointer<Slider> imageSlider;
 
 
     //==============================================================================
