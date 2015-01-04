@@ -1,4 +1,4 @@
 Kreps-JUCE
 ==========
 
-Learning to develop audio vst plugins.
+Learning to develop audio vst plugins with JUCE framework.
