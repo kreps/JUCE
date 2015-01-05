@@ -1,3 +1,4 @@
+*Functionalities to separate classes
 *Delay time change glitch fix
 *Leaked objects LookAndFeel_V2 ???
 *Rotary slider access juce resource image and draw image background
