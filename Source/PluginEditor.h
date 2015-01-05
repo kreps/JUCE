@@ -80,7 +80,7 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<Label> label;
+    ScopedPointer<Label> delayHeader;
     ScopedPointer<Slider> panSlider;
     ScopedPointer<Label> infoLabel;
     ScopedPointer<Slider> gainSlider;
@@ -88,16 +88,16 @@ private:
     ScopedPointer<ToggleButton> bypassButton;
     ScopedPointer<Label> gainInfoLabel;
     ScopedPointer<Label> panInfoLabel;
-    ScopedPointer<Label> delayAmountInfoLabel;
+    ScopedPointer<Label> delayAmountValueLabel;
     ScopedPointer<Slider> delayTimeSlider;
-    ScopedPointer<Label> delayAmountInfoLabel2;
-    ScopedPointer<Label> label2;
-    ScopedPointer<Label> label3;
+    ScopedPointer<Label> delayTimeValueLabel;
+    ScopedPointer<Label> panHeader;
+    ScopedPointer<Label> inputHeaderLabel;
     ScopedPointer<Slider> midSideSlider;
-    ScopedPointer<Label> label4;
+    ScopedPointer<Label> midsideHeader;
     ScopedPointer<Slider> saturationSlider;
-    ScopedPointer<Label> label5;
-    ScopedPointer<Label> label6;
+    ScopedPointer<Label> distortionHeader;
+    ScopedPointer<Label> hpfHeader;
     ScopedPointer<Slider> hpfSlider;
     ScopedPointer<ImageButton> imageButton;
     ScopedPointer<Slider> imageSlider;
