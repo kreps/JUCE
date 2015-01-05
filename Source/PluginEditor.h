@@ -56,11 +56,6 @@ public:
     void sliderValueChanged (Slider* sliderThatWasMoved);
     void buttonClicked (Button* buttonThatWasClicked);
 
-    // Binary resources:
-    static const char* images_jpg;
-    static const int images_jpgSize;
-    static const char* btn_jpeg;
-    static const int btn_jpegSize;
 
 
 private:
@@ -99,8 +94,9 @@ private:
     ScopedPointer<Label> distortionHeader;
     ScopedPointer<Label> hpfHeader;
     ScopedPointer<Slider> hpfSlider;
-    ScopedPointer<ImageButton> imageButton;
-    ScopedPointer<Slider> imageSlider;
+    ScopedPointer<Slider> reverbSizeSlider;
+    ScopedPointer<Label> midsideInfoLabel;
+    ScopedPointer<Label> reverbSizeHeader;
 
 
     //==============================================================================

@@ -59,7 +59,7 @@ public:
     int getNumPrograms() override                                               { return 1; }
     int getCurrentProgram() override                                            { return 0; }
     void setCurrentProgram (int /*index*/) override                             {}
-    const String getProgramName (int /*index*/) override                        { return "Default2"; }
+    const String getProgramName (int /*index*/) override                        { return "Default"; }
     void changeProgramName (int /*index*/, const String& /*newName*/) override  {}
 
     //==============================================================================
@@ -93,7 +93,7 @@ public:
         midSideParam,
 		thresholdParam,
 		hpfParam,
-
+		reverbSizeParam,
         totalNumParams
 	};
 	enum Channel{
@@ -101,11 +101,10 @@ public:
 		RIGHT_CHANNEL
 	};
 
-    float m_fBypass,m_fGain, m_fDelay, m_fPan,m_fDelayTime,m_fMidSideParam,m_fThreshold;
+    float m_fBypass,m_fGain, m_fDelay, m_fPan,m_fDelayTime,m_fMidSideParam,m_fThreshold,m_dFreq,m_fReverbSize;
 	IIRFilter m_filterL,m_filterR;
 	IIRCoefficients m_ic;
-	double m_dSampleRate;
-	double m_dFreq;
+	juce::Reverb m_Reverb;
 
 private:
     //==============================================================================

@@ -1,3 +1,4 @@
+*Full reverb implementation
 *Functionalities to separate classes
 *Delay time change glitch fix
 *Leaked objects LookAndFeel_V2 ???
@@ -5,6 +6,7 @@
 *c++ tutorial++
 *implement mda detune
 
++JUCE reverb size implementation
 +JUCE IIRfilter implementation
 +Delay length 
 +Gain slider skew 0.3

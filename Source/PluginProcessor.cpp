@@ -34,16 +34,17 @@ JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
 	m_fBypass = kfDefaultBypass;
 	m_fMidSideParam = kfDefaultMidSide;
 	m_fThreshold = 1.0f;
+	m_fReverbSize = 0.1f;
 	lastUIWidth = 400;
 	lastUIHeight = 200;
 
 	lastPosInfo.resetToDefault();
 	delayPosition = 0;
-	m_dSampleRate = getSampleRate();
 	m_dFreq = 0;
-	m_ic = IIRCoefficients::makeHighPass (m_dSampleRate, m_dFreq);
+	m_ic = IIRCoefficients::makeHighPass (getSampleRate(), m_dFreq);
 	m_filterL.setCoefficients( m_ic );
 	m_filterR.setCoefficients( m_ic );
+	
 }
 
 JuceDemoPluginAudioProcessor::~JuceDemoPluginAudioProcessor()
@@ -78,6 +79,8 @@ float JuceDemoPluginAudioProcessor::getParameter(int index)
 		return m_fThreshold;
 	case hpfParam:
 		return m_dFreq;
+	case reverbSizeParam:
+		return m_fReverbSize;
 	default:
 		return 0.0f;
 	}
@@ -114,6 +117,9 @@ void JuceDemoPluginAudioProcessor::setParameter(int index, float newValue)
 	case hpfParam:
 		m_dFreq = newValue;
 		break;
+	case reverbSizeParam:
+		m_fReverbSize = newValue;
+		break;
 	default:
 		break;
 	}
@@ -130,7 +136,8 @@ float JuceDemoPluginAudioProcessor::getParameterDefaultValue(int index)
 	case panParam:    return kfDefaultPan;
 	case midSideParam:    return kfDefaultMidSide;
 	case thresholdParam: return 1.0f;
-	case hpfParam: return 0.0;
+	case hpfParam: return 0.0f;
+	case reverbSizeParam: return 0.0f;
 	default:            break;
 	}
 
@@ -149,6 +156,7 @@ const String JuceDemoPluginAudioProcessor::getParameterName(int index)
 	case midSideParam:		return "mid/side";
 	case thresholdParam:	return "threshold";
 	case hpfParam:			return "hpf";
+	case reverbSizeParam: return "reverb size";
 	default:				break;
 	}
 
@@ -180,6 +188,7 @@ void JuceDemoPluginAudioProcessor::reset()
 	// Use this method as the place to clear any delay lines, buffers, etc, as it
 	// means there's been a break in the audio's continuity.
 	delayBuffer.clear();
+	//m_Reverb.reset();
 }
 
 float JuceDemoPluginAudioProcessor::sigmoid(float x) 
@@ -256,7 +265,6 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 			fSideGain = 1 - (0.5f - m_fMidSideParam) * 2;
 		}
 
-
 		float* leftData = buffer.getWritePointer(LEFT_CHANNEL);
 		float* rightData = buffer.getWritePointer(RIGHT_CHANNEL);
 		float* leftDelayData = delayBuffer.getWritePointer (LEFT_CHANNEL);
@@ -267,6 +275,15 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 		m_filterR.setCoefficients( m_ic );
 		m_filterL.processSamples(leftData,numSamples);
 		m_filterR.processSamples(rightData,numSamples);
+		
+		//m_Reverb.setSampleRate(getSampleRate());
+		juce::Reverb::Parameters params = m_Reverb.getParameters();
+		params.roomSize = m_fReverbSize;
+		params.dryLevel = 1.0f;
+		//params.damping = 0.0f;
+		m_Reverb.setParameters(params);
+		//m_Reverb.setParameters(juce::Reverb::Parameters());
+		m_Reverb.processStereo(leftData,rightData,numSamples);
 		
 		for (int i = 0; i < numSamples; ++i)
 		{
@@ -292,30 +309,6 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 				dp = 0;
 		}
 		delayPosition = dp;
-		//pan0 -> l1 r0
-		//pan1 -> l0 r1
-		// Apply our delay effect to the new output..
-
-		//for (channel = 0; channel < getNumInputChannels(); ++channel)
-		//{
-		//	float* channelData = buffer.getWritePointer (channel);
-		//	
-
-		//	//delay
-		//	float* delayData = delayBuffer.getWritePointer (juce::jmin (channel, delayBuffer.getNumChannels() - 1));
-		//	dp = delayPosition;
-
-		//	for (int i = 0; i < numSamples; ++i)
-		//	{
-		//		const float in = channelData[i];
-		//		channelData[i] += delayData[dp];
-		//		delayData[dp] = (delayData[dp] + in) * m_fDelay;
-		//		if (++dp >= delayBuffer.getNumSamples())
-		//			dp = 0;
-		//	}
-		//}
-
-		//delayPosition = dp;
 
 		// In case we have more outputs than inputs, we'll clear any output
 		// channels that didn't contain input data, (because these aren't
