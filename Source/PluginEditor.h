@@ -55,6 +55,8 @@ public:
     void resized();
     void sliderValueChanged (Slider* sliderThatWasMoved);
     void buttonClicked (Button* buttonThatWasClicked);
+    void mouseEnter (const MouseEvent& e);
+    void mouseExit (const MouseEvent& e);
 
 
 
@@ -97,6 +99,7 @@ private:
     ScopedPointer<Slider> reverbSizeSlider;
     ScopedPointer<Label> midsideInfoLabel;
     ScopedPointer<Label> reverbSizeHeader;
+    ScopedPointer<Label> label;
 
 
     //==============================================================================

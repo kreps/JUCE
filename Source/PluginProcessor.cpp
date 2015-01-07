@@ -243,7 +243,7 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 
 	const int numSamples = buffer.getNumSamples();
 
-	int channel, dp = 0;
+	int dp = 0;
 
 	//calculate left and right gain according to pan param
 	float lGain = 1;

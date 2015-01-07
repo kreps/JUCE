@@ -1,13 +1,14 @@
+*Hard clipper at 0db
 *Full reverb implementation
 *Functionalities to separate classes
 *Delay time change glitch fix
-*Leaked objects LookAndFeel_V2 ???
+*Leaked objects LookAndFeel_V2 ??? constructo destructor 
 *Rotary slider access juce resource image and draw image background
 *c++ tutorial++
 *implement mda detune
 
 +JUCE reverb size implementation
-+JUCE IIRfilter implementation
++JUCE IIRfilter hipass implementation
 +Delay length 
 +Gain slider skew 0.3
 +CustomLookAndFeel
