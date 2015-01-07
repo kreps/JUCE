@@ -77,6 +77,7 @@ private:
     //[/UserVariables]
 
     //==============================================================================
+    ScopedPointer<GroupComponent> groupComponent;
     ScopedPointer<Label> delayHeader;
     ScopedPointer<Slider> panSlider;
     ScopedPointer<Label> infoLabel;
@@ -99,7 +100,9 @@ private:
     ScopedPointer<Slider> reverbSizeSlider;
     ScopedPointer<Label> midsideInfoLabel;
     ScopedPointer<Label> reverbSizeHeader;
-    ScopedPointer<Label> label;
+    ScopedPointer<Slider> delayTimeSlider2;
+    ScopedPointer<Label> delayTimeValueLabel2;
+    ScopedPointer<ToggleButton> wetOnlyButton;
 
 
     //==============================================================================

@@ -6,6 +6,7 @@
 *Rotary slider access juce resource image and draw image background
 *c++ tutorial++
 *implement mda detune
+*Separate dry(on/off) wet(1-100%) chain
 
 +JUCE reverb size implementation
 +JUCE IIRfilter hipass implementation
