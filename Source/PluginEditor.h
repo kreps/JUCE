@@ -77,6 +77,7 @@ private:
     //[/UserVariables]
 
     //==============================================================================
+    ScopedPointer<GroupComponent> groupComponent2;
     ScopedPointer<GroupComponent> groupComponent;
     ScopedPointer<Label> delayHeader;
     ScopedPointer<Slider> panSlider;
@@ -86,7 +87,6 @@ private:
     ScopedPointer<ToggleButton> bypassButton;
     ScopedPointer<Label> gainInfoLabel;
     ScopedPointer<Label> panInfoLabel;
-    ScopedPointer<Label> delayAmountValueLabel;
     ScopedPointer<Slider> delayTimeSlider;
     ScopedPointer<Label> delayTimeValueLabel;
     ScopedPointer<Label> panHeader;

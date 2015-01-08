@@ -414,6 +414,10 @@ void setupCustomLookAndFeelColours (LookAndFeel& laf)
 JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemoPluginAudioProcessor* ownerFilter)
     : AudioProcessorEditor (ownerFilter)
 {
+    addAndMakeVisible (groupComponent2 = new GroupComponent ("new group",
+                                                             TRANS("reverb")));
+    groupComponent2->setColour (GroupComponent::textColourId, Colour (0xff434343));
+
     addAndMakeVisible (groupComponent = new GroupComponent ("new group",
                                                             TRANS("delay")));
     groupComponent->setColour (GroupComponent::textColourId, Colour (0xff363636));
@@ -486,15 +490,6 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     panInfoLabel->setColour (Label::textColourId, Colour (0xff282828));
     panInfoLabel->setColour (TextEditor::textColourId, Colours::black);
     panInfoLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
-    addAndMakeVisible (delayAmountValueLabel = new Label ("new label",
-                                                          TRANS("80%")));
-    delayAmountValueLabel->setFont (Font ("Aharoni", 15.00f, Font::plain));
-    delayAmountValueLabel->setJustificationType (Justification::centred);
-    delayAmountValueLabel->setEditable (false, false, false);
-    delayAmountValueLabel->setColour (Label::textColourId, Colour (0xff282828));
-    delayAmountValueLabel->setColour (TextEditor::textColourId, Colours::black);
-    delayAmountValueLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (delayTimeSlider = new Slider ("new slider"));
     delayTimeSlider->setRange (0, 1, 0);
@@ -653,6 +648,7 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
 	//deleteAllChildren ();
     //[/Destructor_pre]
 
+    groupComponent2 = nullptr;
     groupComponent = nullptr;
     delayHeader = nullptr;
     panSlider = nullptr;
@@ -662,7 +658,6 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
     bypassButton = nullptr;
     gainInfoLabel = nullptr;
     panInfoLabel = nullptr;
-    delayAmountValueLabel = nullptr;
     delayTimeSlider = nullptr;
     delayTimeValueLabel = nullptr;
     panHeader = nullptr;
@@ -712,7 +707,8 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    groupComponent->setBounds (200, 53, 240, 110);
+    groupComponent2->setBounds (472, 53, 200, 100);
+    groupComponent->setBounds (200, 53, 240, 100);
     delayHeader->setBounds (200, 67, 80, 20);
     panSlider->setBounds (100, 87, 80, 50);
     infoLabel->setBounds (96, 304, 400, 25);
@@ -721,7 +717,6 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     bypassButton->setBounds (8, 301, 64, 24);
     gainInfoLabel->setBounds (0, 137, 80, 20);
     panInfoLabel->setBounds (100, 137, 80, 20);
-    delayAmountValueLabel->setBounds (200, 137, 80, 20);
     delayTimeSlider->setBounds (280, 87, 80, 50);
     delayTimeValueLabel->setBounds (280, 67, 80, 20);
     panHeader->setBounds (100, 67, 80, 20);
@@ -732,9 +727,9 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     distortionHeader->setBounds (116, 213, 80, 10);
     hpfHeader->setBounds (210, 182, 80, 30);
     hpfSlider->setBounds (220, 202, 60, 75);
-    reverbSizeSlider->setBounds (488, 101, 50, 50);
+    reverbSizeSlider->setBounds (488, 88, 50, 50);
     midsideInfoLabel->setBounds (10, 257, 80, 30);
-    reverbSizeHeader->setBounds (474, 82, 80, 30);
+    reverbSizeHeader->setBounds (472, 64, 80, 30);
     delayTimeSlider2->setBounds (360, 87, 80, 50);
     delayTimeValueLabel2->setBounds (360, 67, 80, 20);
     wetOnlyButton->setBounds (32, 16, 150, 24);
@@ -1014,8 +1009,11 @@ BEGIN_JUCER_METADATA
     <METHOD name="mouseExit (const MouseEvent&amp; e)"/>
   </METHODS>
   <BACKGROUND backgroundColour="ff777777"/>
+  <GROUPCOMPONENT name="new group" id="fb7419eb67152218" memberName="groupComponent2"
+                  virtualName="" explicitFocusOrder="0" pos="472 53 200 100" textcol="ff434343"
+                  title="reverb"/>
   <GROUPCOMPONENT name="new group" id="98be51d9c59fac6f" memberName="groupComponent"
-                  virtualName="" explicitFocusOrder="0" pos="200 53 240 110" textcol="ff363636"
+                  virtualName="" explicitFocusOrder="0" pos="200 53 240 100" textcol="ff363636"
                   title="delay"/>
   <LABEL name="new label" id="b192efc88f0f8308" memberName="delayHeader"
          virtualName="" explicitFocusOrder="0" pos="200 67 80 20" textCol="ff363636"
@@ -1054,11 +1052,6 @@ BEGIN_JUCER_METADATA
          edTextCol="ff000000" edBkgCol="0" labelText="C" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
-  <LABEL name="new label" id="c1aa620aa8c0a7b0" memberName="delayAmountValueLabel"
-         virtualName="" explicitFocusOrder="0" pos="200 137 80 20" textCol="ff282828"
-         edTextCol="ff000000" edBkgCol="0" labelText="80%" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
-         fontsize="15" bold="0" italic="0" justification="36"/>
   <SLIDER name="new slider" id="ead45d255e5f5831" memberName="delayTimeSlider"
           virtualName="" explicitFocusOrder="0" pos="280 87 80 50" min="0"
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
@@ -1107,7 +1100,7 @@ BEGIN_JUCER_METADATA
           min="20" max="10000" int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.20000000000000001"/>
   <SLIDER name="new slider" id="81b8a5f3e2f90d2e" memberName="reverbSizeSlider"
-          virtualName="" explicitFocusOrder="0" pos="488 101 50 50" min="0.01"
+          virtualName="" explicitFocusOrder="0" pos="488 88 50 50" min="0.01"
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="63580ead55c45fe" memberName="midsideInfoLabel"
@@ -1116,7 +1109,7 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="15" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="9e5a6f98ed1157ee" memberName="reverbSizeHeader"
-         virtualName="" explicitFocusOrder="0" pos="474 82 80 30" textCol="ff363636"
+         virtualName="" explicitFocusOrder="0" pos="472 64 80 30" textCol="ff363636"
          edTextCol="ff000000" edBkgCol="0" labelText="room size" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
