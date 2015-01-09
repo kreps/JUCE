@@ -62,6 +62,8 @@ public:
     // Binary resources:
     static const char* kreps_logo_jpeg;
     static const int kreps_logo_jpegSize;
+    static const char* chickknob_png;
+    static const int chickknob_pngSize;
 
 
 private:

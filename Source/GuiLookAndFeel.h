@@ -34,9 +34,11 @@ public:
                                                    const String& text, const Justification& position,
                                                    GroupComponent& group);
     void setImage(Image& img);
+    void setChickKnobImage(Image& img);
     void GuiLookAndFeel::drawLabel(Graphics& g, Label& label);
 private:
     Image img;
+    Image chikenKnobImage;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GuiLookAndFeel)
 };
 
