@@ -59,6 +59,9 @@ public:
     void mouseEnter (const MouseEvent& e);
     void mouseExit (const MouseEvent& e);
 
+    // Binary resources:
+    static const char* kreps_logo_jpeg;
+    static const int kreps_logo_jpegSize;
 
 
 private:
@@ -73,7 +76,7 @@ private:
     }
 
     void displayPositionInfo (const AudioPlayHead::CurrentPositionInfo& pos);
-   
+
     //CustomLookAndFeel laf;
     GuiLookAndFeel guilaf;
     LookAndFeel_V1 lookAndFeelV1;
@@ -84,9 +87,8 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<GroupComponent> groupComponent2;
-    ScopedPointer<GroupComponent> groupComponent;
-    ScopedPointer<Label> delayHeader;
+    ScopedPointer<GroupComponent> reverGroupComponent;
+    ScopedPointer<GroupComponent> delayGroupComponent;
     ScopedPointer<Slider> panSlider;
     ScopedPointer<Label> infoLabel;
     ScopedPointer<Slider> gainSlider;
@@ -110,6 +112,8 @@ private:
     ScopedPointer<Slider> delayTimeSlider2;
     ScopedPointer<Label> delayTimeValueLabel2;
     ScopedPointer<ToggleButton> wetOnlyButton;
+    ScopedPointer<Label> delayAmountHeader;
+    ScopedPointer<ImageButton> imageButton;
 
 
     //==============================================================================

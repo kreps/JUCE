@@ -29,7 +29,14 @@ public:
                                      bool isEnabled,
                                      bool /*isMouseOverButton*/,
                                      bool /*isButtonDown*/);
+    void drawToggleButton(Graphics& g, ToggleButton& button,bool isMouseOverButton, bool isButtonDown);
+    void drawGroupComponentOutline(Graphics& g, int width, int height,
+                                                   const String& text, const Justification& position,
+                                                   GroupComponent& group);
+    void setImage(Image& img);
+    void GuiLookAndFeel::drawLabel(Graphics& g, Label& label);
 private:
+    Image img;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GuiLookAndFeel)
 };
 
