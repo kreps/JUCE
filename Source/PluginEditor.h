@@ -64,6 +64,8 @@ public:
     static const int kreps_logo_jpegSize;
     static const char* chickknob_png;
     static const int chickknob_pngSize;
+    static const char* uibg_png;
+    static const int uibg_pngSize;
 
 
 private:
@@ -113,10 +115,13 @@ private:
     ScopedPointer<Label> reverbSizeHeader;
     ScopedPointer<Slider> delayTimeSlider2;
     ScopedPointer<Label> delayTimeValueLabel2;
-    ScopedPointer<ToggleButton> wetOnlyButton;
     ScopedPointer<Label> delayAmountHeader;
-    ScopedPointer<ImageButton> imageButton;
     ScopedPointer<Slider> slider;
+    ScopedPointer<TextButton> textButton;
+    ScopedPointer<TextButton> textButton2;
+    ScopedPointer<TextButton> textButton3;
+    ScopedPointer<ToggleButton> toggleButton;
+    Image cachedImage_uibg_png;
 
 
     //==============================================================================
