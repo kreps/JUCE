@@ -1,13 +1,13 @@
-*Hard clipper at 0db
-*Full reverb implementation
-*Functionalities to separate classes
-*Delay time change glitch fix
-*Leaked objects LookAndFeel_V2 ??? constructo destructor 
-*Rotary slider access juce resource image and draw image background
+*hard clipper at 0db
+*full reverb implementation
+*functionalities to separate classes
+*delay time change glitch fix
+*rotary slider access juce resource image and draw image background
 *c++ tutorial++
 *implement mda detune
-*Separate dry(on/off) wet(1-100%) chain
+*separate dry(on/off) wet(1-100%) chain
 
++Leaked objects LookAndFeel_V2 ??? constructo destructor -> Added GuiLookandFeel class instead of CustomLookAndFeel struct
 +JUCE reverb size implementation
 +JUCE IIRfilter hipass implementation
 +Delay length 

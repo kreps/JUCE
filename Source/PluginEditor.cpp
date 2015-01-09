@@ -408,6 +408,7 @@ void setupCustomLookAndFeelColours (LookAndFeel& laf)
 	laf.setColour (TextButton::buttonOnColourId, laf.findColour (TextButton::textColourOffId));
 	laf.setColour (TextButton::textColourOnId, laf.findColour (TextButton::buttonColourId));
 };
+
 //[/MiscUserDefs]
 
 //==============================================================================
@@ -546,7 +547,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     saturationSlider->addListener (this);
 
     addAndMakeVisible (distortionHeader = new Label ("saturation fx",
-                                                     TRANS("distortion")));
+                                                     TRANS("saturation")));
     distortionHeader->setFont (Font ("Aharoni", 10.00f, Font::plain));
     distortionHeader->setJustificationType (Justification::centredTop);
     distortionHeader->setEditable (false, false, false);
@@ -567,7 +568,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     hpfSlider->setTooltip (TRANS("hi pass filter (hz)"));
     hpfSlider->setRange (20, 10000, 0);
     hpfSlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    hpfSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
+    hpfSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
     hpfSlider->addListener (this);
     hpfSlider->setSkewFactor (0.2);
 
@@ -627,18 +628,15 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 	// set our component's initial size to be the last one that was stored in the filter's settings
 	setSize(ownerFilter->lastUIWidth, ownerFilter->lastUIHeight);
 	setSize(800, 300);
-
-	startTimer(500);
+    startTimer(50);
 	gainSlider->setDoubleClickReturnValue(true,0.0f);
 	//cutom rotary start and end position
 	//gainSlider->setRotaryParameters(1.0f*3.14f+0.1f,(12.0f/4.0f)*3.14f-0.1f,true);
 	panSlider->setDoubleClickReturnValue(true,0.5f);
 	midSideSlider->setDoubleClickReturnValue(true,0.5f);
-	LookAndFeel *laf = new CustomLookAndFeel();
-	//setupCustomLookAndFeelColours(*laf);
-	LookAndFeel::setDefaultLookAndFeel(laf);
-	laf->setDefaultSansSerifTypefaceName("Aharoni");
-
+	setupCustomLookAndFeelColours(guilaf);
+	LookAndFeel::setDefaultLookAndFeel(&guilaf);
+    guilaf.setDefaultSansSerifTypefaceName("Aharoni");
     //[/Constructor]
 }
 
@@ -685,19 +683,11 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
 void JuceDemoPluginAudioProcessorEditor::paint (Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
-	g.setGradientFill(ColourGradient(Colours::white, 0, 0, Colours::grey, 0, (float)getHeight(), false));
-	g.fillAll();
     //[/UserPrePaint]
 
     g.fillAll (Colour (0xff777777));
 
     //[UserPaint] Add your own custom painting code here..
-	/*JuceDemoPluginAudioProcessor* p = getProcessor();
-
-	float* tt = p->test;
-	for (int i = 0; i < 500; i){
-	g.drawVerticalLine(i,100,100+100*tt[i]);
-	}*/
 
     //[/UserPaint]
 }
@@ -724,9 +714,9 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     midSideSlider->setBounds (20, 202, 80, 50);
     midsideHeader->setBounds (10, 182, 80, 20);
     saturationSlider->setBounds (104, 221, 100, 50);
-    distortionHeader->setBounds (116, 213, 80, 10);
+    distortionHeader->setBounds (116, 208, 80, 10);
     hpfHeader->setBounds (210, 182, 80, 30);
-    hpfSlider->setBounds (220, 202, 60, 75);
+    hpfSlider->setBounds (220, 202, 60, 50);
     reverbSizeSlider->setBounds (488, 88, 50, 50);
     midsideInfoLabel->setBounds (10, 257, 80, 30);
     reverbSizeHeader->setBounds (472, 64, 80, 30);
@@ -1086,8 +1076,8 @@ BEGIN_JUCER_METADATA
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="saturation fx" id="eda4710f044030be" memberName="distortionHeader"
-         virtualName="" explicitFocusOrder="0" pos="116 213 80 10" textCol="ff363636"
-         edTextCol="ff000000" edBkgCol="0" labelText="distortion" editableSingleClick="0"
+         virtualName="" explicitFocusOrder="0" pos="116 208 80 10" textCol="ff363636"
+         edTextCol="ff000000" edBkgCol="0" labelText="saturation" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="12"/>
   <LABEL name="new label" id="f53c45ed3e69f449" memberName="hpfHeader"
@@ -1096,8 +1086,8 @@ BEGIN_JUCER_METADATA
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
          fontname="Aharoni" fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="hi pass filter" id="253b421224cbac37" memberName="hpfSlider"
-          virtualName="" explicitFocusOrder="0" pos="220 202 60 75" tooltip="hi pass filter (hz)"
-          min="20" max="10000" int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
+          virtualName="" explicitFocusOrder="0" pos="220 202 60 50" tooltip="hi pass filter (hz)"
+          min="20" max="10000" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.20000000000000001"/>
   <SLIDER name="new slider" id="81b8a5f3e2f90d2e" memberName="reverbSizeSlider"
           virtualName="" explicitFocusOrder="0" pos="488 88 50 50" min="0.01"

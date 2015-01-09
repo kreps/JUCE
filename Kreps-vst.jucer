@@ -61,6 +61,10 @@
     </VS2013>
   </EXPORTFORMATS>
   <MAINGROUP id="dYAMo6Ykd" name="JuceDemoPlugin">
+    <FILE id="HpQahg" name="GuiLookAndFeel.cpp" compile="1" resource="0"
+          file="Source/GuiLookAndFeel.cpp"/>
+    <FILE id="PKXIm2" name="GuiLookAndFeel.h" compile="0" resource="0"
+          file="Source/GuiLookAndFeel.h"/>
     <FILE id="gFFr0hbSp" name="PluginProcessor.cpp" compile="1" resource="0"
           file="Source/PluginProcessor.cpp"/>
     <FILE id="PkpMNdnIr" name="PluginProcessor.h" compile="0" resource="0"

@@ -23,6 +23,7 @@
 //[Headers]     -- You can add your own extra header files here --
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
+#include "GuiLookAndFeel.h"
 //[/Headers]
 
 
@@ -72,7 +73,13 @@ private:
     }
 
     void displayPositionInfo (const AudioPlayHead::CurrentPositionInfo& pos);
-
+   
+    //CustomLookAndFeel laf;
+    GuiLookAndFeel guilaf;
+    LookAndFeel_V1 lookAndFeelV1;
+    LookAndFeel_V2 lookAndFeelV2;
+    LookAndFeel_V3 lookAndFeelV3;
+    TooltipWindow tooltipWindow;
 
     //[/UserVariables]
 
