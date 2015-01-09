@@ -228,12 +228,12 @@ void GuiLookAndFeel::drawGroupComponentOutline(Graphics& g, int width, int heigh
                Justification::centred, true);
 }
 
-void GuiLookAndFeel::setImage(Image &image)
+void GuiLookAndFeel::setImage(Image image)
 {
     img = image;
 }
 
-void GuiLookAndFeel::setChickKnobImage(Image &image)
+void GuiLookAndFeel::setChickKnobImage(Image image)
 {
     chikenKnobImage = image;
 }
@@ -246,7 +246,6 @@ void GuiLookAndFeel::drawLabel(Graphics& g, Label& label)
     {
         const float alpha = label.isEnabled() ? 1.0f : 0.5f;
         const Font font(getLabelFont(label));
-
         g.setColour(label.findColour(Label::textColourId).withMultipliedAlpha(alpha));
         g.setFont(font);
 

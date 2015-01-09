@@ -33,8 +33,8 @@ public:
     void drawGroupComponentOutline(Graphics& g, int width, int height,
                                                    const String& text, const Justification& position,
                                                    GroupComponent& group);
-    void setImage(Image& img);
-    void setChickKnobImage(Image& img);
+    void setImage(Image img);
+    void setChickKnobImage(Image img);
     void GuiLookAndFeel::drawLabel(Graphics& g, Label& label);
 private:
     Image img;

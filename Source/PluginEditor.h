@@ -116,6 +116,7 @@ private:
     ScopedPointer<ToggleButton> wetOnlyButton;
     ScopedPointer<Label> delayAmountHeader;
     ScopedPointer<ImageButton> imageButton;
+    ScopedPointer<Slider> slider;
 
 
     //==============================================================================

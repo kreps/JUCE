@@ -6,6 +6,10 @@
 *implement mda detune
 *separate dry(on/off) wet(1-100%) chain
 
+R&D
+*vst container
+
+Done
 +image rotary slider 
 +access juce resource image and draw image background
 +Leaked objects LookAndFeel_V2 ??? constructo destructor -> Added GuiLookandFeel class instead of CustomLookAndFeel struct
