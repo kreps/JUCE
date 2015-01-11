@@ -304,6 +304,13 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     slider4->setTextBoxStyle (Slider::TextBoxLeft, false, 80, 20);
     slider4->addListener (this);
 
+    addAndMakeVisible (imageButton = new ImageButton ("new button"));
+    imageButton->addListener (this);
+
+    imageButton->setImages (false, true, true,
+                            ImageCache::getFromMemory (off_png, off_pngSize), 1.000f, Colour (0x00000000),
+                            Image(), 1.000f, Colour (0x00000000),
+                            ImageCache::getFromMemory (on_red_png, on_red_pngSize), 1.000f, Colour (0x00000000));
     cachedImage_uibg_png = ImageCache::getFromMemory (uibg_png, uibg_pngSize);
 
     //[UserPreSize]
@@ -338,7 +345,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 		ImageCache::getFromMemory(on_red_png,on_red_pngSize)
 		);
 	 //gainSlider->setScrollWheelEnabled(false);
-
+	 imageButton->setClickingTogglesState(true);
     //[/Constructor]
 }
 
@@ -384,6 +391,7 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
     reverbSizeHeader4 = nullptr;
     bypassBtn = nullptr;
     slider4 = nullptr;
+    imageButton = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -448,8 +456,9 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     reverbSizeHeader3->setBounds (600, 24, 80, 30);
     slider3->setBounds (688, 48, 50, 50);
     reverbSizeHeader4->setBounds (680, 24, 80, 30);
-    bypassBtn->setBounds (5, 40, 64, 24);
+    bypassBtn->setBounds (8, 72, 64, 24);
     slider4->setBounds (368, 144, 72, 80);
+    imageButton->setBounds (144, 80, 56, 24);
     //[UserResized] Add your own custom resize handling here..
 	resizer->setBounds(getWidth() - 16, getHeight() - 16, 16, 16);
 
@@ -579,6 +588,11 @@ void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasCli
 		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::bypassParam, (float)(bypassBtn->getToggleState() == true)?1.0f:0.0f);
 		gainSlider->setEnabled(!bypassBtn->getToggleState());
         //[/UserButtonCode_bypassBtn]
+    }
+    else if (buttonThatWasClicked == imageButton)
+    {
+        //[UserButtonCode_imageButton] -- add your button handler code here..
+        //[/UserButtonCode_imageButton]
     }
 
     //[UserbuttonClicked_Post]
@@ -893,12 +907,18 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <TOGGLEBUTTON name="new toggle button" id="4ce3978395a4d72f" memberName="bypassBtn"
-                virtualName="" explicitFocusOrder="0" pos="5 40 64 24" buttonText="wet off"
+                virtualName="" explicitFocusOrder="0" pos="8 72 64 24" buttonText="wet off"
                 connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
   <SLIDER name="new slider" id="48f473b00ab44475" memberName="slider4"
           virtualName="" explicitFocusOrder="0" pos="368 144 72 80" min="0"
           max="127" int="1" style="IncDecButtons" textBoxPos="TextBoxLeft"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+  <IMAGEBUTTON name="new button" id="78ae118428467ed5" memberName="imageButton"
+               virtualName="" explicitFocusOrder="0" pos="144 80 56 24" buttonText="new button"
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="off_png" opacityNormal="1" colourNormal="0" resourceOver=""
+               opacityOver="1" colourOver="0" resourceDown="on_red_png" opacityDown="1"
+               colourDown="0"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
