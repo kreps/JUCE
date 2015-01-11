@@ -101,7 +101,7 @@ public:
 		RIGHT_CHANNEL
 	};
 
-    float m_fBypass,m_fGain, m_fDelay, m_fPan,m_fDelayTime,m_fMidSideParam,m_fThreshold,m_dFreq,m_fReverbSize;
+    float bypass,m_fGain, m_fDelay, m_fPan,m_fDelayTime,m_fMidSideParam,m_fThreshold,m_dFreq,m_fReverbSize;
 	IIRFilter m_filterL,m_filterR;
 	IIRCoefficients m_ic;
 	juce::Reverb m_Reverb;
@@ -110,11 +110,6 @@ private:
     //==============================================================================
     AudioSampleBuffer delayBuffer;
     int delayPosition;
-
-    // the synth!
-    Synthesiser synth;
-	
-
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuceDemoPluginAudioProcessor)
 };
 

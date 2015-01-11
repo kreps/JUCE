@@ -31,10 +31,10 @@ JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
 	m_fDelay = kfDefaultDelay;
 	m_fDelayTime = kfDefaultDelayTime;
 	m_fPan = kfDefaultPan;
-	m_fBypass = kfDefaultBypass;
+	//m_fBypass = kfDefaultBypass;
 	m_fMidSideParam = kfDefaultMidSide;
 	m_fThreshold = 1.0f;
-	m_fReverbSize = 0.1f;
+	m_fReverbSize = 0.5f;
 	lastUIWidth = 400;
 	lastUIHeight = 200;
 
@@ -64,7 +64,7 @@ float JuceDemoPluginAudioProcessor::getParameter(int index)
 	switch (index)
 	{
 	case bypassParam:
-		return m_fBypass;
+		return bypass;
 	case gainParam:
 		return m_fGain;
 	case delayParam:
@@ -94,7 +94,7 @@ void JuceDemoPluginAudioProcessor::setParameter(int index, float newValue)
 	switch (index)
 	{
 	case bypassParam:
-		m_fBypass = newValue;
+		bypass = newValue;
 		break;
 	case gainParam:
 		m_fGain = newValue;
@@ -236,7 +236,7 @@ float JuceDemoPluginAudioProcessor::Saturate(float x, float t) {
 void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
 
-	if (m_fBypass == 1.0f || getNumInputChannels() < 2)
+	if (bypass == 1.0f || getNumInputChannels() < 2)
 	{
 		return;
 	}
@@ -279,7 +279,7 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 		//m_Reverb.setSampleRate(getSampleRate());
 		juce::Reverb::Parameters params = m_Reverb.getParameters();
 		params.roomSize = m_fReverbSize;
-		params.dryLevel = 1.0f;//this depends on general dry on/off button only on or off is possible
+		params.dryLevel = 0.0f;//this depends on general dry on/off button only on or off is possible
 		params.damping = 0.0f;
 		//params.freezeMode = 0.0f;//0 or 1
 		//params.wetLevel = 1.0f; //this depends on general wet gain control

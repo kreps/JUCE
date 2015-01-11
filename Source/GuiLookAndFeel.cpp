@@ -150,7 +150,8 @@ void GuiLookAndFeel::drawTickBox(Graphics& g, Component& component,
 	
     if (ticked)
     {
-		g.drawImage(checkboxOnImage,0,0,checkboxOffImage.getWidth(),checkboxOffImage.getHeight(),0,0,checkboxOffImage.getWidth(),checkboxOffImage.getHeight());
+		g.drawImage(checkboxOffImage,0,0,checkboxOffImage.getWidth(),checkboxOffImage.getHeight(),0,0,checkboxOffImage.getWidth(),checkboxOffImage.getHeight());
+		
         ////const Path tick (LookAndFeel_V3::getTickShape (6.0f));
         //g.setColour(isEnabled ? findColour(TextButton::buttonColourId) : Colours::grey);
         //g.setColour(Colours::white);
@@ -161,7 +162,7 @@ void GuiLookAndFeel::drawTickBox(Graphics& g, Component& component,
         //Rectangle<float> r2(x + boxsize2 / 2.0f, y + (h - boxsize2) * 0.5f, boxsize2, boxsize2);
         //g.fillRoundedRectangle(r2, 1.0f);
     } else {
-		g.drawImage(checkboxOffImage,0,0,checkboxOffImage.getWidth(),checkboxOffImage.getHeight(),0,0,checkboxOffImage.getWidth(),checkboxOffImage.getHeight());
+		g.drawImage(checkboxOnImage,0,0,checkboxOffImage.getWidth(),checkboxOffImage.getHeight(),0,0,checkboxOffImage.getWidth(),checkboxOffImage.getHeight());
 	}
 }
 

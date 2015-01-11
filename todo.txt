@@ -1,3 +1,4 @@
+
 *texturized bg
 *hard clipper at 0db
 *full reverb implementation
@@ -8,6 +9,7 @@
 *separate dry(on/off) wet(1-100%) chain
 
 Done
++bypass button fix
 +image rotary slider 
 +access juce resource image and draw image background
 +Leaked objects LookAndFeel_V2 ??? constructo destructor -> Added GuiLookandFeel class instead of CustomLookAndFeel struct

@@ -75,6 +75,8 @@ public:
     static const int on_red_pngSize;
     static const char* on_yellow_png;
     static const int on_yellow_pngSize;
+    static const char* images1_jpg;
+    static const int images1_jpgSize;
 
 
 private:
@@ -108,13 +110,11 @@ private:
     ScopedPointer<Label> infoLabel;
     ScopedPointer<Slider> gainSlider;
     ScopedPointer<Slider> delaySlider;
-    ScopedPointer<ToggleButton> bypassButton;
     ScopedPointer<Label> gainInfoLabel;
     ScopedPointer<Label> panInfoLabel;
     ScopedPointer<Slider> delayTimeSlider;
     ScopedPointer<Label> delayTimeValueLabel;
     ScopedPointer<Label> panHeader;
-    ScopedPointer<Label> inputHeaderLabel;
     ScopedPointer<Slider> midSideSlider;
     ScopedPointer<Label> midsideHeader;
     ScopedPointer<Slider> saturationSlider;
@@ -127,16 +127,19 @@ private:
     ScopedPointer<Slider> delayTimeSlider2;
     ScopedPointer<Label> delayTimeValueLabel2;
     ScopedPointer<Label> delayAmountHeader;
-    ScopedPointer<TextButton> textButton;
-    ScopedPointer<TextButton> textButton2;
-    ScopedPointer<TextButton> textButton4;
-    ScopedPointer<ToggleButton> toggleButton;
+    ScopedPointer<TextButton> lnf3Btn;
+    ScopedPointer<TextButton> guilafBtn;
+    ScopedPointer<TextButton> guilaf2Btn;
+    ScopedPointer<ToggleButton> dry;
     ScopedPointer<Slider> slider;
     ScopedPointer<Label> reverbSizeHeader2;
     ScopedPointer<Slider> slider2;
     ScopedPointer<Label> reverbSizeHeader3;
     ScopedPointer<Slider> slider3;
     ScopedPointer<Label> reverbSizeHeader4;
+    ScopedPointer<ImageButton> donateBtn;
+    ScopedPointer<ToggleButton> bypassBtn;
+    ScopedPointer<Label> label;
     Image cachedImage_uibg_png;
 
 
