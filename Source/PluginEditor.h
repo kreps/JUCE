@@ -24,6 +24,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
 #include "GuiLookAndFeel.h"
+#include "GuiLookAndFeel2.h"
 //[/Headers]
 
 
@@ -66,6 +67,14 @@ public:
     static const int chickknob_pngSize;
     static const char* uibg_png;
     static const int uibg_pngSize;
+    static const char* off_png;
+    static const int off_pngSize;
+    static const char* on_orange_png;
+    static const int on_orange_pngSize;
+    static const char* on_red_png;
+    static const int on_red_pngSize;
+    static const char* on_yellow_png;
+    static const int on_yellow_pngSize;
 
 
 private:
@@ -83,6 +92,7 @@ private:
 
     //CustomLookAndFeel laf;
     GuiLookAndFeel guilaf;
+	GuiLookAndFeel2 guilaf2;
     LookAndFeel_V1 lookAndFeelV1;
     LookAndFeel_V2 lookAndFeelV2;
     LookAndFeel_V3 lookAndFeelV3;
@@ -91,6 +101,7 @@ private:
     //[/UserVariables]
 
     //==============================================================================
+    ScopedPointer<GroupComponent> groupComponent;
     ScopedPointer<GroupComponent> reverGroupComponent;
     ScopedPointer<GroupComponent> delayGroupComponent;
     ScopedPointer<Slider> panSlider;
@@ -116,11 +127,16 @@ private:
     ScopedPointer<Slider> delayTimeSlider2;
     ScopedPointer<Label> delayTimeValueLabel2;
     ScopedPointer<Label> delayAmountHeader;
-    ScopedPointer<Slider> slider;
     ScopedPointer<TextButton> textButton;
     ScopedPointer<TextButton> textButton2;
-    ScopedPointer<TextButton> textButton3;
+    ScopedPointer<TextButton> textButton4;
     ScopedPointer<ToggleButton> toggleButton;
+    ScopedPointer<Slider> slider;
+    ScopedPointer<Label> reverbSizeHeader2;
+    ScopedPointer<Slider> slider2;
+    ScopedPointer<Label> reverbSizeHeader3;
+    ScopedPointer<Slider> slider3;
+    ScopedPointer<Label> reverbSizeHeader4;
     Image cachedImage_uibg_png;
 
 

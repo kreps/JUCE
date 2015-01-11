@@ -35,10 +35,11 @@ public:
                                                    GroupComponent& group);
     void setImage(Image img);
     void setChickKnobImage(Image img);
+	void setImages(Image rotarySliderImg,Image checkboxOffImg, Image checkboxOnImg);
     void GuiLookAndFeel::drawLabel(Graphics& g, Label& label);
 private:
-    Image img;
-    Image chikenKnobImage;
+    Image img,chikenKnobImage,checkboxOffImage,checkboxOnImage;
+	
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GuiLookAndFeel)
 };
 

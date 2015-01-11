@@ -1,3 +1,4 @@
+*texturized bg
 *hard clipper at 0db
 *full reverb implementation
 *functionalities to separate classes
@@ -5,9 +6,6 @@
 *c++ tutorial++
 *implement mda detune
 *separate dry(on/off) wet(1-100%) chain
-
-R&D
-*vst container
 
 Done
 +image rotary slider 

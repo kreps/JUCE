@@ -40,7 +40,7 @@ void setupCustomLookAndFeelColours (LookAndFeel& laf)
 
 	laf.setColour (TextButton::buttonColourId, Colours::white);
 	laf.setColour (TextButton::textColourOffId, Colour (0xff00b5f6));
-    laf.setColour(GroupComponent::textColourId, Colour(0xff434343));
+    laf.setColour(GroupComponent::textColourId, Colour(0xff000000));
 	laf.setColour (TextButton::buttonOnColourId, laf.findColour (TextButton::textColourOffId));
 	laf.setColour (TextButton::textColourOnId, laf.findColour (TextButton::buttonColourId));
 };
@@ -51,6 +51,9 @@ void setupCustomLookAndFeelColours (LookAndFeel& laf)
 JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemoPluginAudioProcessor* ownerFilter)
     : AudioProcessorEditor (ownerFilter)
 {
+    addAndMakeVisible (groupComponent = new GroupComponent ("new group",
+                                                            TRANS("io")));
+
     addAndMakeVisible (reverGroupComponent = new GroupComponent ("new group",
                                                                  TRANS("reverb")));
 
@@ -58,7 +61,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
                                                                  TRANS("delay")));
     delayGroupComponent->setTextLabelPosition (Justification::centredLeft);
 
-    addAndMakeVisible (panSlider = new Slider ("pan"));
+    addAndMakeVisible (panSlider = new Slider ("panSlider"));
     panSlider->setRange (0, 1, 0);
     panSlider->setSliderStyle (Slider::RotaryVerticalDrag);
     panSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
@@ -81,7 +84,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     gainSlider->addListener (this);
     gainSlider->setSkewFactor (0.3);
 
-    addAndMakeVisible (delaySlider = new Slider ("delay"));
+    addAndMakeVisible (delaySlider = new Slider ("delaySlider"));
     delaySlider->setTooltip (TRANS("delay gain\n"));
     delaySlider->setRange (0, 1, 0);
     delaySlider->setSliderStyle (Slider::RotaryVerticalDrag);
@@ -94,6 +97,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     addAndMakeVisible (bypassButton = new ToggleButton ("new toggle button"));
     bypassButton->setButtonText (TRANS("bypass"));
     bypassButton->addListener (this);
+    bypassButton->setToggleState (true, dontSendNotification);
 
     addAndMakeVisible (gainInfoLabel = new Label ("gainInfoLabel",
                                                   TRANS("0.0 dB\n")));
@@ -240,27 +244,66 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     delayAmountHeader->setColour (TextEditor::textColourId, Colours::black);
     delayAmountHeader->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
+    addAndMakeVisible (textButton = new TextButton ("new button"));
+    textButton->setButtonText (TRANS("lfv3"));
+    textButton->addListener (this);
+
+    addAndMakeVisible (textButton2 = new TextButton ("new button"));
+    textButton2->setButtonText (TRANS("guilaf"));
+    textButton2->addListener (this);
+
+    addAndMakeVisible (textButton4 = new TextButton ("new button"));
+    textButton4->setButtonText (TRANS("guilaf2"));
+    textButton4->addListener (this);
+
+    addAndMakeVisible (toggleButton = new ToggleButton ("new toggle button"));
+    toggleButton->setButtonText (TRANS("dry"));
+    toggleButton->addListener (this);
+
     addAndMakeVisible (slider = new Slider ("new slider"));
     slider->setRange (0, 10, 0);
     slider->setSliderStyle (Slider::RotaryVerticalDrag);
     slider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
     slider->addListener (this);
 
-    addAndMakeVisible (textButton = new TextButton ("new button"));
-    textButton->setButtonText (TRANS("change lf1"));
-    textButton->addListener (this);
+    addAndMakeVisible (reverbSizeHeader2 = new Label ("new label",
+                                                      TRANS("damp todo")));
+    reverbSizeHeader2->setFont (Font ("Aharoni", 10.00f, Font::plain));
+    reverbSizeHeader2->setJustificationType (Justification::centred);
+    reverbSizeHeader2->setEditable (false, false, false);
+    reverbSizeHeader2->setColour (Label::textColourId, Colour (0xff363636));
+    reverbSizeHeader2->setColour (TextEditor::textColourId, Colours::black);
+    reverbSizeHeader2->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (textButton2 = new TextButton ("new button"));
-    textButton2->setButtonText (TRANS("change lf2"));
-    textButton2->addListener (this);
+    addAndMakeVisible (slider2 = new Slider ("new slider"));
+    slider2->setRange (0, 10, 0);
+    slider2->setSliderStyle (Slider::RotaryVerticalDrag);
+    slider2->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    slider2->addListener (this);
 
-    addAndMakeVisible (textButton3 = new TextButton ("new button"));
-    textButton3->setButtonText (TRANS("dry"));
-    textButton3->addListener (this);
+    addAndMakeVisible (reverbSizeHeader3 = new Label ("new label",
+                                                      TRANS("freeze todo")));
+    reverbSizeHeader3->setFont (Font ("Aharoni", 10.00f, Font::plain));
+    reverbSizeHeader3->setJustificationType (Justification::centred);
+    reverbSizeHeader3->setEditable (false, false, false);
+    reverbSizeHeader3->setColour (Label::textColourId, Colour (0xff363636));
+    reverbSizeHeader3->setColour (TextEditor::textColourId, Colours::black);
+    reverbSizeHeader3->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (toggleButton = new ToggleButton ("new toggle button"));
-    toggleButton->setButtonText (String::empty);
-    toggleButton->addListener (this);
+    addAndMakeVisible (slider3 = new Slider ("new slider"));
+    slider3->setRange (0, 10, 0);
+    slider3->setSliderStyle (Slider::RotaryVerticalDrag);
+    slider3->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    slider3->addListener (this);
+
+    addAndMakeVisible (reverbSizeHeader4 = new Label ("new label",
+                                                      TRANS("width todo")));
+    reverbSizeHeader4->setFont (Font ("Aharoni", 10.00f, Font::plain));
+    reverbSizeHeader4->setJustificationType (Justification::centred);
+    reverbSizeHeader4->setEditable (false, false, false);
+    reverbSizeHeader4->setColour (Label::textColourId, Colour (0xff363636));
+    reverbSizeHeader4->setColour (TextEditor::textColourId, Colours::black);
+    reverbSizeHeader4->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     cachedImage_uibg_png = ImageCache::getFromMemory (uibg_png, uibg_pngSize);
 
@@ -284,9 +327,17 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 	midSideSlider->setDoubleClickReturnValue(true,0.5f);
 	setupCustomLookAndFeelColours(guilaf);
 	LookAndFeel::setDefaultLookAndFeel(&guilaf);
-    guilaf.setDefaultSansSerifTypefaceName("Aharoni");
-    guilaf.setImage(ImageCache::getFromMemory(kreps_logo_jpeg, kreps_logo_jpegSize));
-    guilaf.setChickKnobImage(ImageCache::getFromMemory(chickknob_png,chickknob_pngSize));
+    //guilaf.setDefaultSansSerifTypefaceName("Aharoni");
+    guilaf.setImages(
+		ImageCache::getFromMemory(chickknob_png,chickknob_pngSize),
+		ImageCache::getFromMemory(off_png,off_pngSize),
+		ImageCache::getFromMemory(on_red_png,on_red_pngSize)
+		);
+	 guilaf2.setImages(
+		ImageCache::getFromMemory(chickknob_png,chickknob_pngSize),
+		ImageCache::getFromMemory(off_png,off_pngSize),
+		ImageCache::getFromMemory(on_red_png,on_red_pngSize)
+		);
     //[/Constructor]
 }
 
@@ -296,6 +347,7 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
 	//deleteAllChildren ();
     //[/Destructor_pre]
 
+    groupComponent = nullptr;
     reverGroupComponent = nullptr;
     delayGroupComponent = nullptr;
     panSlider = nullptr;
@@ -321,11 +373,16 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
     delayTimeSlider2 = nullptr;
     delayTimeValueLabel2 = nullptr;
     delayAmountHeader = nullptr;
-    slider = nullptr;
     textButton = nullptr;
     textButton2 = nullptr;
-    textButton3 = nullptr;
+    textButton4 = nullptr;
     toggleButton = nullptr;
+    slider = nullptr;
+    reverbSizeHeader2 = nullptr;
+    slider2 = nullptr;
+    reverbSizeHeader3 = nullptr;
+    slider3 = nullptr;
+    reverbSizeHeader4 = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -341,11 +398,10 @@ void JuceDemoPluginAudioProcessorEditor::paint (Graphics& g)
 
     g.fillAll (Colour (0xff777777));
 
-    g.setColour (Colours::black.withAlpha (0.500f));
-    g.drawImageWithin (cachedImage_uibg_png,
-                       0, 0, 1920, 1040,
-                       RectanglePlacement::centred | RectanglePlacement::onlyReduceInSize,
-                       false);
+    g.setColour (Colours::black);
+    g.drawImage (cachedImage_uibg_png,
+                 4, 4, 1920, 1040,
+                 0, 0, cachedImage_uibg_png.getWidth(), cachedImage_uibg_png.getHeight());
 
     //[UserPaint] Add your own custom painting code here..
 
@@ -357,36 +413,42 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    reverGroupComponent->setBounds (472, 53, 200, 100);
-    delayGroupComponent->setBounds (200, 53, 240, 100);
-    panSlider->setBounds (100, 87, 80, 50);
-    infoLabel->setBounds (96, 304, 400, 25);
-    gainSlider->setBounds (0, 87, 80, 50);
-    delaySlider->setBounds (200, 87, 80, 50);
-    bypassButton->setBounds (8, 301, 64, 24);
-    gainInfoLabel->setBounds (0, 137, 80, 20);
-    panInfoLabel->setBounds (100, 137, 80, 20);
-    delayTimeSlider->setBounds (280, 87, 80, 50);
-    delayTimeValueLabel->setBounds (280, 67, 80, 20);
-    panHeader->setBounds (100, 67, 80, 20);
-    inputHeaderLabel->setBounds (0, 67, 80, 20);
-    midSideSlider->setBounds (20, 202, 80, 50);
-    midsideHeader->setBounds (10, 182, 80, 20);
-    saturationSlider->setBounds (104, 221, 100, 50);
-    distortionHeader->setBounds (116, 208, 80, 10);
-    hpfHeader->setBounds (210, 182, 80, 30);
-    hpfSlider->setBounds (220, 202, 60, 50);
-    reverbSizeSlider->setBounds (488, 88, 50, 50);
-    midsideInfoLabel->setBounds (10, 257, 80, 30);
-    reverbSizeHeader->setBounds (472, 64, 80, 30);
-    delayTimeSlider2->setBounds (360, 87, 80, 50);
-    delayTimeValueLabel2->setBounds (360, 67, 80, 20);
-    delayAmountHeader->setBounds (200, 64, 80, 24);
-    slider->setBounds (296, 160, 112, 88);
-    textButton->setBounds (200, 296, 88, 24);
-    textButton2->setBounds (304, 296, 88, 24);
-    textButton3->setBounds (4, 5, 44, 24);
-    toggleButton->setBounds (49, 6, 150, 24);
+    groupComponent->setBounds (8, 8, 192, 112);
+    reverGroupComponent->setBounds (456, 13, 408, 100);
+    delayGroupComponent->setBounds (208, 13, 240, 100);
+    panSlider->setBounds (100, 159, 80, 50);
+    infoLabel->setBounds (40, 432, 400, 25);
+    gainSlider->setBounds (104, 45, 80, 50);
+    delaySlider->setBounds (208, 47, 80, 50);
+    bypassButton->setBounds (24, 56, 64, 24);
+    gainInfoLabel->setBounds (104, 95, 80, 20);
+    panInfoLabel->setBounds (100, 209, 80, 20);
+    delayTimeSlider->setBounds (288, 47, 80, 50);
+    delayTimeValueLabel->setBounds (288, 27, 80, 20);
+    panHeader->setBounds (100, 139, 80, 20);
+    inputHeaderLabel->setBounds (104, 25, 80, 20);
+    midSideSlider->setBounds (20, 154, 80, 50);
+    midsideHeader->setBounds (10, 134, 80, 20);
+    saturationSlider->setBounds (120, 309, 100, 50);
+    distortionHeader->setBounds (132, 296, 80, 10);
+    hpfHeader->setBounds (258, 150, 80, 30);
+    hpfSlider->setBounds (268, 170, 60, 50);
+    reverbSizeSlider->setBounds (472, 48, 50, 50);
+    midsideInfoLabel->setBounds (10, 209, 80, 30);
+    reverbSizeHeader->setBounds (456, 24, 80, 30);
+    delayTimeSlider2->setBounds (368, 47, 80, 50);
+    delayTimeValueLabel2->setBounds (368, 27, 80, 20);
+    delayAmountHeader->setBounds (208, 24, 80, 24);
+    textButton->setBounds (216, 384, 88, 24);
+    textButton2->setBounds (320, 384, 88, 24);
+    textButton4->setBounds (432, 384, 88, 24);
+    toggleButton->setBounds (24, 32, 48, 24);
+    slider->setBounds (536, 48, 50, 50);
+    reverbSizeHeader2->setBounds (520, 24, 80, 30);
+    slider2->setBounds (608, 48, 50, 50);
+    reverbSizeHeader3->setBounds (600, 24, 80, 30);
+    slider3->setBounds (688, 48, 50, 50);
+    reverbSizeHeader4->setBounds (680, 24, 80, 30);
     //[UserResized] Add your own custom resize handling here..
 	resizer->setBounds(getWidth() - 16, getHeight() - 16, 16, 16);
 
@@ -461,6 +523,16 @@ void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatW
         //[UserSliderCode_slider] -- add your slider handling code here..
         //[/UserSliderCode_slider]
     }
+    else if (sliderThatWasMoved == slider2)
+    {
+        //[UserSliderCode_slider2] -- add your slider handling code here..
+        //[/UserSliderCode_slider2]
+    }
+    else if (sliderThatWasMoved == slider3)
+    {
+        //[UserSliderCode_slider3] -- add your slider handling code here..
+        //[/UserSliderCode_slider3]
+    }
 
     //[UsersliderValueChanged_Post]
     //[/UsersliderValueChanged_Post]
@@ -486,12 +558,14 @@ void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasCli
     else if (buttonThatWasClicked == textButton2)
     {
         //[UserButtonCode_textButton2] -- add your button handler code here..
+		LookAndFeel::setDefaultLookAndFeel(&guilaf);
         //[/UserButtonCode_textButton2]
     }
-    else if (buttonThatWasClicked == textButton3)
+    else if (buttonThatWasClicked == textButton4)
     {
-        //[UserButtonCode_textButton3] -- add your button handler code here..
-        //[/UserButtonCode_textButton3]
+        //[UserButtonCode_textButton4] -- add your button handler code here..
+		LookAndFeel::setDefaultLookAndFeel(&guilaf2);
+        //[/UserButtonCode_textButton4]
     }
     else if (buttonThatWasClicked == toggleButton)
     {
@@ -684,135 +758,160 @@ BEGIN_JUCER_METADATA
     <METHOD name="mouseExit (const MouseEvent&amp; e)"/>
   </METHODS>
   <BACKGROUND backgroundColour="ff777777">
-    <IMAGE pos="0 0 1920 1040" resource="uibg_png" opacity="0.5" mode="2"/>
+    <IMAGE pos="4 4 1920 1040" resource="uibg_png" opacity="1" mode="0"/>
   </BACKGROUND>
+  <GROUPCOMPONENT name="new group" id="7c8c0a2a1419927a" memberName="groupComponent"
+                  virtualName="" explicitFocusOrder="0" pos="8 8 192 112" title="io"/>
   <GROUPCOMPONENT name="new group" id="fb7419eb67152218" memberName="reverGroupComponent"
-                  virtualName="" explicitFocusOrder="0" pos="472 53 200 100" title="reverb"/>
+                  virtualName="" explicitFocusOrder="0" pos="456 13 408 100" title="reverb"/>
   <GROUPCOMPONENT name="new group" id="98be51d9c59fac6f" memberName="delayGroupComponent"
-                  virtualName="" explicitFocusOrder="0" pos="200 53 240 100" title="delay"
+                  virtualName="" explicitFocusOrder="0" pos="208 13 240 100" title="delay"
                   textpos="33"/>
-  <SLIDER name="pan" id="324eec4d274919f3" memberName="panSlider" virtualName=""
-          explicitFocusOrder="0" pos="100 87 80 50" min="0" max="1" int="0"
-          style="RotaryVerticalDrag" textBoxPos="NoTextBox" textBoxEditable="1"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+  <SLIDER name="panSlider" id="324eec4d274919f3" memberName="panSlider"
+          virtualName="" explicitFocusOrder="0" pos="100 159 80 50" min="0"
+          max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="" id="3084384ee25f6d12" memberName="infoLabel" virtualName=""
-         explicitFocusOrder="0" pos="96 304 400 25" textCol="ff414141"
+         explicitFocusOrder="0" pos="40 432 400 25" textCol="ff414141"
          edTextCol="ff000000" edBkgCol="0" labelText="aaa" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="12" bold="0" italic="0" justification="33"/>
   <SLIDER name="gainSlider" id="c31acc4ca22491a9" memberName="gainSlider"
-          virtualName="" explicitFocusOrder="0" pos="0 87 80 50" tooltip="gain"
+          virtualName="" explicitFocusOrder="0" pos="104 45 80 50" tooltip="gain"
           min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.29999999999999999"/>
-  <SLIDER name="delay" id="37878e5e9fd60a08" memberName="delaySlider" virtualName=""
-          explicitFocusOrder="0" pos="200 87 80 50" tooltip="delay gain&#10;"
+  <SLIDER name="delaySlider" id="37878e5e9fd60a08" memberName="delaySlider"
+          virtualName="" explicitFocusOrder="0" pos="208 47 80 50" tooltip="delay gain&#10;"
           trackcol="ffffffff" textboxhighlight="ff1111ee" textboxoutline="ff808080"
           min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <TOGGLEBUTTON name="new toggle button" id="d59c4ede9f259185" memberName="bypassButton"
-                virtualName="" explicitFocusOrder="0" pos="8 301 64 24" buttonText="bypass"
-                connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
+                virtualName="" explicitFocusOrder="0" pos="24 56 64 24" buttonText="bypass"
+                connectedEdges="0" needsCallback="1" radioGroupId="0" state="1"/>
   <LABEL name="gainInfoLabel" id="dde6ff72637f37e7" memberName="gainInfoLabel"
-         virtualName="" explicitFocusOrder="0" pos="0 137 80 20" textCol="ff323232"
+         virtualName="" explicitFocusOrder="0" pos="104 95 80 20" textCol="ff323232"
          edTextCol="ff000000" edBkgCol="0" labelText="0.0 dB&#10;" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="12" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="64ddab567eb77e3c" memberName="panInfoLabel"
-         virtualName="" explicitFocusOrder="0" pos="100 137 80 20" textCol="ff282828"
+         virtualName="" explicitFocusOrder="0" pos="100 209 80 20" textCol="ff282828"
          edTextCol="ff000000" edBkgCol="0" labelText="C" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="new slider" id="ead45d255e5f5831" memberName="delayTimeSlider"
-          virtualName="" explicitFocusOrder="0" pos="280 87 80 50" min="0"
+          virtualName="" explicitFocusOrder="0" pos="288 47 80 50" min="0"
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="0" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="3b34631ac55e0fe6" memberName="delayTimeValueLabel"
-         virtualName="" explicitFocusOrder="0" pos="280 67 80 20" textCol="ff282828"
+         virtualName="" explicitFocusOrder="0" pos="288 27 80 20" textCol="ff282828"
          edTextCol="ff000000" edBkgCol="0" labelText="time" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="ec32effd76232b82" memberName="panHeader"
-         virtualName="" explicitFocusOrder="0" pos="100 67 80 20" textCol="ff363636"
+         virtualName="" explicitFocusOrder="0" pos="100 139 80 20" textCol="ff363636"
          edTextCol="ff000000" edBkgCol="0" labelText="pan&#10;" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <LABEL name="input label for header" id="2a92c25f1cf628c8" memberName="inputHeaderLabel"
-         virtualName="" explicitFocusOrder="0" pos="0 67 80 20" textCol="ff363636"
+         virtualName="" explicitFocusOrder="0" pos="104 25 80 20" textCol="ff363636"
          edTextCol="ff000000" edBkgCol="0" labelText="wet amount" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="mid/side slider" id="84706171dc5b90dd" memberName="midSideSlider"
-          virtualName="" explicitFocusOrder="0" pos="20 202 80 50" min="0"
+          virtualName="" explicitFocusOrder="0" pos="20 154 80 50" min="0"
           max="1" int="0.0050000000000000001" style="RotaryVerticalDrag"
           textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="fcf994bed06bf6ab" memberName="midsideHeader"
-         virtualName="" explicitFocusOrder="0" pos="10 182 80 20" textCol="ff363636"
+         virtualName="" explicitFocusOrder="0" pos="10 134 80 20" textCol="ff363636"
          edTextCol="ff000000" edBkgCol="0" labelText="mid/side" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="mid/side slider" id="2a577f0fc0372cc6" memberName="saturationSlider"
-          virtualName="" explicitFocusOrder="0" pos="104 221 100 50" min="0.001"
+          virtualName="" explicitFocusOrder="0" pos="120 309 100 50" min="0.001"
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="saturation fx" id="eda4710f044030be" memberName="distortionHeader"
-         virtualName="" explicitFocusOrder="0" pos="116 208 80 10" textCol="ff363636"
+         virtualName="" explicitFocusOrder="0" pos="132 296 80 10" textCol="ff363636"
          edTextCol="ff000000" edBkgCol="0" labelText="saturation" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="12"/>
   <LABEL name="new label" id="f53c45ed3e69f449" memberName="hpfHeader"
-         virtualName="" explicitFocusOrder="0" pos="210 182 80 30" textCol="ff363636"
+         virtualName="" explicitFocusOrder="0" pos="258 150 80 30" textCol="ff363636"
          edTextCol="ff000000" edBkgCol="0" labelText="hi pass filter"
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
          fontname="Aharoni" fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="hi pass filter" id="253b421224cbac37" memberName="hpfSlider"
-          virtualName="" explicitFocusOrder="0" pos="220 202 60 50" tooltip="hi pass filter (hz)"
+          virtualName="" explicitFocusOrder="0" pos="268 170 60 50" tooltip="hi pass filter (hz)"
           min="20" max="10000" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.20000000000000001"/>
   <SLIDER name="new slider" id="81b8a5f3e2f90d2e" memberName="reverbSizeSlider"
-          virtualName="" explicitFocusOrder="0" pos="488 88 50 50" min="0.01"
+          virtualName="" explicitFocusOrder="0" pos="472 48 50 50" min="0.01"
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="63580ead55c45fe" memberName="midsideInfoLabel"
-         virtualName="" explicitFocusOrder="0" pos="10 257 80 30" textCol="ff363636"
+         virtualName="" explicitFocusOrder="0" pos="10 209 80 30" textCol="ff363636"
          edTextCol="ff000000" edBkgCol="0" labelText="80%" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="15" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="9e5a6f98ed1157ee" memberName="reverbSizeHeader"
-         virtualName="" explicitFocusOrder="0" pos="472 64 80 30" textCol="ff363636"
+         virtualName="" explicitFocusOrder="0" pos="456 24 80 30" textCol="ff363636"
          edTextCol="ff000000" edBkgCol="0" labelText="room size" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="new slider" id="f86ed4bd47474957" memberName="delayTimeSlider2"
-          virtualName="" explicitFocusOrder="0" pos="360 87 80 50" min="0"
+          virtualName="" explicitFocusOrder="0" pos="368 47 80 50" min="0"
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="0" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="b702d23a464e1ffe" memberName="delayTimeValueLabel2"
-         virtualName="" explicitFocusOrder="0" pos="360 67 80 20" textCol="ff282828"
+         virtualName="" explicitFocusOrder="0" pos="368 27 80 20" textCol="ff282828"
          edTextCol="ff000000" edBkgCol="0" labelText="feedback" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="17713b10facdb0a1" memberName="delayAmountHeader"
-         virtualName="" explicitFocusOrder="0" pos="200 64 80 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="208 24 80 24" edTextCol="ff000000"
          edBkgCol="0" labelText="amount" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Aharoni" fontsize="10" bold="0"
          italic="0" justification="36"/>
-  <SLIDER name="new slider" id="501ed27d1d7aee12" memberName="slider" virtualName=""
-          explicitFocusOrder="0" pos="296 160 112 88" min="0" max="10"
-          int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox" textBoxEditable="1"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <TEXTBUTTON name="new button" id="877f25c71c1bc232" memberName="textButton"
-              virtualName="" explicitFocusOrder="0" pos="200 296 88 24" buttonText="change lf1"
+              virtualName="" explicitFocusOrder="0" pos="216 384 88 24" buttonText="lfv3"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <TEXTBUTTON name="new button" id="bcef889c607949af" memberName="textButton2"
-              virtualName="" explicitFocusOrder="0" pos="304 296 88 24" buttonText="change lf2"
+              virtualName="" explicitFocusOrder="0" pos="320 384 88 24" buttonText="guilaf"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
-  <TEXTBUTTON name="new button" id="c04eb8bb913886bc" memberName="textButton3"
-              virtualName="" explicitFocusOrder="0" pos="4 5 44 24" buttonText="dry"
+  <TEXTBUTTON name="new button" id="c18db766ecc28fe6" memberName="textButton4"
+              virtualName="" explicitFocusOrder="0" pos="432 384 88 24" buttonText="guilaf2"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
-  <TOGGLEBUTTON name="new toggle button" id="98e5eb6eca28c006" memberName="toggleButton"
-                virtualName="" explicitFocusOrder="0" pos="49 6 150 24" buttonText=""
+  <TOGGLEBUTTON name="new toggle button" id="9fec732da680abce" memberName="toggleButton"
+                virtualName="" explicitFocusOrder="0" pos="24 32 48 24" buttonText="dry"
                 connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
+  <SLIDER name="new slider" id="64dc86b4ed912be" memberName="slider" virtualName=""
+          explicitFocusOrder="0" pos="536 48 50 50" min="0" max="10" int="0"
+          style="RotaryVerticalDrag" textBoxPos="NoTextBox" textBoxEditable="1"
+          textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+  <LABEL name="new label" id="cf93cb9c05f6ea83" memberName="reverbSizeHeader2"
+         virtualName="" explicitFocusOrder="0" pos="520 24 80 30" textCol="ff363636"
+         edTextCol="ff000000" edBkgCol="0" labelText="damp todo" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
+         fontsize="10" bold="0" italic="0" justification="36"/>
+  <SLIDER name="new slider" id="19c54baf5cf03b32" memberName="slider2"
+          virtualName="" explicitFocusOrder="0" pos="608 48 50 50" min="0"
+          max="10" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+  <LABEL name="new label" id="629d011e42cdcd54" memberName="reverbSizeHeader3"
+         virtualName="" explicitFocusOrder="0" pos="600 24 80 30" textCol="ff363636"
+         edTextCol="ff000000" edBkgCol="0" labelText="freeze todo" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
+         fontsize="10" bold="0" italic="0" justification="36"/>
+  <SLIDER name="new slider" id="935f633b2a015b36" memberName="slider3"
+          virtualName="" explicitFocusOrder="0" pos="688 48 50 50" min="0"
+          max="10" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+  <LABEL name="new label" id="7c566ba924521d30" memberName="reverbSizeHeader4"
+         virtualName="" explicitFocusOrder="0" pos="680 24 80 30" textCol="ff363636"
+         edTextCol="ff000000" edBkgCol="0" labelText="width todo" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
+         fontsize="10" bold="0" italic="0" justification="36"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
@@ -1197,205 +1296,857 @@ static const unsigned char resource_JuceDemoPluginAudioProcessorEditor_chickknob
 const char* JuceDemoPluginAudioProcessorEditor::chickknob_png = (const char*) resource_JuceDemoPluginAudioProcessorEditor_chickknob_png;
 const int JuceDemoPluginAudioProcessorEditor::chickknob_pngSize = 8824;
 
-// JUCER_RESOURCE: uibg_png, 14573, "../uibg.png"
-static const unsigned char resource_JuceDemoPluginAudioProcessorEditor_uibg_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,7,128,0,0,4,16,8,6,0,0,0,3,44,70,24,0,0,0,4,103,65,77,65,0,0,175,
-200,55,5,138,233,0,0,0,25,116,69,88,116,83,111,102,116,119,97,114,101,0,65,100,111,98,101,32,73,109,97,103,101,82,101,97,100,121,113,201,101,60,0,0,56,127,73,68,65,84,120,218,236,221,125,144,93,117,121,
-192,241,147,23,19,48,169,25,129,8,37,38,133,52,146,146,152,30,16,68,99,147,102,136,133,202,132,73,133,1,82,104,147,138,58,161,113,68,108,82,145,1,43,106,100,124,1,197,12,145,88,141,224,232,24,121,53,29,
-40,83,235,11,99,0,147,66,131,201,169,18,12,50,128,169,137,32,152,109,144,152,49,148,108,127,191,222,187,54,164,155,221,187,175,217,251,220,207,103,230,153,3,187,231,222,123,94,118,243,207,119,207,57,195,
-218,219,219,11,0,0,0,0,0,0,0,154,223,112,135,0,0,0,0,0,0,0,32,6,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,
-0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,
-0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,
-0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,
-0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,
-0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,
-0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,
-32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,
-8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,1,24,0,0,0,0,0,0,32,8,
-1,24,0,0,0,0,0,0,32,136,145,141,174,56,108,216,176,150,57,40,237,237,237,126,50,0,0,0,0,0,0,128,166,51,114,8,110,211,184,52,83,58,249,250,214,52,47,56,101,0,0,0,0,0,0,0,157,59,212,1,120,68,154,51,234,
-51,167,168,133,223,113,93,172,191,51,205,147,105,238,77,243,157,250,0,0,0,0,0,0,0,144,12,107,244,118,199,253,120,11,232,28,120,115,240,93,80,95,142,235,195,123,229,32,252,173,52,119,20,181,24,220,47,87,
-8,187,5,52,0,0,0,0,0,0,208,140,6,51,0,143,77,243,129,52,75,235,255,221,223,118,165,249,100,154,21,105,246,244,229,141,4,96,0,0,0,0,0,0,160,25,13,70,0,206,183,121,94,156,230,163,105,198,15,194,62,109,79,
-115,117,154,175,164,121,169,55,111,208,140,1,184,31,175,208,62,228,4,120,0,0,0,0,0,0,232,157,129,14,192,111,75,115,67,81,123,182,239,96,219,146,230,210,162,246,188,224,30,17,128,127,103,106,81,187,90,
-187,99,57,41,205,182,162,118,181,245,227,251,45,251,85,164,0,220,95,231,165,170,170,25,105,49,51,205,180,252,251,180,115,231,206,215,222,119,223,125,191,247,246,183,191,189,173,190,202,211,245,115,145,
-127,238,55,148,101,249,35,231,2,0,0,0,0,0,160,245,12,84,0,30,149,230,227,69,237,150,207,135,218,199,234,211,240,213,192,45,28,128,143,40,106,209,254,188,162,246,124,230,70,110,213,157,35,112,126,254,242,
-173,69,237,121,204,125,126,14,179,0,92,83,85,213,156,180,184,40,205,57,69,45,240,110,40,106,129,247,241,245,235,215,255,102,229,202,149,243,214,172,89,243,141,250,234,199,20,181,63,180,200,129,120,102,
-253,255,215,166,89,83,150,229,58,231,2,0,0,0,0,0,160,53,12,68,0,206,17,241,155,105,230,12,161,253,204,129,242,220,162,193,56,217,130,1,120,86,154,171,138,90,252,237,139,189,69,45,2,95,147,230,161,222,
-190,73,43,7,224,170,170,242,45,211,23,164,185,34,205,206,52,107,210,172,45,203,242,217,3,86,29,151,230,157,105,174,63,200,251,228,219,173,231,112,124,81,253,119,50,63,31,251,214,244,62,47,181,234,185,
-0,0,0,0,0,0,104,5,253,29,128,39,164,249,151,52,51,134,224,190,62,156,230,236,162,118,37,101,151,90,40,0,231,171,69,63,157,102,222,0,108,82,190,34,248,67,69,47,110,17,221,170,1,184,170,170,28,226,255,49,
-205,230,52,171,202,178,124,160,139,213,15,75,243,254,162,22,118,27,121,223,37,105,78,74,115,73,55,239,27,246,92,0,0,0,0,0,0,180,130,254,12,192,249,138,195,245,197,161,121,222,111,163,242,115,81,103,23,
-181,219,22,31,84,11,4,224,195,211,124,46,205,226,1,222,172,124,181,233,202,52,151,23,181,171,131,27,210,106,1,184,126,213,239,103,210,156,82,212,194,239,154,6,222,250,21,245,227,122,77,163,219,146,62,
-39,95,13,156,67,112,254,99,136,101,141,92,13,44,0,3,0,0,0,0,0,52,151,225,253,244,62,249,118,180,249,202,223,41,67,124,127,243,149,201,223,46,106,1,180,85,77,74,243,96,49,240,241,55,203,97,243,178,52,247,
-23,181,103,210,114,128,170,170,242,237,153,191,87,63,86,111,109,48,254,102,47,22,181,8,220,176,250,123,191,181,254,89,223,171,127,54,0,0,0,0,0,0,129,244,87,0,254,106,81,187,122,177,25,156,150,102,117,
-139,158,239,124,43,224,28,127,103,28,130,99,254,96,19,253,140,12,138,170,170,166,213,143,203,3,101,89,94,154,102,111,15,223,34,175,63,170,39,47,200,159,145,63,43,127,102,91,91,219,198,107,175,189,246,
-52,103,2,0,0,0,0,0,32,142,254,8,192,75,211,204,111,178,253,206,183,194,93,220,98,231,58,159,163,124,165,233,161,186,18,55,95,121,156,175,4,158,235,215,174,40,174,187,238,186,217,207,61,247,220,134,244,
-159,43,202,178,252,80,47,223,102,95,81,187,154,183,199,210,103,174,248,212,167,62,85,77,158,60,249,187,85,85,205,112,70,0,0,0,0,0,0,98,232,235,51,128,79,42,106,87,48,142,106,194,125,223,147,230,143,211,
-60,126,224,55,2,62,3,120,70,253,60,13,133,91,95,239,76,243,166,206,142,123,51,31,255,158,156,151,170,170,38,60,241,196,19,15,223,120,227,141,63,248,206,119,190,243,254,244,165,255,236,229,219,255,93,154,
-155,138,110,158,105,221,137,163,210,44,42,106,183,129,126,75,90,94,149,230,45,101,89,110,139,124,46,0,0,0,0,0,0,90,65,95,3,112,190,162,115,86,19,239,255,61,105,206,62,240,139,193,2,240,248,52,27,139,218,
-21,184,67,197,150,52,57,60,118,26,46,35,7,224,170,170,114,132,95,159,230,142,250,51,121,47,72,115,91,154,39,27,121,191,244,250,215,22,181,120,123,220,13,55,220,48,243,194,11,47,252,249,81,71,29,149,111,
-5,189,35,205,83,105,110,78,239,251,203,46,222,34,63,247,247,29,105,238,77,179,185,254,158,87,164,197,130,162,22,129,247,68,61,23,0,0,0,0,0,0,173,160,47,1,56,223,70,249,235,1,142,65,14,192,247,236,255,
-133,64,1,56,95,153,253,237,52,115,134,224,38,231,99,254,23,105,94,58,240,27,193,3,240,231,242,62,151,101,185,172,254,165,137,69,45,190,230,227,241,232,193,222,39,189,110,73,90,44,124,254,249,231,255,224,
-150,91,110,249,183,71,30,121,164,120,226,137,39,142,26,57,114,228,111,211,103,236,59,254,248,227,119,79,159,62,125,216,130,5,11,102,141,25,51,230,177,180,238,170,244,25,7,254,126,190,58,205,197,197,126,
-241,119,191,247,255,76,90,140,72,175,121,127,212,115,1,0,0,0,0,0,208,10,122,27,128,243,115,71,31,73,51,53,192,49,200,33,236,228,253,191,16,40,0,231,43,59,63,49,132,55,251,61,105,86,29,248,197,168,1,184,
-170,170,124,203,244,124,53,246,43,203,178,220,187,223,106,249,185,204,249,15,42,242,51,154,171,253,95,159,94,179,48,45,150,172,93,187,246,185,21,43,86,140,111,107,107,123,99,209,245,115,127,247,30,113,
-196,17,27,63,252,225,15,255,250,244,211,79,31,93,212,66,112,190,194,184,35,254,126,63,205,15,15,124,81,250,156,252,199,2,191,73,243,166,180,254,195,17,207,5,0,0,0,0,0,64,43,232,109,0,142,114,245,111,135,
-151,93,5,28,36,0,79,72,243,147,52,99,135,240,102,231,231,1,191,174,190,44,154,249,248,55,114,94,170,170,218,84,212,130,236,23,59,89,53,223,154,249,111,210,252,32,205,67,105,221,145,105,249,137,199,30,
-123,236,79,23,47,94,188,175,173,173,237,205,61,253,236,241,227,199,223,127,211,77,55,189,234,176,195,14,251,238,25,103,156,177,61,125,233,129,52,255,126,176,245,211,103,190,43,45,222,155,182,239,228,136,
-231,2,0,0,0,0,0,160,21,12,239,229,235,222,27,236,56,92,22,240,220,126,180,24,218,241,55,203,209,243,170,86,248,69,171,170,106,94,90,108,63,72,252,205,114,4,191,41,205,105,175,127,253,235,223,158,150,215,
-223,126,251,237,39,92,112,193,5,211,123,19,127,179,103,159,125,118,246,252,249,243,39,221,124,243,205,179,175,191,254,250,211,210,54,60,210,213,250,105,219,190,156,183,177,190,173,0,0,0,0,0,0,52,161,222,
-4,224,41,105,102,6,59,14,103,164,153,20,104,127,242,213,191,11,155,100,91,23,23,181,16,28,93,14,221,171,186,89,103,87,154,155,223,240,134,55,92,250,145,143,124,228,117,31,255,248,199,231,181,183,183,143,
-233,203,135,166,215,191,122,205,154,53,39,109,223,190,253,176,244,191,203,27,120,201,170,162,69,162,60,0,0,0,0,0,64,68,189,9,192,11,131,30,139,139,2,237,75,190,149,239,168,38,217,214,177,129,127,166,254,
-87,85,85,211,210,98,92,89,150,247,52,176,238,21,211,166,77,123,113,237,218,181,167,23,93,63,235,183,39,70,93,119,221,117,127,190,121,243,230,83,211,251,119,25,119,235,219,56,174,190,205,0,0,0,0,0,0,52,
-153,222,4,224,51,130,30,139,57,129,246,101,161,237,29,114,251,247,181,238,86,170,170,106,86,91,91,219,95,95,121,229,149,167,22,253,31,240,15,191,248,226,139,255,112,247,238,221,151,165,207,57,185,155,
-117,215,20,177,254,32,2,0,0,0,0,0,160,101,244,52,0,231,91,245,158,22,244,88,228,0,60,42,192,126,204,40,106,183,233,110,38,167,20,177,110,193,125,160,252,76,221,123,26,88,111,201,210,165,75,255,99,223,
-190,125,71,14,196,70,164,247,157,112,229,149,87,222,159,63,167,155,85,239,74,51,223,63,143,0,0,0,0,0,0,205,167,167,1,56,135,186,17,65,143,197,225,105,78,10,176,31,115,155,116,187,231,68,252,161,170,170,
-42,255,209,196,132,178,44,127,212,205,122,111,220,177,99,71,249,195,31,254,240,109,3,185,61,235,214,173,251,179,231,159,127,126,94,250,188,169,7,91,167,190,173,19,234,219,14,0,0,0,0,0,64,19,233,105,0,
-142,254,92,208,169,1,246,97,102,147,110,247,172,160,63,83,249,124,108,104,96,189,37,203,151,47,255,105,49,192,87,161,183,183,183,191,234,218,107,175,205,219,211,221,85,192,27,154,248,103,9,0,0,0,0,0,160,
-101,9,192,47,55,195,62,28,50,81,127,182,242,126,109,105,96,189,211,54,109,218,116,194,96,108,208,125,247,221,55,49,45,222,220,205,106,91,90,224,247,29,0,0,0,0,0,32,156,158,6,224,9,193,143,71,132,253,155,
-210,164,219,61,53,232,207,84,126,182,241,182,174,86,168,170,234,53,187,119,239,126,205,158,61,123,6,229,24,236,218,181,107,250,190,125,251,78,78,159,219,213,213,198,219,138,216,207,101,6,0,0,0,0,0,8,169,
-167,1,120,92,240,227,209,236,251,55,182,24,224,91,8,15,160,168,207,155,205,251,181,179,155,117,222,242,232,163,143,254,184,24,164,231,107,183,183,183,143,121,234,169,167,242,231,157,218,197,106,59,95,
-124,241,197,35,253,19,9,0,0,0,0,0,208,92,70,246,112,253,232,1,120,172,237,63,100,114,252,60,60,205,158,72,63,80,91,183,110,61,118,195,134,13,227,211,127,158,114,176,117,238,188,243,206,147,127,253,235,
-95,15,234,118,165,207,60,108,203,150,45,239,75,255,121,102,103,223,95,180,104,209,235,206,58,235,172,63,58,229,148,83,252,43,9,0,0,0,0,0,208,68,70,58,4,47,51,194,246,219,254,254,180,115,231,206,225,219,
-183,111,63,42,253,231,177,7,91,103,199,142,29,71,14,246,190,207,154,53,235,23,31,248,192,7,238,40,203,242,142,206,190,255,213,175,126,117,126,90,188,203,63,9,0,0,0,0,0,0,205,165,167,1,248,165,224,199,
-99,111,147,111,255,11,182,127,104,153,57,115,230,207,210,60,118,219,109,183,221,125,176,117,46,189,244,210,17,27,55,110,156,182,122,245,234,65,219,174,163,143,62,250,213,105,177,163,139,85,242,213,254,
-187,252,19,9,0,0,0,0,0,208,92,122,250,12,224,103,131,31,143,157,77,190,253,57,216,53,107,196,126,54,240,207,84,119,207,55,94,127,226,137,39,190,126,16,183,105,239,113,199,29,151,63,111,99,23,235,28,17,
-224,247,1,0,0,0,0,0,160,229,244,52,0,63,29,252,120,68,216,191,199,109,247,144,219,175,41,93,173,80,150,229,47,199,140,25,211,54,122,244,232,199,6,99,131,198,142,29,187,101,248,240,225,143,164,207,237,
-234,143,5,166,4,62,39,0,0,0,0,0,0,97,245,52,0,111,13,126,60,34,236,159,0,60,244,126,166,166,54,176,222,198,233,211,167,255,100,48,54,232,212,83,79,125,162,232,250,234,223,162,190,205,209,127,223,1,0,0,
-0,0,0,194,233,105,0,222,18,252,120,68,216,191,13,182,123,200,237,215,220,170,170,70,116,179,222,77,151,95,126,249,248,65,216,158,189,31,252,224,7,115,220,93,117,176,21,234,219,58,55,205,3,254,137,4,0,
-0,0,0,0,104,46,61,13,192,15,5,62,22,47,165,121,56,192,126,172,107,210,237,190,55,226,15,85,89,150,47,20,181,8,60,179,155,245,190,119,226,137,39,254,118,252,248,241,247,15,228,246,76,154,52,105,221,177,
-199,30,187,45,125,222,166,46,86,203,219,186,33,173,179,199,63,145,0,0,0,0,0,0,205,165,167,1,120,123,17,247,86,189,63,74,179,43,192,126,228,72,223,108,207,50,222,90,196,190,221,240,93,105,230,55,176,222,
-170,27,111,188,113,244,176,97,195,118,15,196,70,164,247,109,91,189,122,245,196,162,139,171,127,235,230,215,183,25,0,0,0,0,0,128,38,51,188,23,175,185,39,232,177,136,18,188,242,149,204,107,154,108,155,215,
-4,255,61,203,251,183,180,187,219,64,151,101,121,219,9,39,156,112,223,251,222,247,190,111,15,196,207,197,213,87,95,253,192,209,71,31,253,205,244,57,119,31,108,165,250,54,46,109,129,115,2,0,0,0,0,0,16,82,
-111,2,240,215,130,30,139,72,251,245,229,162,22,130,155,193,222,52,95,137,252,75,86,150,101,190,114,62,255,129,193,59,26,88,125,249,59,223,249,206,157,179,103,207,94,219,159,219,48,127,254,252,127,58,231,
-156,115,126,150,182,229,170,110,86,205,219,120,87,125,155,1,0,0,0,0,0,104,50,189,9,192,249,57,185,91,130,29,135,252,140,214,72,183,182,206,231,103,109,147,108,107,14,239,219,90,224,119,237,154,52,75,186,
-91,169,44,203,231,211,98,213,202,149,43,119,206,154,53,235,238,126,248,220,151,230,207,159,127,231,242,229,203,127,153,254,123,101,3,235,47,169,111,43,0,0,0,0,0,0,77,104,120,47,95,183,42,216,113,88,21,
-240,220,126,172,24,250,87,1,231,171,127,91,34,54,150,101,153,255,112,98,123,85,85,87,53,178,238,214,173,91,111,154,56,113,226,248,101,203,150,253,235,168,81,163,122,245,199,9,163,71,143,254,201,69,23,
-93,180,233,146,75,46,249,175,244,191,43,210,251,118,249,156,229,250,182,61,93,223,86,0,0,0,0,0,0,154,80,111,3,112,190,197,240,211,65,142,193,147,69,204,231,157,254,40,205,138,33,190,141,215,212,143,127,
-171,120,79,154,43,170,170,154,218,221,138,23,92,112,193,228,111,124,227,27,87,45,90,180,232,219,15,62,248,224,164,243,207,63,255,206,87,188,226,21,63,107,228,67,114,48,94,184,112,225,157,15,61,244,80,
-123,89,150,223,155,55,111,222,166,180,124,162,171,215,212,183,233,138,52,151,248,103,17,0,0,0,0,0,160,121,13,107,111,111,111,108,197,97,195,14,252,210,210,52,159,9,112,12,222,93,212,130,246,239,52,122,
-76,134,212,137,252,255,231,39,27,155,102,83,154,41,67,112,147,115,160,62,181,168,93,5,92,52,251,241,111,244,188,84,85,117,89,90,76,45,203,242,61,93,188,236,79,242,58,69,237,217,200,251,210,107,38,23,181,
-91,51,159,247,232,163,143,254,226,243,159,255,252,211,59,118,236,120,229,115,207,61,119,228,222,189,123,95,57,122,244,232,23,142,60,242,200,182,137,19,39,238,190,236,178,203,142,155,60,121,242,171,210,
-186,183,165,89,149,62,231,231,105,121,78,154,255,78,115,208,91,74,167,207,184,49,45,182,166,245,87,68,61,23,0,0,0,0,0,0,173,160,47,1,120,84,81,139,139,211,154,120,255,55,23,181,8,249,178,91,37,7,10,192,
-217,73,105,30,172,159,175,161,226,133,250,113,239,244,150,196,145,3,112,86,85,213,55,211,226,201,178,44,151,117,242,146,9,105,46,76,243,165,52,187,58,121,237,91,235,223,31,159,230,247,211,188,178,126,
-60,159,169,207,87,210,251,174,239,228,119,117,113,154,239,167,249,113,39,239,249,233,180,152,146,94,119,110,228,115,1,0,0,0,0,0,208,10,250,18,128,179,89,105,238,111,210,125,207,209,55,71,200,205,7,126,
-35,88,0,206,46,74,243,245,33,116,220,115,104,188,235,96,43,180,64,0,62,188,168,197,216,111,149,101,121,245,126,223,58,172,168,221,130,249,91,197,65,226,120,31,28,147,102,97,154,213,105,218,246,219,150,
-143,166,197,219,210,188,53,109,203,11,145,207,5,0,0,0,0,0,64,43,24,222,199,215,63,144,230,179,77,186,239,159,44,58,137,191,65,229,103,28,191,127,136,108,203,197,69,23,241,183,21,148,101,185,39,45,206,
-78,179,160,170,170,79,236,247,173,252,181,159,22,253,31,127,179,252,204,238,117,105,206,79,51,34,127,161,126,229,239,130,252,185,157,197,95,0,0,0,0,0,0,154,79,95,175,0,206,242,237,101,243,85,192,167,53,
-209,126,223,155,230,204,226,128,91,63,119,8,120,5,112,135,124,27,224,252,172,215,17,135,96,19,243,179,126,23,165,185,181,187,21,163,95,1,220,161,170,170,113,105,113,75,154,199,231,206,157,251,245,95,253,
-234,87,249,118,221,95,58,216,207,101,63,185,112,204,152,49,187,215,175,95,127,70,81,123,54,244,249,93,197,95,87,0,3,0,0,0,0,0,52,151,225,253,240,30,57,236,229,91,250,110,111,146,125,126,60,205,95,22,3,
-27,217,134,170,47,22,181,171,76,119,14,242,231,230,171,79,115,112,191,213,175,220,255,41,203,50,63,227,247,236,182,182,182,225,103,158,121,230,231,191,240,133,47,252,108,160,127,46,239,190,251,238,95,
-156,123,238,185,255,176,109,219,182,209,133,43,127,1,0,0,0,0,0,194,233,143,43,128,59,76,43,106,207,53,29,63,132,247,55,135,200,217,69,45,2,31,84,224,43,128,59,76,74,115,115,154,185,131,176,105,247,164,
-121,119,253,216,55,164,85,174,0,222,223,218,181,107,255,118,242,228,201,249,182,228,159,45,203,242,99,3,177,45,85,85,125,56,45,150,62,243,204,51,127,127,230,153,103,174,110,181,115,1,0,0,0,0,0,208,10,
-250,51,0,103,51,210,252,115,81,11,140,67,77,142,190,103,21,221,196,223,172,5,2,112,135,121,105,242,115,96,167,13,192,38,61,156,230,242,162,118,187,237,30,105,197,0,156,85,85,117,76,90,124,38,205,41,105,
-86,229,41,203,114,111,95,62,63,189,103,190,69,251,146,250,228,115,178,44,189,103,75,198,120,0,0,0,0,0,128,86,208,223,1,56,203,87,0,223,158,102,206,16,218,207,111,165,249,171,162,193,91,31,183,80,0,238,
-240,174,52,87,165,57,190,31,54,101,107,154,124,5,235,154,222,190,65,171,6,224,14,85,85,77,77,139,43,210,92,148,230,43,105,238,74,179,174,209,219,53,167,215,143,173,255,254,205,79,243,142,250,185,248,100,
-122,253,214,86,62,23,0,0,0,0,0,0,173,96,32,2,112,150,175,58,188,33,205,226,33,176,143,43,210,44,43,122,240,108,213,22,12,192,29,242,45,161,23,164,121,91,209,179,171,184,159,44,106,183,122,206,207,248,
-125,160,175,27,209,234,1,184,67,85,85,71,164,197,121,69,45,228,230,160,155,175,94,223,82,95,30,248,204,237,9,105,166,20,181,171,185,243,114,93,81,11,199,119,148,101,185,211,185,0,0,0,0,0,0,104,13,3,21,
-128,59,228,219,206,230,91,12,143,61,4,251,182,43,205,165,105,190,214,211,23,182,112,0,222,95,14,192,39,21,181,152,56,181,147,239,119,132,200,205,197,255,143,145,125,34,0,119,174,170,170,124,62,58,2,239,
-132,3,190,189,189,126,62,182,148,101,185,217,185,0,0,0,0,0,0,104,77,3,29,128,179,28,18,243,115,77,207,27,196,253,202,183,188,205,87,253,62,221,155,23,11,192,135,150,232,8,0,0,0,0,0,0,189,51,24,1,184,195,
-204,162,246,92,211,249,3,184,63,107,211,92,147,230,225,190,188,137,0,9,0,0,0,0,0,0,52,163,193,12,192,29,242,45,108,23,166,121,71,154,99,250,225,253,242,173,111,191,92,212,110,245,252,120,127,108,160,0,
-12,0,0,0,0,0,0,52,163,67,17,128,247,151,175,10,158,155,102,78,154,227,139,218,179,77,187,179,53,205,147,105,214,165,185,55,205,67,253,189,81,2,48,0,0,0,0,0,0,208,140,14,117,0,238,204,184,162,22,130,143,
-40,106,81,56,95,213,187,171,168,133,223,23,6,99,3,4,96,0,0,0,0,0,0,160,25,13,197,0,124,200,9,192,0,0,0,0,0,0,64,51,26,217,232,138,162,40,0,0,0,0,0,0,192,208,54,220,33,0,0,0,0,0,0,0,136,65,0,6,0,0,0,0,
-0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,
-6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,
-0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,
-0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,
-8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,
-0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,
-66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,
-0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,
-0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,
-0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,
-6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,
-0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,
-0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,
-8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,
-0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,
-66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,
-0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,
-0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,
-0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,
-6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,
-0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,
-0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,
-8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,
-0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,
-66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,
-0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,
-0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,
-0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,
-6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,
-0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,
-0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,
-8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,
-0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,
-66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,0,0,8,66,0,6,0,0,0,0,254,135,61,59,144,1,0,0,0,24,228,111,125,143,175,52,2,0,96,
-66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,
-8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,
-1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,
-128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,
-48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,
-0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,
-192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,
-24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,
-3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,
-0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,
-0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,
-1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,
-0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,
-6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,
-0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,
-0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,
-0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,
-0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,
-0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,
-0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,
-0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,
-0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,
-0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,
-0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,
-0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,
-0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,
-0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,
-0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,
-0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,
-0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,
-0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,
-0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,
-0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,
-0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,
-0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,
-0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,
-0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,
-0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,
-0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,
-0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,
-0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,
-0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,
-0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,
-0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,
-0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,
-0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,
-0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,
-0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,
-0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,
-0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,
-0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,
-0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,
-0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,
-0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,
-0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,
-0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,
-0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,
-0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,
-0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,
-0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,
-0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,136,61,59,144,1,0,0,0,24,228,111,125,143,175,52,2,128,9,1,12,0,0,0,0,0,0,48,33,128,
-1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,
-0,0,0,0,0,0,192,132,0,6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,132,0,
-6,0,0,0,0,0,0,152,16,192,0,0,0,0,0,0,0,19,2,24,0,0,0,0,0,0,96,66,0,3,0,0,0,0,0,0,76,8,96,0,0,0,0,0,0,128,9,1,12,0,0,0,0,0,0,48,33,128,1,0,0,0,0,0,0,38,4,48,0,0,0,0,0,0,192,68,2,12,0,188,93,83,253,98,185,
-130,182,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
+// JUCER_RESOURCE: uibg_png, 42225, "../uibg.png"
+static const unsigned char resource_JuceDemoPluginAudioProcessorEditor_uibg_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,7,128,0,0,4,16,8,2,0,0,0,140,78,209,79,0,0,0,4,103,65,77,65,0,0,
+175,200,55,5,138,233,0,0,0,25,116,69,88,116,83,111,102,116,119,97,114,101,0,65,100,111,98,101,32,73,109,97,103,101,82,101,97,100,121,113,201,101,60,0,0,164,131,73,68,65,84,120,218,236,221,93,106,28,177,
+18,6,208,150,212,51,123,114,24,24,19,200,134,194,53,225,26,194,197,219,118,119,171,174,126,38,11,208,251,209,131,236,41,157,222,64,81,124,149,254,243,223,255,69,68,74,105,219,182,26,181,253,189,149,91,
+109,165,45,162,214,118,167,173,61,37,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,249,254,171,201,134,114,202,13,157,231,89,251,107,205,41,149,82,218,151,205,221,203,157,97,24,134,97,
+24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,123,60,83,71,237,199,214,96,201,121,52,172,95,87,255,54,165,218,219,216,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,96,246,136,122,93,181,
+143,75,111,91,47,228,92,82,58,175,115,47,123,171,28,215,17,209,234,153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,60,127,206,132,142,173,103,115,108,179,57,125,43,183,230,174,184,
+26,205,163,81,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,107,230,227,243,171,55,168,183,186,205,51,191,169,215,200,238,72,227,195,246,95,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,
+97,152,37,179,247,96,142,158,20,221,83,162,219,153,219,9,219,213,112,238,201,29,253,181,55,170,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,204,222,116,68,212,24,103,139,86,189,223,110,
+99,118,58,242,72,138,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,85,147,126,255,249,155,231,118,194,158,216,49,55,21,230,227,252,222,203,94,163,126,31,71,31,157,238,221,106,134,97,24,134,
+97,24,134,97,24,134,97,24,134,97,24,134,89,49,31,159,95,237,49,182,136,90,183,151,76,175,198,245,43,200,35,141,29,134,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,96,202,143,199,179,214,153,
+18,157,106,175,198,158,247,241,107,184,45,230,28,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,124,255,181,141,173,132,121,100,69,159,231,89,123,195,186,230,148,74,233,75,12,155,
+187,151,59,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,246,120,206,201,232,232,123,9,103,78,199,24,142,158,19,210,35,39,186,125,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,
+48,75,102,143,168,215,85,183,17,205,209,11,57,151,148,206,235,220,75,31,150,62,174,35,162,213,51,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,120,254,236,81,29,81,71,42,199,54,155,
+211,183,114,107,238,138,171,209,60,26,213,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,102,62,62,191,102,90,244,12,141,158,243,209,181,94,35,187,35,253,91,86,88,24,134,97,24,134,97,24,134,
+97,24,134,97,24,134,97,24,102,201,236,61,152,163,39,69,247,148,232,118,218,21,91,191,26,206,61,185,163,191,246,70,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,217,155,142,136,26,227,
+108,209,170,247,219,109,204,78,71,30,73,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,239,63,127,243,220,78,216,19,59,230,166,194,124,156,223,123,217,107,212,239,227,232,163,211,
+189,91,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,43,230,227,243,171,61,198,22,81,235,246,146,233,213,184,126,5,121,164,177,195,144,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,22,
+76,249,241,120,214,58,83,162,83,237,213,216,243,62,126,13,183,197,156,163,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,158,239,191,182,177,149,48,143,172,232,243,60,107,111,88,215,156,
+82,41,125,137,97,115,247,114,103,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,222,30,207,57,25,29,125,47,225,204,233,24,195,209,115,66,122,228,68,183,207,24,134,97,24,134,97,24,134,97,24,
+134,97,24,134,97,24,102,201,236,17,245,186,234,54,162,57,122,33,231,146,210,121,157,123,233,195,210,199,117,68,180,122,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,30,207,159,61,170,
+35,234,72,229,216,102,115,250,86,110,205,93,113,53,154,71,163,154,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,214,204,199,231,215,76,139,158,161,209,115,62,186,214,107,100,119,164,127,203,10,
+11,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,189,7,115,244,164,232,158,18,221,78,187,98,235,87,195,185,39,119,244,215,222,168,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,
+37,51,123,211,17,81,99,156,45,90,245,126,187,141,217,233,200,35,41,154,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,86,77,250,253,231,111,158,219,9,123,98,199,220,84,152,143,243,123,47,123,141,
+250,125,28,125,116,186,119,171,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,197,124,124,126,181,199,216,34,106,221,94,50,189,26,215,175,32,143,52,118,24,50,12,195,48,12,195,48,12,195,48,12,
+195,48,12,195,48,204,130,41,63,30,207,90,103,74,116,170,189,26,123,222,199,175,225,182,152,115,212,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,243,253,215,54,182,18,230,145,21,125,
+158,103,237,13,235,154,83,42,165,47,49,108,238,94,238,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,219,227,57,39,163,163,239,37,156,57,29,99,56,122,78,72,143,156,232,246,25,195,48,
+12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,61,162,94,87,221,70,52,71,47,228,92,82,58,175,115,47,125,88,250,184,142,136,86,207,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,
+227,249,179,71,117,68,29,169,28,219,108,78,223,202,173,185,43,174,70,243,104,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,154,249,248,252,154,105,209,51,52,122,206,71,215,122,141,236,142,
+244,111,89,97,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,179,247,96,142,158,20,221,83,162,219,105,87,108,253,106,56,247,228,142,254,218,27,213,12,195,48,12,195,48,12,195,48,12,195,48,
+12,195,48,12,179,100,102,111,58,34,106,140,179,69,171,222,111,183,49,59,29,121,36,69,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,170,73,191,255,252,205,115,59,97,79,236,152,155,10,243,113,
+126,239,101,175,81,191,143,163,143,78,247,110,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,152,143,207,175,246,24,91,68,173,219,75,166,87,227,250,21,228,145,198,14,67,134,97,24,134,97,
+24,134,97,24,134,97,24,134,97,24,134,89,48,229,199,227,89,235,76,137,78,181,87,99,207,251,248,53,220,22,115,142,154,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,190,255,218,198,86,194,
+60,178,162,207,243,172,189,97,93,115,74,165,244,37,134,205,221,203,157,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,123,60,231,100,116,244,189,132,51,167,99,12,71,207,9,233,145,19,221,
+62,99,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,179,71,212,235,170,219,136,230,232,133,156,75,74,231,117,238,165,15,75,31,215,17,209,234,153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,
+134,97,150,76,121,60,127,246,168,142,168,35,149,99,155,205,233,91,185,53,119,197,213,104,30,141,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,51,31,159,95,51,45,122,134,70,207,249,232,90,
+175,145,221,145,254,45,43,44,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,30,204,209,147,162,123,74,116,59,237,138,173,95,13,231,158,220,209,95,123,163,154,97,24,134,97,24,134,97,24,
+134,97,24,134,97,24,134,97,150,204,236,77,71,68,141,113,182,104,213,251,237,54,102,167,35,143,164,104,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,53,233,247,159,191,121,110,39,236,137,29,
+115,83,97,62,206,239,189,236,53,234,247,113,244,209,233,222,173,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,21,243,241,249,213,30,99,139,168,117,123,201,244,106,92,191,130,60,210,216,97,
+200,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,11,166,252,120,60,107,157,41,209,169,246,106,236,121,31,191,134,219,98,206,81,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,207,
+247,95,219,216,74,152,71,86,244,121,158,181,55,172,107,78,169,148,190,196,176,185,123,185,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,111,143,231,156,140,142,190,151,112,230,116,140,
+225,232,57,33,61,114,162,219,103,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,209,28,189,144,115,73,233,188,206,189,244,97,233,227,58,34,90,61,51,12,195,48,12,195,
+48,12,195,48,12,195,48,12,195,48,204,146,41,143,231,207,30,213,17,117,164,114,108,179,57,125,43,183,230,174,184,26,205,163,81,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,107,230,227,243,107,
+166,69,207,208,232,57,31,93,235,53,178,59,210,191,101,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,131,57,122,82,116,79,137,110,167,93,177,245,171,225,220,147,59,250,107,111,
+84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,189,233,136,168,49,206,22,173,122,191,221,198,236,116,228,145,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,253,
+254,243,55,207,237,132,61,177,99,110,42,204,199,249,189,151,189,70,253,62,142,62,58,221,187,213,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,98,62,62,191,218,99,108,17,181,110,47,153,94,141,
+235,87,144,71,26,59,12,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,193,148,31,143,103,173,51,37,58,213,94,141,61,239,227,215,112,91,204,57,106,134,97,24,134,97,24,134,97,24,134,97,24,134,
+97,24,134,89,50,229,249,254,107,27,91,9,243,200,138,62,207,179,246,134,117,205,41,149,210,151,24,54,119,47,119,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,237,241,156,147,209,209,247,
+18,206,156,142,49,28,61,39,164,71,78,116,251,140,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,30,81,175,171,110,35,154,163,23,114,46,41,157,215,185,151,62,44,125,92,71,68,171,103,134,97,
+24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,241,252,217,163,58,162,142,84,142,109,54,167,111,229,214,220,21,87,163,121,52,170,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,205,
+124,124,126,205,180,232,25,26,61,231,163,107,189,70,118,71,250,183,172,176,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,217,123,48,71,79,138,238,41,209,237,180,43,182,126,53,156,123,114,
+71,127,237,141,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,179,55,29,17,53,198,217,162,85,239,183,219,152,157,142,60,146,162,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,
+213,164,223,127,254,230,185,157,176,39,118,204,77,133,249,56,191,247,178,215,168,223,199,209,71,167,123,183,154,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,86,204,199,231,87,123,140,45,162,214,
+237,37,211,171,113,253,10,242,72,99,135,33,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,152,242,227,241,172,117,166,68,167,218,171,177,231,125,252,26,110,139,57,71,205,48,12,195,48,12,195,
+48,12,195,48,12,195,48,12,195,48,75,166,60,223,127,109,99,43,97,30,89,209,231,121,214,222,176,174,57,165,82,250,18,195,230,238,229,206,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,166,188,61,
+158,115,50,58,250,94,194,153,211,49,134,163,231,132,244,200,137,110,159,49,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,217,35,234,117,213,109,68,115,244,66,206,37,165,243,58,247,210,135,
+165,143,235,136,104,245,204,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,166,60,158,63,123,84,71,212,145,202,177,205,230,244,173,220,154,187,226,106,52,143,70,53,195,48,12,195,48,12,195,48,
+12,195,48,12,195,48,12,195,172,153,143,207,175,153,22,61,67,163,231,124,116,173,215,200,238,72,255,150,21,22,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,123,15,230,232,73,209,61,37,186,
+157,118,197,214,175,134,115,79,238,232,175,189,81,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,246,166,35,162,198,56,91,180,234,253,118,27,179,211,145,71,82,52,195,48,12,195,48,12,195,
+48,12,195,48,12,195,48,12,195,172,154,244,251,207,223,60,183,19,246,196,142,185,169,48,31,231,247,94,246,26,245,251,56,250,232,116,239,86,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,138,249,
+248,252,106,143,177,69,212,186,189,100,122,53,174,95,65,30,105,236,48,100,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,5,83,126,60,158,181,206,148,232,84,123,53,246,188,143,95,195,109,49,231,
+168,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,231,251,175,109,108,37,204,35,43,250,60,207,218,27,214,53,167,84,74,95,98,216,220,189,220,25,134,97,24,134,97,24,134,97,24,134,97,24,
+134,97,24,102,201,148,183,199,115,78,70,71,223,75,56,115,58,198,112,244,156,144,30,57,209,237,51,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,123,68,189,174,186,141,104,142,94,200,185,164,
+116,94,231,94,250,176,244,113,29,17,173,158,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,199,243,103,143,234,136,58,82,57,182,217,156,190,149,91,115,87,92,141,230,209,168,102,24,134,
+97,24,134,97,24,134,97,24,134,97,24,134,97,152,53,243,241,249,53,211,162,103,104,244,156,143,174,245,26,217,29,233,223,178,194,194,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,239,193,28,
+61,41,186,167,68,183,211,174,216,250,213,112,238,201,29,253,181,55,170,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,204,222,116,68,212,24,103,139,86,189,223,110,99,118,58,242,72,138,102,
+24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,85,147,126,255,249,155,231,118,194,158,216,49,55,21,230,227,252,222,203,94,163,126,31,71,31,157,238,221,106,134,97,24,134,97,24,134,97,24,134,97,24,
+134,97,24,134,89,49,31,159,95,237,49,182,136,90,183,151,76,175,198,245,43,200,35,141,29,134,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,96,202,143,199,179,214,153,18,157,106,175,198,158,247,
+241,107,184,45,230,28,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,124,255,181,141,173,132,121,100,69,159,231,89,123,195,186,230,148,74,233,75,12,155,187,151,59,195,48,12,195,48,
+12,195,48,12,195,48,12,195,48,12,195,44,153,242,246,120,206,201,232,232,123,9,103,78,199,24,142,158,19,210,35,39,186,125,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,
+183,17,205,209,11,57,151,148,206,235,220,75,31,150,62,174,35,162,213,51,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,120,254,236,81,29,81,71,42,199,54,155,211,183,114,107,238,138,171,
+209,60,26,213,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,102,62,62,191,102,90,244,12,141,158,243,209,181,94,35,187,35,253,91,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,
+201,236,61,152,163,39,69,247,148,232,118,218,21,91,191,26,206,61,185,163,191,246,70,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,217,155,142,136,26,227,108,209,170,247,219,109,204,78,
+71,30,73,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,239,63,127,243,220,78,216,19,59,230,166,194,124,156,223,123,217,107,212,239,227,232,163,211,189,91,205,48,12,195,48,12,195,
+48,12,195,48,12,195,48,12,195,48,43,230,227,243,171,61,198,22,81,235,246,146,233,213,184,126,5,121,164,177,195,144,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,22,76,249,241,120,214,58,83,162,
+83,237,213,216,243,62,126,13,183,197,156,163,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,158,239,191,182,177,149,48,143,172,232,243,60,107,111,88,215,156,82,41,125,137,97,115,247,114,
+103,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,222,30,207,57,25,29,125,47,225,204,233,24,195,209,115,66,122,228,68,183,207,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,
+236,17,245,186,234,54,162,57,122,33,231,146,210,121,157,123,233,195,210,199,117,68,180,122,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,30,207,159,61,170,35,234,72,229,216,102,115,250,
+86,110,205,93,113,53,154,71,163,154,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,214,204,199,231,215,76,139,158,161,209,115,62,186,214,107,100,119,164,127,203,10,11,195,48,12,195,48,12,195,48,
+12,195,48,12,195,48,12,195,44,153,189,7,115,244,164,232,158,18,221,78,187,98,235,87,195,185,39,119,244,215,222,168,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,51,123,211,17,81,99,156,
+45,90,245,126,187,141,217,233,200,35,41,154,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,86,77,250,253,231,111,158,219,9,123,98,199,220,84,152,143,243,123,47,123,141,250,125,28,125,116,186,119,
+171,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,197,124,124,126,181,199,216,34,106,221,94,50,189,26,215,175,32,143,52,118,24,50,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,130,41,
+63,30,207,90,103,74,116,170,189,26,123,222,199,175,225,182,152,115,212,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,243,253,215,54,182,18,230,145,21,125,158,103,237,13,235,154,83,42,
+165,47,49,108,238,94,238,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,219,227,57,39,163,163,239,37,156,57,29,99,56,122,78,72,143,156,232,246,25,195,48,12,195,48,12,195,48,12,195,48,
+12,195,48,12,195,44,153,61,162,94,87,221,70,52,71,47,228,92,82,58,175,115,47,125,88,250,184,142,136,86,207,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,227,249,179,71,117,68,29,169,
+28,219,108,78,223,202,173,185,43,174,70,243,104,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,154,249,248,252,154,105,209,51,52,122,206,71,215,122,141,236,142,244,111,89,97,97,24,134,97,
+24,134,97,24,134,97,24,134,97,24,134,97,152,37,179,247,96,142,158,20,221,83,162,219,105,87,108,253,106,56,247,228,142,254,218,27,213,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,102,111,
+58,34,106,140,179,69,171,222,111,183,49,59,29,121,36,69,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,170,73,191,255,252,205,115,59,97,79,236,152,155,10,243,113,126,239,101,175,81,191,143,163,
+143,78,247,110,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,152,143,207,175,246,24,91,68,173,219,75,166,87,227,250,21,228,145,198,14,67,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,
+134,89,48,229,199,227,89,235,76,137,78,181,87,99,207,251,248,53,220,22,115,142,154,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,190,255,218,198,86,194,60,178,162,207,243,172,189,97,
+93,115,74,165,244,37,134,205,221,203,157,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,123,60,231,100,116,244,189,132,51,167,99,12,71,207,9,233,145,19,221,62,99,24,134,97,24,134,97,24,
+134,97,24,134,97,24,134,97,152,37,179,71,212,235,170,219,136,230,232,133,156,75,74,231,117,238,165,15,75,31,215,17,209,234,153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,60,127,246,
+168,142,168,35,149,99,155,205,233,91,185,53,119,197,213,104,30,141,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,51,31,159,95,51,45,122,134,70,207,249,232,90,175,145,221,145,254,45,43,44,
+12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,30,204,209,147,162,123,74,116,59,237,138,173,95,13,231,158,220,209,95,123,163,154,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,
+150,204,236,77,71,68,141,113,182,104,213,251,237,54,102,167,35,143,164,104,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,53,233,247,159,191,121,110,39,236,137,29,115,83,97,62,206,239,189,236,
+53,234,247,113,244,209,233,222,173,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,21,243,241,249,213,30,99,139,168,117,123,201,244,106,92,191,130,60,210,216,97,200,48,12,195,48,12,195,48,12,
+195,48,12,195,48,12,195,48,11,166,252,120,60,107,157,41,209,169,246,106,236,121,31,191,134,219,98,206,81,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,207,247,95,219,216,74,152,71,86,
+244,121,158,181,55,172,107,78,169,148,190,196,176,185,123,185,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,111,143,231,156,140,142,190,151,112,230,116,140,225,232,57,33,61,114,162,219,
+103,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,209,28,189,144,115,73,233,188,206,189,244,97,233,227,58,34,90,61,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,
+48,204,146,41,143,231,207,30,213,17,117,164,114,108,179,57,125,43,183,230,174,184,26,205,163,81,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,107,230,227,243,107,166,69,207,208,232,57,31,93,
+235,53,178,59,210,191,101,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,131,57,122,82,116,79,137,110,167,93,177,245,171,225,220,147,59,250,107,111,84,51,12,195,48,12,195,48,
+12,195,48,12,195,48,12,195,48,204,146,153,189,233,136,168,49,206,22,173,122,191,221,198,236,116,228,145,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,253,254,243,55,207,237,132,61,
+177,99,110,42,204,199,249,189,151,189,70,253,62,142,62,58,221,187,213,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,98,62,62,191,218,99,108,17,181,110,47,153,94,141,235,87,144,71,26,59,12,25,
+134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,193,148,31,143,103,173,51,37,58,213,94,141,61,239,227,215,112,91,204,57,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,249,254,
+107,27,91,9,243,200,138,62,207,179,246,134,117,205,41,149,210,151,24,54,119,47,119,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,237,241,156,147,209,209,247,18,206,156,142,49,28,61,39,
+164,71,78,116,251,140,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,30,81,175,171,110,35,154,163,23,114,46,41,157,215,185,151,62,44,125,92,71,68,171,103,134,97,24,134,97,24,134,97,24,134,
+97,24,134,97,24,134,89,50,229,241,252,217,163,58,162,142,84,142,109,54,167,111,229,214,220,21,87,163,121,52,170,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,205,124,124,126,205,180,232,25,
+26,61,231,163,107,189,70,118,71,250,183,172,176,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,217,123,48,71,79,138,238,41,209,237,180,43,182,126,53,156,123,114,71,127,237,141,106,134,97,
+24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,179,55,29,17,53,198,217,162,85,239,183,219,152,157,142,60,146,162,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,213,164,223,127,254,230,
+185,157,176,39,118,204,77,133,249,56,191,247,178,215,168,223,199,209,71,167,123,183,154,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,86,204,199,231,87,123,140,45,162,214,237,37,211,171,113,253,
+10,242,72,99,135,33,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,152,242,227,241,172,117,166,68,167,218,171,177,231,125,252,26,110,139,57,71,205,48,12,195,48,12,195,48,12,195,48,12,195,48,
+12,195,48,75,166,60,223,127,109,99,43,97,30,89,209,231,121,214,222,176,174,57,165,82,250,18,195,230,238,229,206,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,166,188,61,158,115,50,58,250,94,
+194,153,211,49,134,163,231,132,244,200,137,110,159,49,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,217,35,234,117,213,109,68,115,244,66,206,37,165,243,58,247,210,135,165,143,235,136,104,245,
+204,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,166,60,158,63,123,84,71,212,145,202,177,205,230,244,173,220,154,187,226,106,52,143,70,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,
+172,153,143,207,175,153,22,61,67,163,231,124,116,173,215,200,238,72,255,150,21,22,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,123,15,230,232,73,209,61,37,186,157,118,197,214,175,134,115,
+79,238,232,175,189,81,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,246,166,35,162,198,56,91,180,234,253,118,27,179,211,145,71,82,52,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,
+195,172,154,244,251,207,223,60,183,19,246,196,142,185,169,48,31,231,247,94,246,26,245,251,56,250,232,116,239,86,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,138,249,248,252,106,143,177,69,
+212,186,189,100,122,53,174,95,65,30,105,236,48,100,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,5,83,126,60,158,181,206,148,232,84,123,53,246,188,143,95,195,109,49,231,168,25,134,97,24,134,97,
+24,134,97,24,134,97,24,134,97,24,102,201,148,231,251,175,109,108,37,204,35,43,250,60,207,218,27,214,53,167,84,74,95,98,216,220,189,220,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,
+183,199,115,78,70,71,223,75,56,115,58,198,112,244,156,144,30,57,209,237,51,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,123,68,189,174,186,141,104,142,94,200,185,164,116,94,231,94,250,176,
+244,113,29,17,173,158,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,199,243,103,143,234,136,58,82,57,182,217,156,190,149,91,115,87,92,141,230,209,168,102,24,134,97,24,134,97,24,134,
+97,24,134,97,24,134,97,152,53,243,241,249,53,211,162,103,104,244,156,143,174,245,26,217,29,233,223,178,194,194,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,239,193,28,61,41,186,167,68,183,
+211,174,216,250,213,112,238,201,29,253,181,55,170,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,204,222,116,68,212,24,103,139,86,189,223,110,99,118,58,242,72,138,102,24,134,97,24,134,97,
+24,134,97,24,134,97,24,134,97,152,85,147,126,255,249,155,231,118,194,158,216,49,55,21,230,227,252,222,203,94,163,126,31,71,31,157,238,221,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,49,
+31,159,95,237,49,182,136,90,183,151,76,175,198,245,43,200,35,141,29,134,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,96,202,143,199,179,214,153,18,157,106,175,198,158,247,241,107,184,45,230,
+28,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,124,255,181,141,173,132,121,100,69,159,231,89,123,195,186,230,148,74,233,75,12,155,187,151,59,195,48,12,195,48,12,195,48,12,195,48,
+12,195,48,12,195,44,153,242,246,120,206,201,232,232,123,9,103,78,199,24,142,158,19,210,35,39,186,125,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,17,205,209,11,57,
+151,148,206,235,220,75,31,150,62,174,35,162,213,51,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,120,254,236,81,29,81,71,42,199,54,155,211,183,114,107,238,138,171,209,60,26,213,12,195,
+48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,102,62,62,191,102,90,244,12,141,158,243,209,181,94,35,187,35,253,91,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,61,152,163,
+39,69,247,148,232,118,218,21,91,191,26,206,61,185,163,191,246,70,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,217,155,142,136,26,227,108,209,170,247,219,109,204,78,71,30,73,209,12,195,
+48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,239,63,127,243,220,78,216,19,59,230,166,194,124,156,223,123,217,107,212,239,227,232,163,211,189,91,205,48,12,195,48,12,195,48,12,195,48,12,195,
+48,12,195,48,43,230,227,243,171,61,198,22,81,235,246,146,233,213,184,126,5,121,164,177,195,144,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,22,76,249,241,120,214,58,83,162,83,237,213,216,243,62,
+126,13,183,197,156,163,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,158,239,191,182,177,149,48,143,172,232,243,60,107,111,88,215,156,82,41,125,137,97,115,247,114,103,24,134,97,24,134,
+97,24,134,97,24,134,97,24,134,97,152,37,83,222,30,207,57,25,29,125,47,225,204,233,24,195,209,115,66,122,228,68,183,207,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,17,245,186,234,54,
+162,57,122,33,231,146,210,121,157,123,233,195,210,199,117,68,180,122,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,30,207,159,61,170,35,234,72,229,216,102,115,250,86,110,205,93,113,53,
+154,71,163,154,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,214,204,199,231,215,76,139,158,161,209,115,62,186,214,107,100,119,164,127,203,10,11,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,
+195,44,153,189,7,115,244,164,232,158,18,221,78,187,98,235,87,195,185,39,119,244,215,222,168,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,51,123,211,17,81,99,156,45,90,245,126,187,141,217,
+233,200,35,41,154,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,86,77,250,253,231,111,158,219,9,123,98,199,220,84,152,143,243,123,47,123,141,250,125,28,125,116,186,119,171,25,134,97,24,134,97,24,
+134,97,24,134,97,24,134,97,24,102,197,124,124,126,181,199,216,34,106,221,94,50,189,26,215,175,32,143,52,118,24,50,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,130,41,63,30,207,90,103,74,116,170,
+189,26,123,222,199,175,225,182,152,115,212,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,243,253,215,54,182,18,230,145,21,125,158,103,237,13,235,154,83,42,165,47,49,108,238,94,238,12,
+195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,219,227,57,39,163,163,239,37,156,57,29,99,56,122,78,72,143,156,232,246,25,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,61,
+162,94,87,221,70,52,71,47,228,92,82,58,175,115,47,125,88,250,184,142,136,86,207,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,227,249,179,71,117,68,29,169,28,219,108,78,223,202,173,
+185,43,174,70,243,104,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,154,249,248,252,154,105,209,51,52,122,206,71,215,122,141,236,142,244,111,89,97,97,24,134,97,24,134,97,24,134,97,24,134,
+97,24,134,97,152,37,179,247,96,142,158,20,221,83,162,219,105,87,108,253,106,56,247,228,142,254,218,27,213,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,102,111,58,34,106,140,179,69,171,
+222,111,183,49,59,29,121,36,69,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,170,73,191,255,252,205,115,59,97,79,236,152,155,10,243,113,126,239,101,175,81,191,143,163,143,78,247,110,53,195,
+48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,152,143,207,175,246,24,91,68,173,219,75,166,87,227,250,21,228,145,198,14,67,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,48,229,199,227,
+89,235,76,137,78,181,87,99,207,251,248,53,220,22,115,142,154,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,190,255,218,198,86,194,60,178,162,207,243,172,189,97,93,115,74,165,244,37,134,
+205,221,203,157,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,123,60,231,100,116,244,189,132,51,167,99,12,71,207,9,233,145,19,221,62,99,24,134,97,24,134,97,24,134,97,24,134,97,24,134,
+97,152,37,179,71,212,235,170,219,136,230,232,133,156,75,74,231,117,238,165,15,75,31,215,17,209,234,153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,60,127,246,168,142,168,35,149,99,
+155,205,233,91,185,53,119,197,213,104,30,141,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,51,31,159,95,51,45,122,134,70,207,249,232,90,175,145,221,145,254,45,43,44,12,195,48,12,195,48,
+12,195,48,12,195,48,12,195,48,12,179,100,246,30,204,209,147,162,123,74,116,59,237,138,173,95,13,231,158,220,209,95,123,163,154,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,236,77,71,68,
+141,113,182,104,213,251,237,54,102,167,35,143,164,104,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,53,233,247,159,191,121,110,39,236,137,29,115,83,97,62,206,239,189,236,53,234,247,113,244,
+209,233,222,173,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,21,243,241,249,213,30,99,139,168,117,123,201,244,106,92,191,130,60,210,216,97,200,48,12,195,48,12,195,48,12,195,48,12,195,48,12,
+195,48,11,166,252,120,60,107,157,41,209,169,246,106,236,121,31,191,134,219,98,206,81,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,207,247,95,219,216,74,152,71,86,244,121,158,181,55,
+172,107,78,169,148,190,196,176,185,123,185,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,111,143,231,156,140,142,190,151,112,230,116,140,225,232,57,33,61,114,162,219,103,12,195,48,12,
+195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,209,28,189,144,115,73,233,188,206,189,244,97,233,227,58,34,90,61,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,143,
+231,207,30,213,17,117,164,114,108,179,57,125,43,183,230,174,184,26,205,163,81,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,107,230,227,243,107,166,69,207,208,232,57,31,93,235,53,178,59,210,
+191,101,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,131,57,122,82,116,79,137,110,167,93,177,245,171,225,220,147,59,250,107,111,84,51,12,195,48,12,195,48,12,195,48,12,195,48,
+12,195,48,204,146,153,189,233,136,168,49,206,22,173,122,191,221,198,236,116,228,145,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,253,254,243,55,207,237,132,61,177,99,110,42,204,199,
+249,189,151,189,70,253,62,142,62,58,221,187,213,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,98,62,62,191,218,99,108,17,181,110,47,153,94,141,235,87,144,71,26,59,12,25,134,97,24,134,97,24,
+134,97,24,134,97,24,134,97,24,102,193,148,31,143,103,173,51,37,58,213,94,141,61,239,227,215,112,91,204,57,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,249,254,107,27,91,9,243,200,
+138,62,207,179,246,134,117,205,41,149,210,151,24,54,119,47,119,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,237,241,156,147,209,209,247,18,206,156,142,49,28,61,39,164,71,78,116,251,
+140,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,30,81,175,171,110,35,154,163,23,114,46,41,157,215,185,151,62,44,125,92,71,68,171,103,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,
+134,89,50,229,241,252,217,163,58,162,142,84,142,109,54,167,111,229,214,220,21,87,163,121,52,170,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,205,124,124,126,205,180,232,25,26,61,231,163,107,
+189,70,118,71,250,183,172,176,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,217,123,48,71,79,138,238,41,209,237,180,43,182,126,53,156,123,114,71,127,237,141,106,134,97,24,134,97,24,134,
+97,24,134,97,24,134,97,24,134,89,50,179,55,29,17,53,198,217,162,85,239,183,219,152,157,142,60,146,162,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,213,164,223,127,254,230,185,157,176,39,118,
+204,77,133,249,56,191,247,178,215,168,223,199,209,71,167,123,183,154,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,86,204,199,231,87,123,140,45,162,214,237,37,211,171,113,253,10,242,72,99,135,33,
+195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,152,242,227,241,172,117,166,68,167,218,171,177,231,125,252,26,110,139,57,71,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,166,60,
+223,127,109,99,43,97,30,89,209,231,121,214,222,176,174,57,165,82,250,18,195,230,238,229,206,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,166,188,61,158,115,50,58,250,94,194,153,211,49,134,163,
+231,132,244,200,137,110,159,49,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,217,35,234,117,213,109,68,115,244,66,206,37,165,243,58,247,210,135,165,143,235,136,104,245,204,48,12,195,48,12,
+195,48,12,195,48,12,195,48,12,195,48,75,166,60,158,63,123,84,71,212,145,202,177,205,230,244,173,220,154,187,226,106,52,143,70,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,153,143,207,175,
+153,22,61,67,163,231,124,116,173,215,200,238,72,255,150,21,22,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,123,15,230,232,73,209,61,37,186,157,118,197,214,175,134,115,79,238,232,175,189,
+81,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,246,166,35,162,198,56,91,180,234,253,118,27,179,211,145,71,82,52,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,154,244,251,
+207,223,60,183,19,246,196,142,185,169,48,31,231,247,94,246,26,245,251,56,250,232,116,239,86,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,138,249,248,252,106,143,177,69,212,186,189,100,122,
+53,174,95,65,30,105,236,48,100,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,5,83,126,60,158,181,206,148,232,84,123,53,246,188,143,95,195,109,49,231,168,25,134,97,24,134,97,24,134,97,24,134,97,
+24,134,97,24,102,201,148,231,251,175,109,108,37,204,35,43,250,60,207,218,27,214,53,167,84,74,95,98,216,220,189,220,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,183,199,115,78,70,71,
+223,75,56,115,58,198,112,244,156,144,30,57,209,237,51,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,123,68,189,174,186,141,104,142,94,200,185,164,116,94,231,94,250,176,244,113,29,17,173,
+158,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,199,243,103,143,234,136,58,82,57,182,217,156,190,149,91,115,87,92,141,230,209,168,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,
+97,152,53,243,241,249,53,211,162,103,104,244,156,143,174,245,26,217,29,233,223,178,194,194,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,239,193,28,61,41,186,167,68,183,211,174,216,250,213,
+112,238,201,29,253,181,55,170,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,204,222,116,68,212,24,103,139,86,189,223,110,99,118,58,242,72,138,102,24,134,97,24,134,97,24,134,97,24,134,97,
+24,134,97,152,85,147,126,255,249,155,231,118,194,158,216,49,55,21,230,227,252,222,203,94,163,126,31,71,31,157,238,221,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,49,31,159,95,237,49,182,
+136,90,183,151,76,175,198,245,43,200,35,141,29,134,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,96,202,143,199,179,214,153,18,157,106,175,198,158,247,241,107,184,45,230,28,53,195,48,12,195,
+48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,124,255,181,141,173,132,121,100,69,159,231,89,123,195,186,230,148,74,233,75,12,155,187,151,59,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,
+153,242,246,120,206,201,232,232,123,9,103,78,199,24,142,158,19,210,35,39,186,125,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,17,205,209,11,57,151,148,206,235,220,
+75,31,150,62,174,35,162,213,51,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,120,254,236,81,29,81,71,42,199,54,155,211,183,114,107,238,138,171,209,60,26,213,12,195,48,12,195,48,12,195,
+48,12,195,48,12,195,48,12,179,102,62,62,191,102,90,244,12,141,158,243,209,181,94,35,187,35,253,91,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,61,152,163,39,69,247,148,232,118,
+218,21,91,191,26,206,61,185,163,191,246,70,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,217,155,142,136,26,227,108,209,170,247,219,109,204,78,71,30,73,209,12,195,48,12,195,48,12,195,
+48,12,195,48,12,195,48,12,179,106,210,239,63,127,243,220,78,216,19,59,230,166,194,124,156,223,123,217,107,212,239,227,232,163,211,189,91,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,43,230,
+227,243,171,61,198,22,81,235,246,146,233,213,184,126,5,121,164,177,195,144,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,22,76,249,241,120,214,58,83,162,83,237,213,216,243,62,126,13,183,197,156,
+163,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,158,239,191,182,177,149,48,143,172,232,243,60,107,111,88,215,156,82,41,125,137,97,115,247,114,103,24,134,97,24,134,97,24,134,97,24,134,
+97,24,134,97,152,37,83,222,30,207,57,25,29,125,47,225,204,233,24,195,209,115,66,122,228,68,183,207,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,17,245,186,234,54,162,57,122,33,231,
+146,210,121,157,123,233,195,210,199,117,68,180,122,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,30,207,159,61,170,35,234,72,229,216,102,115,250,86,110,205,93,113,53,154,71,163,154,97,
+24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,214,204,199,231,215,76,139,158,161,209,115,62,186,214,107,100,119,164,127,203,10,11,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,189,7,
+115,244,164,232,158,18,221,78,187,98,235,87,195,185,39,119,244,215,222,168,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,51,123,211,17,81,99,156,45,90,245,126,187,141,217,233,200,35,41,
+154,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,86,77,250,253,231,111,158,219,9,123,98,199,220,84,152,143,243,123,47,123,141,250,125,28,125,116,186,119,171,25,134,97,24,134,97,24,134,97,24,134,
+97,24,134,97,24,102,197,124,124,126,181,199,216,34,106,221,94,50,189,26,215,175,32,143,52,118,24,50,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,130,41,63,30,207,90,103,74,116,170,189,26,123,
+222,199,175,225,182,152,115,212,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,243,253,215,54,182,18,230,145,21,125,158,103,237,13,235,154,83,42,165,47,49,108,238,94,238,12,195,48,12,
+195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,219,227,57,39,163,163,239,37,156,57,29,99,56,122,78,72,143,156,232,246,25,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,61,162,94,87,
+221,70,52,71,47,228,92,82,58,175,115,47,125,88,250,184,142,136,86,207,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,227,249,179,71,117,68,29,169,28,219,108,78,223,202,173,185,43,174,
+70,243,104,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,154,249,248,252,154,105,209,51,52,122,206,71,215,122,141,236,142,244,111,89,97,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,
+97,152,37,179,247,96,142,158,20,221,83,162,219,105,87,108,253,106,56,247,228,142,254,218,27,213,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,102,111,58,34,106,140,179,69,171,222,111,183,
+49,59,29,121,36,69,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,170,73,191,255,252,205,115,59,97,79,236,152,155,10,243,113,126,239,101,175,81,191,143,163,143,78,247,110,53,195,48,12,195,48,
+12,195,48,12,195,48,12,195,48,12,195,172,152,143,207,175,246,24,91,68,173,219,75,166,87,227,250,21,228,145,198,14,67,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,48,229,199,227,89,235,76,137,
+78,181,87,99,207,251,248,53,220,22,115,142,154,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,190,255,218,198,86,194,60,178,162,207,243,172,189,97,93,115,74,165,244,37,134,205,221,203,
+157,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,123,60,231,100,116,244,189,132,51,167,99,12,71,207,9,233,145,19,221,62,99,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,179,
+71,212,235,170,219,136,230,232,133,156,75,74,231,117,238,165,15,75,31,215,17,209,234,153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,60,127,246,168,142,168,35,149,99,155,205,233,91,
+185,53,119,197,213,104,30,141,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,51,31,159,95,51,45,122,134,70,207,249,232,90,175,145,221,145,254,45,43,44,12,195,48,12,195,48,12,195,48,12,195,
+48,12,195,48,12,179,100,246,30,204,209,147,162,123,74,116,59,237,138,173,95,13,231,158,220,209,95,123,163,154,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,236,77,71,68,141,113,182,104,
+213,251,237,54,102,167,35,143,164,104,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,53,233,247,159,191,121,110,39,236,137,29,115,83,97,62,206,239,189,236,53,234,247,113,244,209,233,222,173,
+102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,21,243,241,249,213,30,99,139,168,117,123,201,244,106,92,191,130,60,210,216,97,200,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,11,166,
+252,120,60,107,157,41,209,169,246,106,236,121,31,191,134,219,98,206,81,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,207,247,95,219,216,74,152,71,86,244,121,158,181,55,172,107,78,169,
+148,190,196,176,185,123,185,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,111,143,231,156,140,142,190,151,112,230,116,140,225,232,57,33,61,114,162,219,103,12,195,48,12,195,48,12,195,
+48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,209,28,189,144,115,73,233,188,206,189,244,97,233,227,58,34,90,61,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,143,231,207,30,
+213,17,117,164,114,108,179,57,125,43,183,230,174,184,26,205,163,81,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,107,230,227,243,107,166,69,207,208,232,57,31,93,235,53,178,59,210,191,101,133,
+133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,131,57,122,82,116,79,137,110,167,93,177,245,171,225,220,147,59,250,107,111,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,
+204,146,153,189,233,136,168,49,206,22,173,122,191,221,198,236,116,228,145,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,253,254,243,55,207,237,132,61,177,99,110,42,204,199,249,189,
+151,189,70,253,62,142,62,58,221,187,213,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,98,62,62,191,218,99,108,17,181,110,47,153,94,141,235,87,144,71,26,59,12,25,134,97,24,134,97,24,134,97,24,
+134,97,24,134,97,24,102,193,148,31,143,103,173,51,37,58,213,94,141,61,239,227,215,112,91,204,57,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,249,254,107,27,91,9,243,200,138,62,207,
+179,246,134,117,205,41,149,210,151,24,54,119,47,119,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,237,241,156,147,209,209,247,18,206,156,142,49,28,61,39,164,71,78,116,251,140,97,24,134,
+97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,30,81,175,171,110,35,154,163,23,114,46,41,157,215,185,151,62,44,125,92,71,68,171,103,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,
+241,252,217,163,58,162,142,84,142,109,54,167,111,229,214,220,21,87,163,121,52,170,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,205,124,124,126,205,180,232,25,26,61,231,163,107,189,70,118,71,
+250,183,172,176,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,217,123,48,71,79,138,238,41,209,237,180,43,182,126,53,156,123,114,71,127,237,141,106,134,97,24,134,97,24,134,97,24,134,97,24,
+134,97,24,134,89,50,179,55,29,17,53,198,217,162,85,239,183,219,152,157,142,60,146,162,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,213,164,223,127,254,230,185,157,176,39,118,204,77,133,249,
+56,191,247,178,215,168,223,199,209,71,167,123,183,154,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,86,204,199,231,87,123,140,45,162,214,237,37,211,171,113,253,10,242,72,99,135,33,195,48,12,195,
+48,12,195,48,12,195,48,12,195,48,12,195,44,152,242,227,241,172,117,166,68,167,218,171,177,231,125,252,26,110,139,57,71,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,166,60,223,127,109,99,
+43,97,30,89,209,231,121,214,222,176,174,57,165,82,250,18,195,230,238,229,206,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,166,188,61,158,115,50,58,250,94,194,153,211,49,134,163,231,132,244,
+200,137,110,159,49,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,217,35,234,117,213,109,68,115,244,66,206,37,165,243,58,247,210,135,165,143,235,136,104,245,204,48,12,195,48,12,195,48,12,195,
+48,12,195,48,12,195,48,75,166,60,158,63,123,84,71,212,145,202,177,205,230,244,173,220,154,187,226,106,52,143,70,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,153,143,207,175,153,22,61,67,
+163,231,124,116,173,215,200,238,72,255,150,21,22,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,123,15,230,232,73,209,61,37,186,157,118,197,214,175,134,115,79,238,232,175,189,81,205,48,12,
+195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,246,166,35,162,198,56,91,180,234,253,118,27,179,211,145,71,82,52,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,154,244,251,207,223,60,
+183,19,246,196,142,185,169,48,31,231,247,94,246,26,245,251,56,250,232,116,239,86,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,138,249,248,252,106,143,177,69,212,186,189,100,122,53,174,95,65,
+30,105,236,48,100,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,5,83,126,60,158,181,206,148,232,84,123,53,246,188,143,95,195,109,49,231,168,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,
+102,201,148,231,251,175,109,108,37,204,35,43,250,60,207,218,27,214,53,167,84,74,95,98,216,220,189,220,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,183,199,115,78,70,71,223,75,56,115,
+58,198,112,244,156,144,30,57,209,237,51,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,123,68,189,174,186,141,104,142,94,200,185,164,116,94,231,94,250,176,244,113,29,17,173,158,25,134,97,
+24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,199,243,103,143,234,136,58,82,57,182,217,156,190,149,91,115,87,92,141,230,209,168,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,53,243,
+241,249,53,211,162,103,104,244,156,143,174,245,26,217,29,233,223,178,194,194,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,239,193,28,61,41,186,167,68,183,211,174,216,250,213,112,238,201,
+29,253,181,55,170,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,204,222,116,68,212,24,103,139,86,189,223,110,99,118,58,242,72,138,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,
+85,147,126,255,249,155,231,118,194,158,216,49,55,21,230,227,252,222,203,94,163,126,31,71,31,157,238,221,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,49,31,159,95,237,49,182,136,90,183,
+151,76,175,198,245,43,200,35,141,29,134,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,96,202,143,199,179,214,153,18,157,106,175,198,158,247,241,107,184,45,230,28,53,195,48,12,195,48,12,195,
+48,12,195,48,12,195,48,12,195,44,153,242,124,255,181,141,173,132,121,100,69,159,231,89,123,195,186,230,148,74,233,75,12,155,187,151,59,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,
+246,120,206,201,232,232,123,9,103,78,199,24,142,158,19,210,35,39,186,125,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,17,205,209,11,57,151,148,206,235,220,75,31,150,
+62,174,35,162,213,51,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,120,254,236,81,29,81,71,42,199,54,155,211,183,114,107,238,138,171,209,60,26,213,12,195,48,12,195,48,12,195,48,12,195,
+48,12,195,48,12,179,102,62,62,191,102,90,244,12,141,158,243,209,181,94,35,187,35,253,91,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,61,152,163,39,69,247,148,232,118,218,21,91,
+191,26,206,61,185,163,191,246,70,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,217,155,142,136,26,227,108,209,170,247,219,109,204,78,71,30,73,209,12,195,48,12,195,48,12,195,48,12,195,
+48,12,195,48,12,179,106,210,239,63,127,243,220,78,216,19,59,230,166,194,124,156,223,123,217,107,212,239,227,232,163,211,189,91,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,43,230,227,243,171,
+61,198,22,81,235,246,146,233,213,184,126,5,121,164,177,195,144,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,22,76,249,241,120,214,58,83,162,83,237,213,216,243,62,126,13,183,197,156,163,102,24,
+134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,158,239,191,182,177,149,48,143,172,232,243,60,107,111,88,215,156,82,41,125,137,97,115,247,114,103,24,134,97,24,134,97,24,134,97,24,134,97,24,134,
+97,152,37,83,222,30,207,57,25,29,125,47,225,204,233,24,195,209,115,66,122,228,68,183,207,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,17,245,186,234,54,162,57,122,33,231,146,210,121,
+157,123,233,195,210,199,117,68,180,122,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,30,207,159,61,170,35,234,72,229,216,102,115,250,86,110,205,93,113,53,154,71,163,154,97,24,134,97,
+24,134,97,24,134,97,24,134,97,24,134,97,214,204,199,231,215,76,139,158,161,209,115,62,186,214,107,100,119,164,127,203,10,11,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,189,7,115,244,164,
+232,158,18,221,78,187,98,235,87,195,185,39,119,244,215,222,168,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,51,123,211,17,81,99,156,45,90,245,126,187,141,217,233,200,35,41,154,97,24,134,
+97,24,134,97,24,134,97,24,134,97,24,134,97,86,77,250,253,231,111,158,219,9,123,98,199,220,84,152,143,243,123,47,123,141,250,125,28,125,116,186,119,171,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,
+24,102,197,124,124,126,181,199,216,34,106,221,94,50,189,26,215,175,32,143,52,118,24,50,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,130,41,63,30,207,90,103,74,116,170,189,26,123,222,199,175,225,
+182,152,115,212,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,243,253,215,54,182,18,230,145,21,125,158,103,237,13,235,154,83,42,165,47,49,108,238,94,238,12,195,48,12,195,48,12,195,48,
+12,195,48,12,195,48,12,179,100,202,219,227,57,39,163,163,239,37,156,57,29,99,56,122,78,72,143,156,232,246,25,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,61,162,94,87,221,70,52,71,47,228,
+92,82,58,175,115,47,125,88,250,184,142,136,86,207,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,227,249,179,71,117,68,29,169,28,219,108,78,223,202,173,185,43,174,70,243,104,84,51,12,
+195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,154,249,248,252,154,105,209,51,52,122,206,71,215,122,141,236,142,244,111,89,97,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,179,247,96,
+142,158,20,221,83,162,219,105,87,108,253,106,56,247,228,142,254,218,27,213,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,102,111,58,34,106,140,179,69,171,222,111,183,49,59,29,121,36,69,
+51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,170,73,191,255,252,205,115,59,97,79,236,152,155,10,243,113,126,239,101,175,81,191,143,163,143,78,247,110,53,195,48,12,195,48,12,195,48,12,195,48,
+12,195,48,12,195,172,152,143,207,175,246,24,91,68,173,219,75,166,87,227,250,21,228,145,198,14,67,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,48,229,199,227,89,235,76,137,78,181,87,99,207,
+251,248,53,220,22,115,142,154,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,190,255,218,198,86,194,60,178,162,207,243,172,189,97,93,115,74,165,244,37,134,205,221,203,157,97,24,134,97,
+24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,123,60,231,100,116,244,189,132,51,167,99,12,71,207,9,233,145,19,221,62,99,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,179,71,212,235,170,
+219,136,230,232,133,156,75,74,231,117,238,165,15,75,31,215,17,209,234,153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,60,127,246,168,142,168,35,149,99,155,205,233,91,185,53,119,197,
+213,104,30,141,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,51,31,159,95,51,45,122,134,70,207,249,232,90,175,145,221,145,254,45,43,44,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,
+12,179,100,246,30,204,209,147,162,123,74,116,59,237,138,173,95,13,231,158,220,209,95,123,163,154,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,236,77,71,68,141,113,182,104,213,251,237,54,
+102,167,35,143,164,104,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,53,233,247,159,191,121,110,39,236,137,29,115,83,97,62,206,239,189,236,53,234,247,113,244,209,233,222,173,102,24,134,97,24,
+134,97,24,134,97,24,134,97,24,134,97,152,21,243,241,249,213,30,99,139,168,117,123,201,244,106,92,191,130,60,210,216,97,200,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,11,166,252,120,60,107,157,
+41,209,169,246,106,236,121,31,191,134,219,98,206,81,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,207,247,95,219,216,74,152,71,86,244,121,158,181,55,172,107,78,169,148,190,196,176,185,
+123,185,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,111,143,231,156,140,142,190,151,112,230,116,140,225,232,57,33,61,114,162,219,103,12,195,48,12,195,48,12,195,48,12,195,48,12,195,
+48,12,179,100,246,136,122,93,117,27,209,28,189,144,115,73,233,188,206,189,244,97,233,227,58,34,90,61,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,143,231,207,30,213,17,117,164,114,108,
+179,57,125,43,183,230,174,184,26,205,163,81,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,107,230,227,243,107,166,69,207,208,232,57,31,93,235,53,178,59,210,191,101,133,133,97,24,134,97,24,134,
+97,24,134,97,24,134,97,24,134,97,150,204,222,131,57,122,82,116,79,137,110,167,93,177,245,171,225,220,147,59,250,107,111,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,189,233,136,
+168,49,206,22,173,122,191,221,198,236,116,228,145,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,253,254,243,55,207,237,132,61,177,99,110,42,204,199,249,189,151,189,70,253,62,142,62,
+58,221,187,213,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,98,62,62,191,218,99,108,17,181,110,47,153,94,141,235,87,144,71,26,59,12,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,
+193,148,31,143,103,173,51,37,58,213,94,141,61,239,227,215,112,91,204,57,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,249,254,107,27,91,9,243,200,138,62,207,179,246,134,117,205,41,
+149,210,151,24,54,119,47,119,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,237,241,156,147,209,209,247,18,206,156,142,49,28,61,39,164,71,78,116,251,140,97,24,134,97,24,134,97,24,134,
+97,24,134,97,24,134,97,150,204,30,81,175,171,110,35,154,163,23,114,46,41,157,215,185,151,62,44,125,92,71,68,171,103,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,241,252,217,163,58,162,
+142,84,142,109,54,167,111,229,214,220,21,87,163,121,52,170,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,205,124,124,126,205,180,232,25,26,61,231,163,107,189,70,118,71,250,183,172,176,48,12,
+195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,217,123,48,71,79,138,238,41,209,237,180,43,182,126,53,156,123,114,71,127,237,141,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,
+179,55,29,17,53,198,217,162,85,239,183,219,152,157,142,60,146,162,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,213,164,223,127,254,230,185,157,176,39,118,204,77,133,249,56,191,247,178,215,
+168,223,199,209,71,167,123,183,154,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,86,204,199,231,87,123,140,45,162,214,237,37,211,171,113,253,10,242,72,99,135,33,195,48,12,195,48,12,195,48,12,195,
+48,12,195,48,12,195,44,152,242,227,241,172,117,166,68,167,218,171,177,231,125,252,26,110,139,57,71,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,166,60,223,127,109,99,43,97,30,89,209,231,
+121,214,222,176,174,57,165,82,250,18,195,230,238,229,206,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,166,188,61,158,115,50,58,254,207,222,189,165,184,13,4,81,0,85,119,203,222,83,130,193,97,
+32,27,10,12,129,129,124,204,182,71,82,87,250,225,89,64,255,31,125,8,92,58,222,64,113,185,213,239,18,206,158,142,17,142,158,9,233,209,19,221,254,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,
+75,102,143,168,215,85,183,81,205,209,7,57,151,148,206,235,220,75,15,75,31,215,17,209,230,153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,60,223,122,85,71,212,209,202,177,205,229,244,
+173,220,154,187,226,106,52,143,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,153,247,143,207,217,22,61,75,163,103,62,186,214,107,116,119,164,239,99,133,133,97,24,134,97,24,134,97,24,
+134,97,24,134,97,24,134,97,150,204,222,139,57,122,83,116,111,137,110,79,123,197,214,95,13,231,222,220,209,191,246,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,185,155,142,136,26,
+227,217,162,77,239,183,219,200,78,71,30,77,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,159,191,255,242,188,78,216,27,59,230,165,194,124,156,95,123,217,107,212,175,227,232,209,
+233,190,173,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,21,243,254,241,217,62,198,22,81,235,246,146,233,181,184,126,21,121,164,113,195,144,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,
+97,22,76,249,249,120,214,58,91,162,83,237,211,216,243,62,126,13,183,197,204,81,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,207,95,191,183,113,149,48,143,174,232,243,60,107,95,88,215,
+156,82,41,253,136,97,115,247,114,103,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,126,60,158,51,25,29,253,46,225,236,233,24,225,232,153,144,30,61,209,237,111,12,195,48,12,195,48,12,195,
+48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,213,28,125,144,115,73,233,188,206,189,244,176,244,113,29,17,109,158,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,199,243,173,
+87,117,68,29,173,28,219,92,78,223,202,173,185,43,174,70,243,88,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,154,121,255,248,156,109,209,179,52,122,230,163,107,189,70,119,71,250,62,86,88,
+24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,189,152,163,55,69,247,150,232,246,180,87,108,253,213,112,238,205,29,253,107,95,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,
+204,146,153,187,233,136,168,49,158,45,218,244,126,187,141,236,116,228,209,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,253,249,251,47,207,235,132,189,177,99,94,42,204,199,249,181,
+151,189,70,253,58,142,30,157,238,219,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,49,239,31,159,237,99,108,17,181,110,47,153,94,139,235,87,145,71,26,55,12,25,134,97,24,134,97,24,134,97,
+24,134,97,24,134,97,24,102,193,148,159,143,103,173,179,37,58,213,62,141,61,239,227,215,112,91,204,28,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,252,245,123,27,87,9,243,232,138,
+62,207,179,246,133,117,205,41,149,210,143,24,54,119,47,119,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,199,227,57,147,209,209,239,18,206,158,142,17,142,158,9,233,209,19,221,254,198,
+48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,81,205,209,7,57,151,148,206,235,220,75,15,75,31,215,17,209,230,153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,
+76,121,60,223,122,85,71,212,209,202,177,205,229,244,173,220,154,187,226,106,52,143,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,153,247,143,207,217,22,61,75,163,103,62,186,214,107,116,
+119,164,239,99,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,139,57,122,83,116,111,137,110,79,123,197,214,95,13,231,222,220,209,191,246,69,53,195,48,12,195,48,12,195,48,12,195,
+48,12,195,48,12,195,44,153,185,155,142,136,26,227,217,162,77,239,183,219,200,78,71,30,77,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,159,191,255,242,188,78,216,27,59,230,165,194,
+124,156,95,123,217,107,212,175,227,232,209,233,190,173,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,21,243,254,241,217,62,198,22,81,235,246,146,233,181,184,126,21,121,164,113,195,144,97,24,
+134,97,24,134,97,24,134,97,24,134,97,24,134,97,22,76,249,249,120,214,58,91,162,83,237,211,216,243,62,126,13,183,197,204,81,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,207,95,191,183,
+113,149,48,143,174,232,243,60,107,95,88,215,156,82,41,253,136,97,115,247,114,103,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,126,60,158,51,25,29,253,46,225,236,233,24,225,232,153,144,30,
+61,209,237,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,213,28,125,144,115,73,233,188,206,189,244,176,244,113,29,17,109,158,25,134,97,24,134,97,24,134,97,24,134,
+97,24,134,97,24,102,201,148,199,243,173,87,117,68,29,173,28,219,92,78,223,202,173,185,43,174,70,243,88,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,154,121,255,248,156,109,209,179,52,122,
+230,163,107,189,70,119,71,250,62,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,189,152,163,55,69,247,150,232,246,180,87,108,253,213,112,238,205,29,253,107,95,84,51,12,195,48,12,
+195,48,12,195,48,12,195,48,12,195,48,204,146,153,187,233,136,168,49,158,45,218,244,126,187,141,236,116,228,209,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,253,249,251,47,207,235,
+132,189,177,99,94,42,204,199,249,181,151,189,70,253,58,142,30,157,238,219,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,49,239,31,159,237,99,108,17,181,110,47,153,94,139,235,87,145,71,26,
+55,12,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,193,148,159,143,103,173,179,37,58,213,62,141,61,239,227,215,112,91,204,28,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,
+242,252,245,123,27,87,9,243,232,138,62,207,179,246,133,117,205,41,149,210,143,24,54,119,47,119,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,199,227,57,147,209,209,239,18,206,158,142,
+17,142,158,9,233,209,19,221,254,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,81,205,209,7,57,151,148,206,235,220,75,15,75,31,215,17,209,230,153,97,24,134,97,24,134,
+97,24,134,97,24,134,97,24,134,97,150,76,121,60,223,122,85,71,212,209,202,177,205,229,244,173,220,154,187,226,106,52,143,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,153,247,143,207,
+217,22,61,75,163,103,62,186,214,107,116,119,164,239,99,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,139,57,122,83,116,111,137,110,79,123,197,214,95,13,231,222,220,209,191,246,
+69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,185,155,142,136,26,227,217,162,77,239,183,219,200,78,71,30,77,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,159,
+191,255,242,188,78,216,27,59,230,165,194,124,156,95,123,217,107,212,175,227,232,209,233,190,173,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,21,243,254,241,217,62,198,22,81,235,246,146,233,
+181,184,126,21,121,164,113,195,144,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,22,76,249,249,120,214,58,91,162,83,237,211,216,243,62,126,13,183,197,204,81,51,12,195,48,12,195,48,12,195,48,12,
+195,48,12,195,48,204,146,41,207,95,191,183,113,149,48,143,174,232,243,60,107,95,88,215,156,82,41,253,136,97,115,247,114,103,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,126,60,158,51,25,
+29,253,46,225,236,233,24,225,232,153,144,30,61,209,237,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,213,28,125,144,115,73,233,188,206,189,244,176,244,113,29,17,
+109,158,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,199,243,173,87,117,68,29,173,28,219,92,78,223,202,173,185,43,174,70,243,88,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,
+48,204,154,121,255,248,156,109,209,179,52,122,230,163,107,189,70,119,71,250,62,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,189,152,163,55,69,247,150,232,246,180,87,108,253,213,
+112,238,205,29,253,107,95,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,187,233,136,168,49,158,45,218,244,126,187,141,236,116,228,209,20,205,48,12,195,48,12,195,48,12,195,48,12,195,
+48,12,195,48,171,38,253,249,251,47,207,235,132,189,177,99,94,42,204,199,249,181,151,189,70,253,58,142,30,157,238,219,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,49,239,31,159,237,99,108,
+17,181,110,47,153,94,139,235,87,145,71,26,55,12,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,193,148,159,143,103,173,179,37,58,213,62,141,61,239,227,215,112,91,204,28,53,195,48,12,195,48,12,
+195,48,12,195,48,12,195,48,12,195,44,153,242,252,245,123,27,87,9,243,232,138,62,207,179,246,133,117,205,41,149,210,143,24,54,119,47,119,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,
+199,227,57,147,209,209,239,18,206,158,142,17,142,158,9,233,209,19,221,254,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,81,205,209,7,57,151,148,206,235,220,75,15,75,
+31,215,17,209,230,153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,60,223,122,85,71,212,209,202,177,205,229,244,173,220,154,187,226,106,52,143,69,53,195,48,12,195,48,12,195,48,12,195,
+48,12,195,48,12,195,172,153,247,143,207,217,22,61,75,163,103,62,186,214,107,116,119,164,239,99,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,139,57,122,83,116,111,137,110,79,
+123,197,214,95,13,231,222,220,209,191,246,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,185,155,142,136,26,227,217,162,77,239,183,219,200,78,71,30,77,209,12,195,48,12,195,48,12,195,
+48,12,195,48,12,195,48,12,179,106,210,159,191,255,242,188,78,216,27,59,230,165,194,124,156,95,123,217,107,212,175,227,232,209,233,190,173,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,21,243,
+254,241,217,62,198,22,81,235,246,146,233,181,184,126,21,121,164,113,195,144,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,22,76,249,249,120,214,58,91,162,83,237,211,216,243,62,126,13,183,197,204,
+81,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,207,95,191,183,113,149,48,143,174,232,243,60,107,95,88,215,156,82,41,253,136,97,115,247,114,103,24,134,97,24,134,97,24,134,97,24,134,
+97,24,134,97,152,37,83,126,60,158,51,25,29,253,46,225,236,233,24,225,232,153,144,30,61,209,237,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,213,28,125,144,115,
+73,233,188,206,189,244,176,244,113,29,17,109,158,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,199,243,173,87,117,68,29,173,28,219,92,78,223,202,173,185,43,174,70,243,88,84,51,12,195,
+48,12,195,48,12,195,48,12,195,48,12,195,48,204,154,121,255,248,156,109,209,179,52,122,230,163,107,189,70,119,71,250,62,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,189,152,163,
+55,69,247,150,232,246,180,87,108,253,213,112,238,205,29,253,107,95,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,187,233,136,168,49,158,45,218,244,126,187,141,236,116,228,209,20,
+205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,253,249,251,47,207,235,132,189,177,99,94,42,204,199,249,181,151,189,70,253,58,142,30,157,238,219,106,134,97,24,134,97,24,134,97,24,134,97,
+24,134,97,24,134,89,49,239,31,159,237,99,108,17,181,110,47,153,94,139,235,87,145,71,26,55,12,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,193,148,159,143,103,173,179,37,58,213,62,141,61,239,
+227,215,112,91,204,28,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,252,245,123,27,87,9,243,232,138,62,207,179,246,133,117,205,41,149,210,143,24,54,119,47,119,134,97,24,134,97,24,
+134,97,24,134,97,24,134,97,24,134,89,50,229,199,227,57,147,209,209,239,18,206,158,142,17,142,158,9,233,209,19,221,254,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,
+81,205,209,7,57,151,148,206,235,220,75,15,75,31,215,17,209,230,153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,60,223,122,85,71,212,209,202,177,205,229,244,173,220,154,187,226,106,
+52,143,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,153,247,143,207,217,22,61,75,163,103,62,186,214,107,116,119,164,239,99,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,
+97,150,204,222,139,57,122,83,116,111,137,110,79,123,197,214,95,13,231,222,220,209,191,246,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,185,155,142,136,26,227,217,162,77,239,183,219,
+200,78,71,30,77,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,159,191,255,242,188,78,216,27,59,230,165,194,124,156,95,123,217,107,212,175,227,232,209,233,190,173,102,24,134,97,24,
+134,97,24,134,97,24,134,97,24,134,97,152,21,243,254,241,217,62,198,22,81,235,246,146,233,181,184,126,21,121,164,113,195,144,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,22,76,249,249,120,214,58,
+91,162,83,237,211,216,243,62,126,13,183,197,204,81,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,207,95,191,183,113,149,48,143,174,232,243,60,107,95,88,215,156,82,41,253,136,97,115,247,
+114,103,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,126,60,158,51,25,29,253,46,225,236,233,24,225,232,153,144,30,61,209,237,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,
+100,246,136,122,93,117,27,213,28,125,144,115,73,233,188,206,189,244,176,244,113,29,17,109,158,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,199,243,173,87,117,68,29,173,28,219,92,78,
+223,202,173,185,43,174,70,243,88,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,154,121,255,248,156,109,209,179,52,122,230,163,107,189,70,119,71,250,62,86,88,24,134,97,24,134,97,24,134,97,
+24,134,97,24,134,97,24,102,201,236,189,152,163,55,69,247,150,232,246,180,87,108,253,213,112,238,205,29,253,107,95,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,187,233,136,168,49,
+158,45,218,244,126,187,141,236,116,228,209,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,253,249,251,47,207,235,132,189,177,99,94,42,204,199,249,181,151,189,70,253,58,142,30,157,238,
+219,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,49,239,31,159,237,99,108,17,181,110,47,153,94,139,235,87,145,71,26,55,12,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,193,148,
+159,143,103,173,179,37,58,213,62,141,61,239,227,215,112,91,204,28,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,252,245,123,27,87,9,243,232,138,62,207,179,246,133,117,205,41,149,
+210,143,24,54,119,47,119,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,199,227,57,147,209,209,239,18,206,158,142,17,142,158,9,233,209,19,221,254,198,48,12,195,48,12,195,48,12,195,48,
+12,195,48,12,195,48,75,102,143,168,215,85,183,81,205,209,7,57,151,148,206,235,220,75,15,75,31,215,17,209,230,153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,60,223,122,85,71,212,209,
+202,177,205,229,244,173,220,154,187,226,106,52,143,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,153,247,143,207,217,22,61,75,163,103,62,186,214,107,116,119,164,239,99,133,133,97,24,
+134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,139,57,122,83,116,111,137,110,79,123,197,214,95,13,231,222,220,209,191,246,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,
+185,155,142,136,26,227,217,162,77,239,183,219,200,78,71,30,77,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,159,191,255,242,188,78,216,27,59,230,165,194,124,156,95,123,217,107,212,
+175,227,232,209,233,190,173,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,21,243,254,241,217,62,198,22,81,235,246,146,233,181,184,126,21,121,164,113,195,144,97,24,134,97,24,134,97,24,134,97,
+24,134,97,24,134,97,22,76,249,249,120,214,58,91,162,83,237,211,216,243,62,126,13,183,197,204,81,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,207,95,191,183,113,149,48,143,174,232,243,
+60,107,95,88,215,156,82,41,253,136,97,115,247,114,103,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,126,60,158,51,25,29,253,46,225,236,233,24,225,232,153,144,30,61,209,237,111,12,195,48,
+12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,213,28,125,144,115,73,233,188,206,189,244,176,244,113,29,17,109,158,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,
+148,199,243,173,87,117,68,29,173,28,219,92,78,223,202,173,185,43,174,70,243,88,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,154,121,255,248,156,109,209,179,52,122,230,163,107,189,70,119,
+71,250,62,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,189,152,163,55,69,247,150,232,246,180,87,108,253,213,112,238,205,29,253,107,95,84,51,12,195,48,12,195,48,12,195,48,12,195,
+48,12,195,48,204,146,153,187,233,136,168,49,158,45,218,244,126,187,141,236,116,228,209,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,253,249,251,47,207,235,132,189,177,99,94,42,204,
+199,249,181,151,189,70,253,58,142,30,157,238,219,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,49,239,31,159,237,99,108,17,181,110,47,153,94,139,235,87,145,71,26,55,12,25,134,97,24,134,
+97,24,134,97,24,134,97,24,134,97,24,102,193,148,159,143,103,173,179,37,58,213,62,141,61,239,227,215,112,91,204,28,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,252,245,123,27,87,
+9,243,232,138,62,207,179,246,133,117,205,41,149,210,143,24,54,119,47,119,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,199,227,57,147,209,209,239,18,206,158,142,17,142,158,9,233,209,
+19,221,254,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,81,205,209,7,57,151,148,206,235,220,75,15,75,31,215,17,209,230,153,97,24,134,97,24,134,97,24,134,97,24,134,
+97,24,134,97,150,76,121,60,223,122,85,71,212,209,202,177,205,229,244,173,220,154,187,226,106,52,143,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,153,247,143,207,217,22,61,75,163,103,
+62,186,214,107,116,119,164,239,99,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,139,57,122,83,116,111,137,110,79,123,197,214,95,13,231,222,220,209,191,246,69,53,195,48,12,195,
+48,12,195,48,12,195,48,12,195,48,12,195,44,153,185,155,142,136,26,227,217,162,77,239,183,219,200,78,71,30,77,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,159,191,255,242,188,78,
+216,27,59,230,165,194,124,156,95,123,217,107,212,175,227,232,209,233,190,173,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,21,243,254,241,217,62,198,22,81,235,246,146,233,181,184,126,21,121,
+164,113,195,144,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,22,76,249,249,120,214,58,91,162,83,237,211,216,243,62,126,13,183,197,204,81,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,
+146,41,207,95,191,183,113,149,48,143,174,232,243,60,107,95,88,215,156,82,41,253,136,97,115,247,114,103,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,126,60,158,51,25,29,253,46,225,236,233,
+24,225,232,153,144,30,61,209,237,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,213,28,125,144,115,73,233,188,206,189,244,176,244,113,29,17,109,158,25,134,97,24,
+134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,199,243,173,87,117,68,29,173,28,219,92,78,223,202,173,185,43,174,70,243,88,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,154,121,255,248,
+156,109,209,179,52,122,230,163,107,189,70,119,71,250,62,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,189,152,163,55,69,247,150,232,246,180,87,108,253,213,112,238,205,29,253,107,
+95,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,187,233,136,168,49,158,45,218,244,126,187,141,236,116,228,209,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,
+253,249,251,47,207,235,132,189,177,99,94,42,204,199,249,181,151,189,70,253,58,142,30,157,238,219,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,49,239,31,159,237,99,108,17,181,110,47,153,
+94,139,235,87,145,71,26,55,12,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,193,148,159,143,103,173,179,37,58,213,62,141,61,239,227,215,112,91,204,28,53,195,48,12,195,48,12,195,48,12,195,48,
+12,195,48,12,195,44,153,242,252,245,123,27,87,9,243,232,138,62,207,179,246,133,117,205,41,149,210,143,24,54,119,47,119,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,199,227,57,147,209,
+209,239,18,206,158,142,17,142,158,9,233,209,19,221,254,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,81,205,209,7,57,151,148,206,235,220,75,15,75,31,215,17,209,230,
+153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,60,223,122,85,71,212,209,202,177,205,229,244,173,220,154,187,226,106,52,143,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,
+195,172,153,247,143,207,217,22,61,75,163,103,62,186,214,107,116,119,164,239,99,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,139,57,122,83,116,111,137,110,79,123,197,214,95,
+13,231,222,220,209,191,246,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,185,155,142,136,26,227,217,162,77,239,183,219,200,78,71,30,77,209,12,195,48,12,195,48,12,195,48,12,195,48,
+12,195,48,12,179,106,210,159,191,255,242,188,78,216,27,59,230,165,194,124,156,95,123,217,107,212,175,227,232,209,233,190,173,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,21,243,254,241,217,
+62,198,22,81,235,246,146,233,181,184,126,21,121,164,113,195,144,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,22,76,249,249,120,214,58,91,162,83,237,211,216,243,62,126,13,183,197,204,81,51,12,195,
+48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,207,95,191,183,113,149,48,143,174,232,243,60,107,95,88,215,156,82,41,253,136,97,115,247,114,103,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,
+152,37,83,126,60,158,51,25,29,253,46,225,236,233,24,225,232,153,144,30,61,209,237,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,213,28,125,144,115,73,233,188,206,
+189,244,176,244,113,29,17,109,158,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,199,243,173,87,117,68,29,173,28,219,92,78,223,202,173,185,43,174,70,243,88,84,51,12,195,48,12,195,48,
+12,195,48,12,195,48,12,195,48,204,154,121,255,248,156,109,209,179,52,122,230,163,107,189,70,119,71,250,62,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,189,152,163,55,69,247,150,
+232,246,180,87,108,253,213,112,238,205,29,253,107,95,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,187,233,136,168,49,158,45,218,244,126,187,141,236,116,228,209,20,205,48,12,195,
+48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,253,249,251,47,207,235,132,189,177,99,94,42,204,199,249,181,151,189,70,253,58,142,30,157,238,219,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,
+134,89,49,239,31,159,237,99,108,17,181,110,47,153,94,139,235,87,145,71,26,55,12,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,193,148,159,143,103,173,179,37,58,213,62,141,61,239,227,215,112,
+91,204,28,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,252,245,123,27,87,9,243,232,138,62,207,179,246,133,117,205,41,149,210,143,24,54,119,47,119,134,97,24,134,97,24,134,97,24,134,
+97,24,134,97,24,134,89,50,229,199,227,57,147,209,209,239,18,206,158,142,17,142,158,9,233,209,19,221,254,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,81,205,209,7,
+57,151,148,206,235,220,75,15,75,31,215,17,209,230,153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,60,223,122,85,71,212,209,202,177,205,229,244,173,220,154,187,226,106,52,143,69,53,
+195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,153,247,143,207,217,22,61,75,163,103,62,186,214,107,116,119,164,239,99,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,
+139,57,122,83,116,111,137,110,79,123,197,214,95,13,231,222,220,209,191,246,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,185,155,142,136,26,227,217,162,77,239,183,219,200,78,71,30,
+77,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,159,191,255,242,188,78,216,27,59,230,165,194,124,156,95,123,217,107,212,175,227,232,209,233,190,173,102,24,134,97,24,134,97,24,134,
+97,24,134,97,24,134,97,152,21,243,254,241,217,62,198,22,81,235,246,146,233,181,184,126,21,121,164,113,195,144,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,22,76,249,249,120,214,58,91,162,83,237,
+211,216,243,62,126,13,183,197,204,81,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,207,95,191,183,113,149,48,143,174,232,243,60,107,95,88,215,156,82,41,253,136,97,115,247,114,103,24,
+134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,126,60,158,51,25,29,253,46,225,236,233,24,225,232,153,144,30,61,209,237,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,
+122,93,117,27,213,28,125,144,115,73,233,188,206,189,244,176,244,113,29,17,109,158,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,199,243,173,87,117,68,29,173,28,219,92,78,223,202,173,
+185,43,174,70,243,88,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,154,121,255,248,156,109,209,179,52,122,230,163,107,189,70,119,71,250,62,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,
+134,97,24,102,201,236,189,152,163,55,69,247,150,232,246,180,87,108,253,213,112,238,205,29,253,107,95,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,187,233,136,168,49,158,45,218,244,
+126,187,141,236,116,228,209,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,253,249,251,47,207,235,132,189,177,99,94,42,204,199,249,181,151,189,70,253,58,142,30,157,238,219,106,134,
+97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,49,239,31,159,237,99,108,17,181,110,47,153,94,139,235,87,145,71,26,55,12,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,193,148,159,143,103,
+173,179,37,58,213,62,141,61,239,227,215,112,91,204,28,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,252,245,123,27,87,9,243,232,138,62,207,179,246,133,117,205,41,149,210,143,24,54,
+119,47,119,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,199,227,57,147,209,209,239,18,206,158,142,17,142,158,9,233,209,19,221,254,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,
+48,75,102,143,168,215,85,183,81,205,209,7,57,151,148,206,235,220,75,15,75,31,215,17,209,230,153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,60,223,122,85,71,212,209,202,177,205,229,
+244,173,220,154,187,226,106,52,143,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,153,247,143,207,217,22,61,75,163,103,62,186,214,107,116,119,164,239,99,133,133,97,24,134,97,24,134,97,
+24,134,97,24,134,97,24,134,97,150,204,222,139,57,122,83,116,111,137,110,79,123,197,214,95,13,231,222,220,209,191,246,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,185,155,142,136,
+26,227,217,162,77,239,183,219,200,78,71,30,77,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,159,191,255,242,188,78,216,27,59,230,165,194,124,156,95,123,217,107,212,175,227,232,209,
+233,190,173,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,21,243,254,241,217,62,198,22,81,235,246,146,233,181,184,126,21,121,164,113,195,144,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,
+97,22,76,249,249,120,214,58,91,162,83,237,211,216,243,62,126,13,183,197,204,81,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,207,95,191,183,113,149,48,143,174,232,243,60,107,95,88,215,
+156,82,41,253,136,97,115,247,114,103,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,126,60,158,51,25,29,253,46,225,236,233,24,225,232,153,144,30,61,209,237,111,12,195,48,12,195,48,12,195,
+48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,213,28,125,144,115,73,233,188,206,189,244,176,244,113,29,17,109,158,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,199,243,173,
+87,117,68,29,173,28,219,92,78,223,202,173,185,43,174,70,243,88,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,154,121,255,248,156,109,209,179,52,122,230,163,107,189,70,119,71,250,62,86,88,
+24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,189,152,163,55,69,247,150,232,246,180,87,108,253,213,112,238,205,29,253,107,95,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,
+204,146,153,187,233,136,168,49,158,45,218,244,126,187,141,236,116,228,209,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,253,249,251,47,207,235,132,189,177,99,94,42,204,199,249,181,
+151,189,70,253,58,142,30,157,238,219,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,49,239,31,159,237,99,108,17,181,110,47,153,94,139,235,87,145,71,26,55,12,25,134,97,24,134,97,24,134,97,
+24,134,97,24,134,97,24,102,193,148,159,143,103,173,179,37,58,213,62,141,61,239,227,215,112,91,204,28,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,252,245,123,27,87,9,243,232,138,
+62,207,179,246,133,117,205,41,149,210,143,24,54,119,47,119,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,199,227,57,147,209,209,239,18,206,158,142,17,142,158,9,233,209,19,221,254,198,
+48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,81,205,209,7,57,151,148,206,235,220,75,15,75,31,215,17,209,230,153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,
+76,121,60,223,122,85,71,212,209,202,177,205,229,244,173,220,154,187,226,106,52,143,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,153,247,143,207,217,22,61,75,163,103,62,186,214,107,116,
+119,164,239,99,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,139,57,122,83,116,111,137,110,79,123,197,214,95,13,231,222,220,209,191,246,69,53,195,48,12,195,48,12,195,48,12,195,
+48,12,195,48,12,195,44,153,185,155,142,136,26,227,217,162,77,239,183,219,200,78,71,30,77,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,159,191,255,242,188,78,216,27,59,230,165,194,
+124,156,95,123,217,107,212,175,227,232,209,233,190,173,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,21,243,254,241,217,62,198,22,81,235,246,146,233,181,184,126,21,121,164,113,195,144,97,24,
+134,97,24,134,97,24,134,97,24,134,97,24,134,97,22,76,249,249,120,214,58,91,162,83,237,211,216,243,62,126,13,183,197,204,81,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,207,95,191,183,
+113,149,48,143,174,232,243,60,107,95,88,215,156,82,41,253,136,97,115,247,114,103,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,126,60,158,51,25,29,253,46,225,236,233,24,225,232,153,144,30,
+61,209,237,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,213,28,125,144,115,73,233,188,206,189,244,176,244,113,29,17,109,158,25,134,97,24,134,97,24,134,97,24,134,
+97,24,134,97,24,102,201,148,199,243,173,87,117,68,29,173,28,219,92,78,223,202,173,185,43,174,70,243,88,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,154,121,255,248,156,109,209,179,52,122,
+230,163,107,189,70,119,71,250,62,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,189,152,163,55,69,247,150,232,246,180,87,108,253,213,112,238,205,29,253,107,95,84,51,12,195,48,12,
+195,48,12,195,48,12,195,48,12,195,48,204,146,153,187,233,136,168,49,158,45,218,244,126,187,141,236,116,228,209,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,253,249,251,47,207,235,
+132,189,177,99,94,42,204,199,249,181,151,189,70,253,58,142,30,157,238,219,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,49,239,31,159,237,99,108,17,181,110,47,153,94,139,235,87,145,71,26,
+55,12,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,193,148,159,143,103,173,179,37,58,213,62,141,61,239,227,215,112,91,204,28,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,
+242,252,245,123,27,87,9,243,232,138,62,207,179,246,133,117,205,41,149,210,143,24,54,119,47,119,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,199,227,57,147,209,209,239,18,206,158,142,
+17,142,158,9,233,209,19,221,254,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,81,205,209,7,57,151,148,206,235,220,75,15,75,31,215,17,209,230,153,97,24,134,97,24,134,
+97,24,134,97,24,134,97,24,134,97,150,76,121,60,223,122,85,71,212,209,202,177,205,229,244,173,220,154,187,226,106,52,143,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,153,247,143,207,
+217,22,61,75,163,103,62,186,214,107,116,119,164,239,99,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,139,57,122,83,116,111,137,110,79,123,197,214,95,13,231,222,220,209,191,246,
+69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,185,155,142,136,26,227,217,162,77,239,183,219,200,78,71,30,77,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,159,
+191,255,242,188,78,216,27,59,230,165,194,124,156,95,123,217,107,212,175,227,232,209,233,190,173,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,21,243,254,241,217,62,198,22,81,235,246,146,233,
+181,184,126,21,121,164,113,195,144,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,22,76,249,249,120,214,58,91,162,83,237,211,216,243,62,126,13,183,197,204,81,51,12,195,48,12,195,48,12,195,48,12,
+195,48,12,195,48,204,146,41,207,95,191,183,113,149,48,143,174,232,243,60,107,95,88,215,156,82,41,253,136,97,115,247,114,103,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,126,60,158,51,25,
+29,253,46,225,236,233,24,225,232,153,144,30,61,209,237,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,213,28,125,144,115,73,233,188,206,189,244,176,244,113,29,17,
+109,158,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,199,243,173,87,117,68,29,173,28,219,92,78,223,202,173,185,43,174,70,243,88,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,
+48,204,154,121,255,248,156,109,209,179,52,122,230,163,107,189,70,119,71,250,62,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,189,152,163,55,69,247,150,232,246,180,87,108,253,213,
+112,238,205,29,253,107,95,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,187,233,136,168,49,158,45,218,244,126,187,141,236,116,228,209,20,205,48,12,195,48,12,195,48,12,195,48,12,195,
+48,12,195,48,171,38,253,249,251,47,207,235,132,189,177,99,94,42,204,199,249,181,151,189,70,253,58,142,30,157,238,219,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,49,239,31,159,237,99,108,
+17,181,110,47,153,94,139,235,87,145,71,26,55,12,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,193,148,159,143,103,173,179,37,58,213,62,141,61,239,227,215,112,91,204,28,53,195,48,12,195,48,12,
+195,48,12,195,48,12,195,48,12,195,44,153,242,252,245,123,27,87,9,243,232,138,62,207,179,246,133,117,205,41,149,210,143,24,54,119,47,119,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,
+199,227,57,147,209,209,239,18,206,158,142,17,142,158,9,233,209,19,221,254,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,81,205,209,7,57,151,148,206,235,220,75,15,75,
+31,215,17,209,230,153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,60,223,122,85,71,212,209,202,177,205,229,244,173,220,154,187,226,106,52,143,69,53,195,48,12,195,48,12,195,48,12,195,
+48,12,195,48,12,195,172,153,247,143,207,217,22,61,75,163,103,62,186,214,107,116,119,164,239,99,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,139,57,122,83,116,111,137,110,79,
+123,197,214,95,13,231,222,220,209,191,246,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,185,155,142,136,26,227,217,162,77,239,183,219,200,78,71,30,77,209,12,195,48,12,195,48,12,195,
+48,12,195,48,12,195,48,12,179,106,210,159,191,255,242,188,78,216,27,59,230,165,194,124,156,95,123,217,107,212,175,227,232,209,233,190,173,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,21,243,
+254,241,217,62,198,22,81,235,246,146,233,181,184,126,21,121,164,113,195,144,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,22,76,249,249,120,214,58,91,162,83,237,211,216,243,62,126,13,183,197,204,
+81,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,207,95,191,183,113,149,48,143,174,232,243,60,107,95,88,215,156,82,41,253,136,97,115,247,114,103,24,134,97,24,134,97,24,134,97,24,134,
+97,24,134,97,152,37,83,126,60,158,51,25,29,253,46,225,236,233,24,225,232,153,144,30,61,209,237,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,213,28,125,144,115,
+73,233,188,206,189,244,176,244,113,29,17,109,158,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,199,243,173,87,117,68,29,173,28,219,92,78,223,202,173,185,43,174,70,243,88,84,51,12,195,
+48,12,195,48,12,195,48,12,195,48,12,195,48,204,154,121,255,248,156,109,209,179,52,122,230,163,107,189,70,119,71,250,62,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,189,152,163,
+55,69,247,150,232,246,180,87,108,253,213,112,238,205,29,253,107,95,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,187,233,136,168,49,158,45,218,244,126,187,141,236,116,228,209,20,
+205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,253,249,251,47,207,235,132,189,177,99,94,42,204,199,249,181,151,189,70,253,58,142,30,157,238,219,106,134,97,24,134,97,24,134,97,24,134,97,
+24,134,97,24,134,89,49,239,31,159,237,99,108,17,181,110,47,153,94,139,235,87,145,71,26,55,12,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,193,148,159,143,103,173,179,37,58,213,62,141,61,239,
+227,215,112,91,204,28,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,252,245,123,27,87,9,243,232,138,62,207,179,246,133,117,205,41,149,210,143,24,54,119,47,119,134,97,24,134,97,24,
+134,97,24,134,97,24,134,97,24,134,89,50,229,199,227,57,147,209,209,239,18,206,158,142,17,142,158,9,233,209,19,221,254,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,
+81,205,209,7,57,151,148,206,235,220,75,15,75,31,215,17,209,230,153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,60,223,122,85,71,212,209,202,177,205,229,244,173,220,154,187,226,106,
+52,143,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,153,247,143,207,217,22,61,75,163,103,62,186,214,107,116,119,164,239,99,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,
+97,150,204,222,139,57,122,83,116,111,137,110,79,123,197,214,95,13,231,222,220,209,191,246,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,185,155,142,136,26,227,217,162,77,239,183,219,
+200,78,71,30,77,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,159,191,255,242,188,78,216,27,59,230,165,194,124,156,95,123,217,107,212,175,227,232,209,233,190,173,102,24,134,97,24,
+134,97,24,134,97,24,134,97,24,134,97,152,21,243,254,241,217,62,198,22,81,235,246,146,233,181,184,126,21,121,164,113,195,144,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,22,76,249,249,120,214,58,
+91,162,83,237,211,216,243,62,126,13,183,197,204,81,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,207,95,191,183,113,149,48,143,174,232,243,60,107,95,88,215,156,82,41,253,136,97,115,247,
+114,103,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,126,60,158,51,25,29,253,46,225,236,233,24,225,232,153,144,30,61,209,237,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,
+100,246,136,122,93,117,27,213,28,125,144,115,73,233,188,206,189,244,176,244,113,29,17,109,158,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,199,243,173,87,117,68,29,173,28,219,92,78,
+223,202,173,185,43,174,70,243,88,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,154,121,255,248,156,109,209,179,52,122,230,163,107,189,70,119,71,250,62,86,88,24,134,97,24,134,97,24,134,97,
+24,134,97,24,134,97,24,102,201,236,189,152,163,55,69,247,150,232,246,180,87,108,253,213,112,238,205,29,253,107,95,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,187,233,136,168,49,
+158,45,218,244,126,187,141,236,116,228,209,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,253,249,251,47,207,235,132,189,177,99,94,42,204,199,249,181,151,189,70,253,58,142,30,157,238,
+219,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,49,239,31,159,237,99,108,17,181,110,47,153,94,139,235,87,145,71,26,55,12,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,193,148,
+159,143,103,173,179,37,58,213,62,141,61,239,227,215,112,91,204,28,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,252,245,123,27,87,9,243,232,138,62,207,179,246,133,117,205,41,149,
+210,143,24,54,119,47,119,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,199,227,57,147,209,209,239,18,206,158,142,17,142,158,9,233,209,19,221,254,198,48,12,195,48,12,195,48,12,195,48,
+12,195,48,12,195,48,75,102,143,168,215,85,183,81,205,209,7,57,151,148,206,235,220,75,15,75,31,215,17,209,230,153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,60,223,122,85,71,212,209,
+202,177,205,229,244,173,220,154,187,226,106,52,143,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,153,247,143,207,217,22,61,75,163,103,62,186,214,107,116,119,164,239,99,133,133,97,24,
+134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,139,57,122,83,116,111,137,110,79,123,197,214,95,13,231,222,220,209,191,246,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,
+185,155,142,136,26,227,217,162,77,239,183,219,200,78,71,30,77,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,159,191,255,242,188,78,216,27,59,230,165,194,124,156,95,123,217,107,212,
+175,227,232,209,233,190,173,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,21,243,254,241,217,62,198,22,81,235,246,146,233,181,184,126,21,121,164,113,195,144,97,24,134,97,24,134,97,24,134,97,
+24,134,97,24,134,97,22,76,249,249,120,214,58,91,162,83,237,211,216,243,62,126,13,183,197,204,81,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,207,95,191,183,113,149,48,143,174,232,243,
+60,107,95,88,215,156,82,41,253,136,97,115,247,114,103,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,126,60,158,51,25,29,253,46,225,236,233,24,225,232,153,144,30,61,209,237,111,12,195,48,
+12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,213,28,125,144,115,73,233,188,206,189,244,176,244,113,29,17,109,158,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,
+148,199,243,173,87,117,68,29,173,28,219,92,78,223,202,173,185,43,174,70,243,88,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,154,121,255,248,156,109,209,179,52,122,230,163,107,189,70,119,
+71,250,62,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,189,152,163,55,69,247,150,232,246,180,87,108,253,213,112,238,205,29,253,107,95,84,51,12,195,48,12,195,48,12,195,48,12,195,
+48,12,195,48,204,146,153,187,233,136,168,49,158,45,218,244,126,187,141,236,116,228,209,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,253,249,251,47,207,235,132,189,177,99,94,42,204,
+199,249,181,151,189,70,253,58,142,30,157,238,219,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,49,239,31,159,237,99,108,17,181,110,47,153,94,139,235,87,145,71,26,55,12,25,134,97,24,134,
+97,24,134,97,24,134,97,24,134,97,24,102,193,148,159,143,103,173,179,37,58,213,62,141,61,239,227,215,112,91,204,28,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,252,245,123,27,87,
+9,243,232,138,62,207,179,246,133,117,205,41,149,210,143,24,54,119,47,119,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,199,227,57,147,209,209,239,18,206,158,142,17,142,158,9,233,209,
+19,221,254,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,81,205,209,7,57,151,148,206,235,220,75,15,75,31,215,17,209,230,153,97,24,134,97,24,134,97,24,134,97,24,134,
+97,24,134,97,150,76,121,60,223,122,85,71,212,209,202,177,205,229,244,173,220,154,187,226,106,52,143,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,153,247,143,207,217,22,61,75,163,103,
+62,186,214,107,116,119,164,239,99,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,139,57,122,83,116,111,137,110,79,123,197,214,95,13,231,222,220,209,191,246,69,53,195,48,12,195,
+48,12,195,48,12,195,48,12,195,48,12,195,44,153,185,155,142,136,26,227,217,162,77,239,183,219,200,78,71,30,77,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,159,191,255,242,188,78,
+216,27,59,230,165,194,124,156,95,123,217,107,212,175,227,232,209,233,190,173,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,21,243,254,241,217,62,198,22,81,235,246,146,233,181,184,126,21,121,
+164,113,195,144,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,22,76,249,249,120,214,58,91,162,83,237,211,216,243,62,126,13,183,197,204,81,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,
+146,41,207,95,191,183,113,149,48,143,174,232,243,60,107,95,88,215,156,82,41,253,136,97,115,247,114,103,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,126,60,158,51,25,29,253,46,225,236,233,
+24,225,232,153,144,30,61,209,237,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,213,28,125,144,115,73,233,188,206,189,244,176,244,113,29,17,109,158,25,134,97,24,
+134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,199,243,173,87,117,68,29,173,28,219,92,78,223,202,173,185,43,174,70,243,88,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,154,121,255,248,
+156,109,209,179,52,122,230,163,107,189,70,119,71,250,62,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,189,152,163,55,69,247,150,232,246,180,87,108,253,213,112,238,205,29,253,107,
+95,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,187,233,136,168,49,158,45,218,244,126,187,141,236,116,228,209,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,
+253,249,251,47,207,235,132,189,177,99,94,42,204,199,249,181,151,189,70,253,58,142,30,157,238,219,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,49,239,31,159,237,99,108,17,181,110,47,153,
+94,139,235,87,145,71,26,55,12,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,193,148,159,143,103,173,179,37,58,213,62,141,61,239,227,215,112,91,204,28,53,195,48,12,195,48,12,195,48,12,195,48,
+12,195,48,12,195,44,153,242,252,245,123,27,87,9,243,232,138,62,207,179,246,133,117,205,41,149,210,143,24,54,119,47,119,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,199,227,57,147,209,
+209,239,18,206,158,142,17,142,158,9,233,209,19,221,254,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,81,205,209,7,57,151,148,206,235,220,75,15,75,31,215,17,209,230,
+153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,60,223,122,85,71,212,209,202,177,205,229,244,173,220,154,187,226,106,52,143,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,
+195,172,153,247,143,207,217,22,61,75,163,103,62,186,214,107,116,119,164,239,99,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,139,57,122,83,116,111,137,110,79,123,197,214,95,
+13,231,222,220,209,191,246,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,185,155,142,136,26,227,217,162,77,239,183,219,200,78,71,30,77,209,12,195,48,12,195,48,12,195,48,12,195,48,
+12,195,48,12,179,106,210,159,191,255,242,188,78,216,27,59,230,165,194,124,156,95,123,217,107,212,175,227,232,209,233,190,173,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,21,243,254,241,217,
+62,198,22,81,235,246,146,233,181,184,126,21,121,164,113,195,144,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,22,76,249,249,120,214,58,91,162,83,237,211,216,243,62,126,13,183,197,204,81,51,12,195,
+48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,207,95,191,183,113,149,48,143,174,232,243,60,107,95,88,215,156,82,41,253,136,97,115,247,114,103,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,
+152,37,83,126,60,158,51,25,29,253,46,225,236,233,24,225,232,153,144,30,61,209,237,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,213,28,125,144,115,73,233,188,206,
+189,244,176,244,113,29,17,109,158,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,199,243,173,87,117,68,29,173,28,219,92,78,223,202,173,185,43,174,70,243,88,84,51,12,195,48,12,195,48,
+12,195,48,12,195,48,12,195,48,204,154,121,255,248,156,109,209,179,52,122,230,163,107,189,70,119,71,250,62,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,189,152,163,55,69,247,150,
+232,246,180,87,108,253,213,112,238,205,29,253,107,95,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,187,233,136,168,49,158,45,218,244,126,187,141,236,116,228,209,20,205,48,12,195,
+48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,253,249,251,47,207,235,132,189,177,99,94,42,204,199,249,181,151,189,70,253,58,142,30,157,238,219,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,
+134,89,49,239,31,159,237,99,108,17,181,110,47,153,94,139,235,87,145,71,26,55,12,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,193,148,159,143,103,173,179,37,58,213,62,141,61,239,227,215,112,
+91,204,28,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,252,245,123,27,87,9,243,232,138,62,207,179,246,133,117,205,41,149,210,143,24,54,119,47,119,134,97,24,134,97,24,134,97,24,134,
+97,24,134,97,24,134,89,50,229,199,227,57,147,209,209,239,18,206,158,142,17,142,158,9,233,209,19,221,254,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,81,205,209,7,
+57,151,148,206,235,220,75,15,75,31,215,17,209,230,153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,60,223,122,85,71,212,209,202,177,205,229,244,173,220,154,187,226,106,52,143,69,53,
+195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,153,247,143,207,217,22,61,75,163,103,62,186,214,107,116,119,164,239,99,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,
+139,57,122,83,116,111,137,110,79,123,197,214,95,13,231,222,220,209,191,246,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,185,155,142,136,26,227,217,162,77,239,183,219,200,78,71,30,
+77,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,159,191,255,242,188,78,216,27,59,230,165,194,124,156,95,123,217,107,212,175,227,232,209,233,190,173,102,24,134,97,24,134,97,24,134,
+97,24,134,97,24,134,97,152,21,243,254,241,217,62,198,22,81,235,246,146,233,181,184,126,21,121,164,113,195,144,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,22,76,249,249,120,214,58,91,162,83,237,
+211,216,243,62,126,13,183,197,204,81,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,207,95,191,183,113,149,48,143,174,232,243,60,107,95,88,215,156,82,41,253,136,97,115,247,114,103,24,
+134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,126,60,158,51,25,29,253,46,225,236,233,24,225,232,153,144,30,61,209,237,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,
+122,93,117,27,213,28,125,144,115,73,233,188,206,189,244,176,244,113,29,17,109,158,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,199,243,173,87,117,68,29,173,28,219,92,78,223,202,173,
+185,43,174,70,243,88,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,154,121,255,248,156,109,209,179,52,122,230,163,107,189,70,119,71,250,62,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,
+134,97,24,102,201,236,189,152,163,55,69,247,150,232,246,180,87,108,253,213,112,238,205,29,253,107,95,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,187,233,136,168,49,158,45,218,244,
+126,187,141,236,116,228,209,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,253,249,251,47,207,235,132,189,177,99,94,42,204,199,249,181,151,189,70,253,58,142,30,157,238,219,106,134,
+97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,49,239,31,159,237,99,108,17,181,110,47,153,94,139,235,87,145,71,26,55,12,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,193,148,159,143,103,
+173,179,37,58,213,62,141,61,239,227,215,112,91,204,28,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,252,245,123,27,87,9,243,232,138,62,207,179,246,133,117,205,41,149,210,143,24,54,
+119,47,119,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,199,227,57,147,209,209,239,18,206,158,142,17,142,158,9,233,209,19,221,254,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,
+48,75,102,143,168,215,85,183,81,205,209,7,57,151,148,206,235,220,75,15,75,31,215,17,209,230,153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,121,60,223,122,85,71,212,209,202,177,205,229,
+244,173,220,154,187,226,106,52,143,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,153,247,143,207,217,22,61,75,163,103,62,186,214,107,116,119,164,239,99,133,133,97,24,134,97,24,134,97,
+24,134,97,24,134,97,24,134,97,150,204,222,139,57,122,83,116,111,137,110,79,123,197,214,95,13,231,222,220,209,191,246,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,185,155,142,136,
+26,227,217,162,77,239,183,219,200,78,71,30,77,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,159,191,255,242,188,78,216,27,59,230,165,194,124,156,95,123,217,107,212,175,227,232,209,
+233,190,173,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,21,243,254,241,217,62,198,22,81,235,246,146,233,181,184,126,21,121,164,113,195,144,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,
+97,22,76,249,249,120,214,58,91,162,83,237,211,216,243,62,126,13,183,197,204,81,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,207,95,191,183,113,149,48,143,174,232,243,60,107,95,88,215,
+156,82,41,253,136,97,115,247,114,103,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,126,60,158,51,25,29,253,46,225,236,233,24,225,232,153,144,30,61,209,237,111,12,195,48,12,195,48,12,195,
+48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,213,28,125,144,115,73,233,188,206,189,244,176,244,113,29,17,109,158,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,199,243,173,
+87,117,68,29,173,28,219,92,78,223,202,173,185,43,174,70,243,88,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,154,121,255,248,156,109,209,179,52,122,230,163,107,189,70,119,71,250,62,86,88,
+24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,189,152,163,55,69,247,150,232,246,180,87,108,253,213,112,238,205,29,253,107,95,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,
+204,146,153,187,233,136,168,49,158,45,218,244,126,187,141,236,116,228,209,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,253,249,251,47,207,235,132,189,177,99,94,42,204,199,249,181,
+151,189,70,253,58,142,30,157,238,219,106,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,49,239,31,159,237,99,108,17,181,110,47,153,94,139,235,87,145,71,26,55,12,25,134,97,24,134,97,24,134,97,
+24,134,97,24,134,97,24,102,193,148,159,143,103,173,179,37,58,213,62,141,61,239,227,215,112,91,204,28,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,252,245,123,27,87,9,243,232,138,
+62,207,179,246,133,117,205,41,149,210,143,24,54,119,47,119,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,50,229,199,227,57,147,209,209,239,18,206,158,142,17,142,158,9,233,209,19,221,254,198,
+48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,81,205,209,7,57,151,148,206,235,220,75,15,75,31,215,17,209,230,153,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,
+76,121,60,223,122,85,71,212,209,202,177,205,229,244,173,220,154,187,226,106,52,143,69,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,153,247,143,207,217,22,61,75,163,103,62,186,214,107,116,
+119,164,239,99,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,139,57,122,83,116,111,137,110,79,123,197,214,95,13,231,222,220,209,191,246,69,53,195,48,12,195,48,12,195,48,12,195,
+48,12,195,48,12,195,44,153,185,155,142,136,26,227,217,162,77,239,183,219,200,78,71,30,77,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,159,191,255,242,188,78,216,27,59,230,165,194,
+124,156,95,123,217,107,212,175,227,232,209,233,190,173,102,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,21,243,254,241,217,62,198,22,81,235,246,146,233,181,184,126,21,121,164,113,195,144,97,24,
+134,97,24,134,97,24,134,97,24,134,97,24,134,97,22,76,249,249,120,214,58,91,162,83,237,211,216,243,62,126,13,183,197,204,81,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,207,95,191,183,
+113,149,48,143,174,232,243,60,107,95,88,215,156,82,41,253,136,97,115,247,114,103,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,37,83,126,60,158,51,25,29,253,46,225,236,233,24,225,232,153,144,30,
+61,209,237,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,213,28,125,144,115,73,233,188,206,189,244,176,244,113,29,17,109,158,25,134,97,24,134,97,24,134,97,24,134,
+97,24,134,97,24,102,201,148,199,243,173,87,117,68,29,173,28,219,92,78,223,202,173,185,43,174,70,243,88,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,252,103,239,110,82,228,134,129,48,128,90,146,
+187,239,148,208,208,33,144,11,13,12,129,129,89,204,181,199,182,42,250,233,28,64,251,167,133,192,165,231,11,20,197,87,12,179,102,222,63,190,102,90,244,12,141,158,243,209,181,94,35,187,35,253,95,86,88,24,
+134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,61,152,163,39,69,247,148,232,118,218,21,91,191,26,206,61,185,163,191,246,70,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,
+217,155,142,136,26,227,108,209,170,247,219,109,204,78,71,30,73,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,219,223,207,60,183,19,246,196,142,185,169,48,31,231,247,94,246,26,245,
+251,56,250,232,116,239,86,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,138,121,255,248,106,143,177,69,212,186,189,100,122,53,174,95,65,30,105,236,48,100,24,134,97,24,134,97,24,134,97,24,134,
+97,24,134,97,152,5,83,126,62,158,181,206,148,232,84,123,53,246,188,143,175,225,182,152,115,212,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,243,215,159,109,108,37,204,35,43,250,60,
+207,218,27,214,53,167,84,74,95,98,216,220,189,220,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,31,143,231,156,140,142,190,151,112,230,116,140,225,232,57,33,61,114,162,219,111,12,195,
+48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,209,28,189,144,115,73,233,188,206,189,244,97,233,227,58,34,90,61,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,
+41,143,231,239,30,213,17,117,164,114,108,179,57,125,43,183,230,174,184,26,205,163,81,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,107,230,253,227,107,166,69,207,208,232,57,31,93,235,53,178,
+59,210,255,101,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,131,57,122,82,116,79,137,110,167,93,177,245,171,225,220,147,59,250,107,111,84,51,12,195,48,12,195,48,12,195,48,12,
+195,48,12,195,48,204,146,153,189,233,136,168,49,206,22,173,122,191,221,198,236,116,228,145,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,189,253,253,204,115,59,97,79,236,152,155,10,
+243,113,126,239,101,175,81,191,143,163,143,78,247,110,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,152,247,143,175,246,24,91,68,173,219,75,166,87,227,250,21,228,145,198,14,67,134,97,24,
+134,97,24,134,97,24,134,97,24,134,97,24,134,89,48,229,231,227,89,235,76,137,78,181,87,99,207,251,248,26,110,139,57,71,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,166,60,127,253,217,198,
+86,194,60,178,162,207,243,172,189,97,93,115,74,165,244,37,134,205,221,203,157,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,249,241,120,206,201,232,232,123,9,103,78,199,24,142,158,19,210,
+35,39,186,253,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,17,205,209,11,57,151,148,206,235,220,75,31,150,62,174,35,162,213,51,195,48,12,195,48,12,195,48,12,195,48,
+12,195,48,12,195,44,153,242,120,254,238,81,29,81,71,42,199,54,155,211,183,114,107,238,138,171,209,60,26,213,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,102,222,63,190,102,90,244,12,141,158,
+243,209,181,94,35,187,35,253,95,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,61,152,163,39,69,247,148,232,118,218,21,91,191,26,206,61,185,163,191,246,70,53,195,48,12,195,48,12,
+195,48,12,195,48,12,195,48,12,195,44,153,217,155,142,136,26,227,108,209,170,247,219,109,204,78,71,30,73,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,219,223,207,60,183,19,246,196,
+142,185,169,48,31,231,247,94,246,26,245,251,56,250,232,116,239,86,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,138,121,255,248,106,143,177,69,212,186,189,100,122,53,174,95,65,30,105,236,48,
+100,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,5,83,126,62,158,181,206,148,232,84,123,53,246,188,143,175,225,182,152,115,212,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,
+243,215,159,109,108,37,204,35,43,250,60,207,218,27,214,53,167,84,74,95,98,216,220,189,220,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,31,143,231,156,140,142,190,151,112,230,116,140,
+225,232,57,33,61,114,162,219,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,209,28,189,144,115,73,233,188,206,189,244,97,233,227,58,34,90,61,51,12,195,48,12,195,
+48,12,195,48,12,195,48,12,195,48,204,146,41,143,231,239,30,213,17,117,164,114,108,179,57,125,43,183,230,174,184,26,205,163,81,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,107,230,253,227,107,
+166,69,207,208,232,57,31,93,235,53,178,59,210,255,101,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,131,57,122,82,116,79,137,110,167,93,177,245,171,225,220,147,59,250,107,111,
+84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,189,233,136,168,49,206,22,173,122,191,221,198,236,116,228,145,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,189,
+253,253,204,115,59,97,79,236,152,155,10,243,113,126,239,101,175,81,191,143,163,143,78,247,110,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,152,247,143,175,246,24,91,68,173,219,75,166,87,
+227,250,21,228,145,198,14,67,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,48,229,231,227,89,235,76,137,78,181,87,99,207,251,248,26,110,139,57,71,205,48,12,195,48,12,195,48,12,195,48,12,195,
+48,12,195,48,75,166,60,127,253,217,198,86,194,60,178,162,207,243,172,189,97,93,115,74,165,244,37,134,205,221,203,157,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,249,241,120,206,201,232,
+232,123,9,103,78,199,24,142,158,19,210,35,39,186,253,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,17,205,209,11,57,151,148,206,235,220,75,31,150,62,174,35,162,213,
+51,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,120,254,238,81,29,81,71,42,199,54,155,211,183,114,107,238,138,171,209,60,26,213,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,
+179,102,222,63,190,102,90,244,12,141,158,243,209,181,94,35,187,35,253,95,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,61,152,163,39,69,247,148,232,118,218,21,91,191,26,206,61,
+185,163,191,246,70,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,217,155,142,136,26,227,108,209,170,247,219,109,204,78,71,30,73,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,
+12,179,106,210,219,223,207,60,183,19,246,196,142,185,169,48,31,231,247,94,246,26,245,251,56,250,232,116,239,86,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,138,121,255,248,106,143,177,69,212,
+186,189,100,122,53,174,95,65,30,105,236,48,100,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,5,83,126,62,158,181,206,148,232,84,123,53,246,188,143,175,225,182,152,115,212,12,195,48,12,195,48,12,
+195,48,12,195,48,12,195,48,12,179,100,202,243,215,159,109,108,37,204,35,43,250,60,207,218,27,214,53,167,84,74,95,98,216,220,189,220,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,31,
+143,231,156,140,142,190,151,112,230,116,140,225,232,57,33,61,114,162,219,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,209,28,189,144,115,73,233,188,206,189,244,
+97,233,227,58,34,90,61,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,143,231,239,30,213,17,117,164,114,108,179,57,125,43,183,230,174,184,26,205,163,81,205,48,12,195,48,12,195,48,12,195,
+48,12,195,48,12,195,48,107,230,253,227,107,166,69,207,208,232,57,31,93,235,53,178,59,210,255,101,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,131,57,122,82,116,79,137,110,167,
+93,177,245,171,225,220,147,59,250,107,111,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,189,233,136,168,49,206,22,173,122,191,221,198,236,116,228,145,20,205,48,12,195,48,12,195,48,
+12,195,48,12,195,48,12,195,48,171,38,189,253,253,204,115,59,97,79,236,152,155,10,243,113,126,239,101,175,81,191,143,163,143,78,247,110,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,152,
+247,143,175,246,24,91,68,173,219,75,166,87,227,250,21,228,145,198,14,67,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,48,229,231,227,89,235,76,137,78,181,87,99,207,251,248,26,110,139,57,71,
+205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,166,60,127,253,217,198,86,194,60,178,162,207,243,172,189,97,93,115,74,165,244,37,134,205,221,203,157,97,24,134,97,24,134,97,24,134,97,24,134,
+97,24,134,97,150,76,249,241,120,206,201,232,232,123,9,103,78,199,24,142,158,19,210,35,39,186,253,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,17,205,209,11,57,151,
+148,206,235,220,75,31,150,62,174,35,162,213,51,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,120,254,238,81,29,81,71,42,199,54,155,211,183,114,107,238,138,171,209,60,26,213,12,195,48,
+12,195,48,12,195,48,12,195,48,12,195,48,12,179,102,222,63,190,102,90,244,12,141,158,243,209,181,94,35,187,35,253,95,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,61,152,163,39,
+69,247,148,232,118,218,21,91,191,26,206,61,185,163,191,246,70,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,217,155,142,136,26,227,108,209,170,247,219,109,204,78,71,30,73,209,12,195,
+48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,219,223,207,60,183,19,246,196,142,185,169,48,31,231,247,94,246,26,245,251,56,250,232,116,239,86,51,12,195,48,12,195,48,12,195,48,12,195,48,12,
+195,48,204,138,121,255,248,106,143,177,69,212,186,189,100,122,53,174,95,65,30,105,236,48,100,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,5,83,126,62,158,181,206,148,232,84,123,53,246,188,143,
+175,225,182,152,115,212,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,243,215,159,109,108,37,204,35,43,250,60,207,218,27,214,53,167,84,74,95,98,216,220,189,220,25,134,97,24,134,97,24,
+134,97,24,134,97,24,134,97,24,102,201,148,31,143,231,156,140,142,190,151,112,230,116,140,225,232,57,33,61,114,162,219,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,
+27,209,28,189,144,115,73,233,188,206,189,244,97,233,227,58,34,90,61,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,143,231,239,30,213,17,117,164,114,108,179,57,125,43,183,230,174,184,
+26,205,163,81,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,107,230,253,227,107,166,69,207,208,232,57,31,93,235,53,178,59,210,255,101,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,
+97,150,204,222,131,57,122,82,116,79,137,110,167,93,177,245,171,225,220,147,59,250,107,111,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,189,233,136,168,49,206,22,173,122,191,221,
+198,236,116,228,145,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,189,253,253,204,115,59,97,79,236,152,155,10,243,113,126,239,101,175,81,191,143,163,143,78,247,110,53,195,48,12,195,
+48,12,195,48,12,195,48,12,195,48,12,195,172,152,247,143,175,246,24,91,68,173,219,75,166,87,227,250,21,228,145,198,14,67,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,48,229,231,227,89,235,76,
+137,78,181,87,99,207,251,248,26,110,139,57,71,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,166,60,127,253,217,198,86,194,60,178,162,207,243,172,189,97,93,115,74,165,244,37,134,205,221,203,
+157,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,249,241,120,206,201,232,232,123,9,103,78,199,24,142,158,19,210,35,39,186,253,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,
+102,143,168,215,85,183,17,205,209,11,57,151,148,206,235,220,75,31,150,62,174,35,162,213,51,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,120,254,238,81,29,81,71,42,199,54,155,211,183,
+114,107,238,138,171,209,60,26,213,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,102,222,63,190,102,90,244,12,141,158,243,209,181,94,35,187,35,253,95,86,88,24,134,97,24,134,97,24,134,97,24,134,
+97,24,134,97,24,102,201,236,61,152,163,39,69,247,148,232,118,218,21,91,191,26,206,61,185,163,191,246,70,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,217,155,142,136,26,227,108,209,170,
+247,219,109,204,78,71,30,73,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,219,223,207,60,183,19,246,196,142,185,169,48,31,231,247,94,246,26,245,251,56,250,232,116,239,86,51,12,195,
+48,12,195,48,12,195,48,12,195,48,12,195,48,204,138,121,255,248,106,143,177,69,212,186,189,100,122,53,174,95,65,30,105,236,48,100,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,5,83,126,62,158,181,
+206,148,232,84,123,53,246,188,143,175,225,182,152,115,212,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,243,215,159,109,108,37,204,35,43,250,60,207,218,27,214,53,167,84,74,95,98,216,
+220,189,220,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,31,143,231,156,140,142,190,151,112,230,116,140,225,232,57,33,61,114,162,219,111,12,195,48,12,195,48,12,195,48,12,195,48,12,
+195,48,12,179,100,246,136,122,93,117,27,209,28,189,144,115,73,233,188,206,189,244,97,233,227,58,34,90,61,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,143,231,239,30,213,17,117,164,114,
+108,179,57,125,43,183,230,174,184,26,205,163,81,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,107,230,253,227,107,166,69,207,208,232,57,31,93,235,53,178,59,210,255,101,133,133,97,24,134,97,
+24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,131,57,122,82,116,79,137,110,167,93,177,245,171,225,220,147,59,250,107,111,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,189,233,
+136,168,49,206,22,173,122,191,221,198,236,116,228,145,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,189,253,253,204,115,59,97,79,236,152,155,10,243,113,126,239,101,175,81,191,143,
+163,143,78,247,110,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,152,247,143,175,246,24,91,68,173,219,75,166,87,227,250,21,228,145,198,14,67,134,97,24,134,97,24,134,97,24,134,97,24,134,
+97,24,134,89,48,229,231,227,89,235,76,137,78,181,87,99,207,251,248,26,110,139,57,71,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,166,60,127,253,217,198,86,194,60,178,162,207,243,172,189,
+97,93,115,74,165,244,37,134,205,221,203,157,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,249,241,120,206,201,232,232,123,9,103,78,199,24,142,158,19,210,35,39,186,253,198,48,12,195,48,12,
+195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,17,205,209,11,57,151,148,206,235,220,75,31,150,62,174,35,162,213,51,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,120,
+254,238,81,29,81,71,42,199,54,155,211,183,114,107,238,138,171,209,60,26,213,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,102,222,63,190,102,90,244,12,141,158,243,209,181,94,35,187,35,253,95,
+86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,61,152,163,39,69,247,148,232,118,218,21,91,191,26,206,61,185,163,191,246,70,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,
+195,44,153,217,155,142,136,26,227,108,209,170,247,219,109,204,78,71,30,73,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,219,223,207,60,183,19,246,196,142,185,169,48,31,231,247,94,
+246,26,245,251,56,250,232,116,239,86,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,138,121,255,248,106,143,177,69,212,186,189,100,122,53,174,95,65,30,105,236,48,100,24,134,97,24,134,97,24,134,
+97,24,134,97,24,134,97,152,5,83,126,62,158,181,206,148,232,84,123,53,246,188,143,175,225,182,152,115,212,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,243,215,159,109,108,37,204,35,
+43,250,60,207,218,27,214,53,167,84,74,95,98,216,220,189,220,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,31,143,231,156,140,142,190,151,112,230,116,140,225,232,57,33,61,114,162,219,
+111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,209,28,189,144,115,73,233,188,206,189,244,97,233,227,58,34,90,61,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,
+48,204,146,41,143,231,239,30,213,17,117,164,114,108,179,57,125,43,183,230,174,184,26,205,163,81,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,107,230,253,227,107,166,69,207,208,232,57,31,93,
+235,53,178,59,210,255,101,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,131,57,122,82,116,79,137,110,167,93,177,245,171,225,220,147,59,250,107,111,84,51,12,195,48,12,195,48,
+12,195,48,12,195,48,12,195,48,204,146,153,189,233,136,168,49,206,22,173,122,191,221,198,236,116,228,145,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,189,253,253,204,115,59,97,79,
+236,152,155,10,243,113,126,239,101,175,81,191,143,163,143,78,247,110,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,152,247,143,175,246,24,91,68,173,219,75,166,87,227,250,21,228,145,198,
+14,67,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,48,229,231,227,89,235,76,137,78,181,87,99,207,251,248,26,110,139,57,71,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,166,60,
+127,253,217,198,86,194,60,178,162,207,243,172,189,97,93,115,74,165,244,37,134,205,221,203,157,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,249,241,120,206,201,232,232,123,9,103,78,199,24,
+142,158,19,210,35,39,186,253,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,17,205,209,11,57,151,148,206,235,220,75,31,150,62,174,35,162,213,51,195,48,12,195,48,12,
+195,48,12,195,48,12,195,48,12,195,44,153,242,120,254,238,81,29,81,71,42,199,54,155,211,183,114,107,238,138,171,209,60,26,213,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,102,222,63,190,102,
+90,244,12,141,158,243,209,181,94,35,187,35,253,95,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,61,152,163,39,69,247,148,232,118,218,21,91,191,26,206,61,185,163,191,246,70,53,
+195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,217,155,142,136,26,227,108,209,170,247,219,109,204,78,71,30,73,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,219,223,
+207,60,183,19,246,196,142,185,169,48,31,231,247,94,246,26,245,251,56,250,232,116,239,86,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,138,121,255,248,106,143,177,69,212,186,189,100,122,53,174,
+95,65,30,105,236,48,100,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,5,83,126,62,158,181,206,148,232,84,123,53,246,188,143,175,225,182,152,115,212,12,195,48,12,195,48,12,195,48,12,195,48,12,195,
+48,12,179,100,202,243,215,159,109,108,37,204,35,43,250,60,207,218,27,214,53,167,84,74,95,98,216,220,189,220,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,31,143,231,156,140,142,190,
+151,112,230,116,140,225,232,57,33,61,114,162,219,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,209,28,189,144,115,73,233,188,206,189,244,97,233,227,58,34,90,61,
+51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,143,231,239,30,213,17,117,164,114,108,179,57,125,43,183,230,174,184,26,205,163,81,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,
+48,107,230,253,227,107,166,69,207,208,232,57,31,93,235,53,178,59,210,255,101,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,131,57,122,82,116,79,137,110,167,93,177,245,171,225,
+220,147,59,250,107,111,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,189,233,136,168,49,206,22,173,122,191,221,198,236,116,228,145,20,205,48,12,195,48,12,195,48,12,195,48,12,195,
+48,12,195,48,171,38,189,253,253,204,115,59,97,79,236,152,155,10,243,113,126,239,101,175,81,191,143,163,143,78,247,110,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,152,247,143,175,246,24,
+91,68,173,219,75,166,87,227,250,21,228,145,198,14,67,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,48,229,231,227,89,235,76,137,78,181,87,99,207,251,248,26,110,139,57,71,205,48,12,195,48,12,
+195,48,12,195,48,12,195,48,12,195,48,75,166,60,127,253,217,198,86,194,60,178,162,207,243,172,189,97,93,115,74,165,244,37,134,205,221,203,157,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,
+249,241,120,206,201,232,232,123,9,103,78,199,24,142,158,19,210,35,39,186,253,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,17,205,209,11,57,151,148,206,235,220,75,
+31,150,62,174,35,162,213,51,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,120,254,238,81,29,81,71,42,199,54,155,211,183,114,107,238,138,171,209,60,26,213,12,195,48,12,195,48,12,195,
+48,12,195,48,12,195,48,12,179,102,222,63,190,102,90,244,12,141,158,243,209,181,94,35,187,35,253,95,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,61,152,163,39,69,247,148,232,118,
+218,21,91,191,26,206,61,185,163,191,246,70,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,217,155,142,136,26,227,108,209,170,247,219,109,204,78,71,30,73,209,12,195,48,12,195,48,12,195,
+48,12,195,48,12,195,48,12,179,106,210,219,223,207,60,183,19,246,196,142,185,169,48,31,231,247,94,246,26,245,251,56,250,232,116,239,86,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,138,121,255,
+248,106,143,177,69,212,186,189,100,122,53,174,95,65,30,105,236,48,100,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,5,83,126,62,158,181,206,148,232,84,123,53,246,188,143,175,225,182,152,115,212,
+12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,243,215,159,109,108,37,204,35,43,250,60,207,218,27,214,53,167,84,74,95,98,216,220,189,220,25,134,97,24,134,97,24,134,97,24,134,97,24,134,
+97,24,102,201,148,31,143,231,156,140,142,190,151,112,230,116,140,225,232,57,33,61,114,162,219,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,209,28,189,144,115,
+73,233,188,206,189,244,97,233,227,58,34,90,61,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,143,231,239,30,213,17,117,164,114,108,179,57,125,43,183,230,174,184,26,205,163,81,205,48,12,
+195,48,12,195,48,12,195,48,12,195,48,12,195,48,107,230,253,227,107,166,69,207,208,232,57,31,93,235,53,178,59,210,255,101,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,131,57,
+122,82,116,79,137,110,167,93,177,245,171,225,220,147,59,250,107,111,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,189,233,136,168,49,206,22,173,122,191,221,198,236,116,228,145,20,
+205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,189,253,253,204,115,59,97,79,236,152,155,10,243,113,126,239,101,175,81,191,143,163,143,78,247,110,53,195,48,12,195,48,12,195,48,12,195,48,
+12,195,48,12,195,172,152,247,143,175,246,24,91,68,173,219,75,166,87,227,250,21,228,145,198,14,67,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,48,229,231,227,89,235,76,137,78,181,87,99,207,
+251,248,26,110,139,57,71,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,166,60,127,253,217,198,86,194,60,178,162,207,243,172,189,97,93,115,74,165,244,37,134,205,221,203,157,97,24,134,97,24,
+134,97,24,134,97,24,134,97,24,134,97,150,76,249,241,120,206,201,232,232,123,9,103,78,199,24,142,158,19,210,35,39,186,253,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,
+183,17,205,209,11,57,151,148,206,235,220,75,31,150,62,174,35,162,213,51,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,120,254,238,81,29,81,71,42,199,54,155,211,183,114,107,238,138,171,
+209,60,26,213,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,102,222,63,190,102,90,244,12,141,158,243,209,181,94,35,187,35,253,95,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,
+201,236,61,152,163,39,69,247,148,232,118,218,21,91,191,26,206,61,185,163,191,246,70,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,217,155,142,136,26,227,108,209,170,247,219,109,204,78,
+71,30,73,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,219,223,207,60,183,19,246,196,142,185,169,48,31,231,247,94,246,26,245,251,56,250,232,116,239,86,51,12,195,48,12,195,48,12,
+195,48,12,195,48,12,195,48,204,138,121,255,248,106,143,177,69,212,186,189,100,122,53,174,95,65,30,105,236,48,100,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,5,83,126,62,158,181,206,148,232,84,
+123,53,246,188,143,175,225,182,152,115,212,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,243,215,159,109,108,37,204,35,43,250,60,207,218,27,214,53,167,84,74,95,98,216,220,189,220,25,
+134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,31,143,231,156,140,142,190,151,112,230,116,140,225,232,57,33,61,114,162,219,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,
+246,136,122,93,117,27,209,28,189,144,115,73,233,188,206,189,244,97,233,227,58,34,90,61,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,143,231,239,30,213,17,117,164,114,108,179,57,125,
+43,183,230,174,184,26,205,163,81,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,107,230,253,227,107,166,69,207,208,232,57,31,93,235,53,178,59,210,255,101,133,133,97,24,134,97,24,134,97,24,134,
+97,24,134,97,24,134,97,150,204,222,131,57,122,82,116,79,137,110,167,93,177,245,171,225,220,147,59,250,107,111,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,189,233,136,168,49,206,
+22,173,122,191,221,198,236,116,228,145,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,189,253,253,204,115,59,97,79,236,152,155,10,243,113,126,239,101,175,81,191,143,163,143,78,247,
+110,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,152,247,143,175,246,24,91,68,173,219,75,166,87,227,250,21,228,145,198,14,67,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,48,
+229,231,227,89,235,76,137,78,181,87,99,207,251,248,26,110,139,57,71,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,166,60,127,253,217,198,86,194,60,178,162,207,243,172,189,97,93,115,74,165,
+244,37,134,205,221,203,157,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,249,241,120,206,201,232,232,123,9,103,78,199,24,142,158,19,210,35,39,186,253,198,48,12,195,48,12,195,48,12,195,48,
+12,195,48,12,195,48,75,102,143,168,215,85,183,17,205,209,11,57,151,148,206,235,220,75,31,150,62,174,35,162,213,51,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,120,254,238,81,29,81,
+71,42,199,54,155,211,183,114,107,238,138,171,209,60,26,213,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,102,222,63,190,102,90,244,12,141,158,243,209,181,94,35,187,35,253,95,86,88,24,134,97,
+24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,61,152,163,39,69,247,148,232,118,218,21,91,191,26,206,61,185,163,191,246,70,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,217,155,
+142,136,26,227,108,209,170,247,219,109,204,78,71,30,73,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,219,223,207,60,183,19,246,196,142,185,169,48,31,231,247,94,246,26,245,251,56,
+250,232,116,239,86,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,138,121,255,248,106,143,177,69,212,186,189,100,122,53,174,95,65,30,105,236,48,100,24,134,97,24,134,97,24,134,97,24,134,97,24,
+134,97,152,5,83,126,62,158,181,206,148,232,84,123,53,246,188,143,175,225,182,152,115,212,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,243,215,159,109,108,37,204,35,43,250,60,207,218,
+27,214,53,167,84,74,95,98,216,220,189,220,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,31,143,231,156,140,142,190,151,112,230,116,140,225,232,57,33,61,114,162,219,111,12,195,48,12,
+195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,209,28,189,144,115,73,233,188,206,189,244,97,233,227,58,34,90,61,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,143,
+231,239,30,213,17,117,164,114,108,179,57,125,43,183,230,174,184,26,205,163,81,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,107,230,253,227,107,166,69,207,208,232,57,31,93,235,53,178,59,210,
+255,101,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,131,57,122,82,116,79,137,110,167,93,177,245,171,225,220,147,59,250,107,111,84,51,12,195,48,12,195,48,12,195,48,12,195,48,
+12,195,48,204,146,153,189,233,136,168,49,206,22,173,122,191,221,198,236,116,228,145,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,189,253,253,204,115,59,97,79,236,152,155,10,243,113,
+126,239,101,175,81,191,143,163,143,78,247,110,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,152,247,143,175,246,24,91,68,173,219,75,166,87,227,250,21,228,145,198,14,67,134,97,24,134,97,
+24,134,97,24,134,97,24,134,97,24,134,89,48,229,231,227,89,235,76,137,78,181,87,99,207,251,248,26,110,139,57,71,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,166,60,127,253,217,198,86,194,
+60,178,162,207,243,172,189,97,93,115,74,165,244,37,134,205,221,203,157,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,249,241,120,206,201,232,232,123,9,103,78,199,24,142,158,19,210,35,39,
+186,253,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,17,205,209,11,57,151,148,206,235,220,75,31,150,62,174,35,162,213,51,195,48,12,195,48,12,195,48,12,195,48,12,195,
+48,12,195,44,153,242,120,254,238,81,29,81,71,42,199,54,155,211,183,114,107,238,138,171,209,60,26,213,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,102,222,63,190,102,90,244,12,141,158,243,209,
+181,94,35,187,35,253,95,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,61,152,163,39,69,247,148,232,118,218,21,91,191,26,206,61,185,163,191,246,70,53,195,48,12,195,48,12,195,48,
+12,195,48,12,195,48,12,195,44,153,217,155,142,136,26,227,108,209,170,247,219,109,204,78,71,30,73,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,219,223,207,60,183,19,246,196,142,
+185,169,48,31,231,247,94,246,26,245,251,56,250,232,116,239,86,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,138,121,255,248,106,143,177,69,212,186,189,100,122,53,174,95,65,30,105,236,48,100,
+24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,5,83,126,62,158,181,206,148,232,84,123,53,246,188,143,175,225,182,152,115,212,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,243,
+215,159,109,108,37,204,35,43,250,60,207,218,27,214,53,167,84,74,95,98,216,220,189,220,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,31,143,231,156,140,142,190,151,112,230,116,140,225,
+232,57,33,61,114,162,219,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,209,28,189,144,115,73,233,188,206,189,244,97,233,227,58,34,90,61,51,12,195,48,12,195,48,
+12,195,48,12,195,48,12,195,48,204,146,41,143,231,239,30,213,17,117,164,114,108,179,57,125,43,183,230,174,184,26,205,163,81,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,107,230,253,227,107,
+166,69,207,208,232,57,31,93,235,53,178,59,210,255,101,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,131,57,122,82,116,79,137,110,167,93,177,245,171,225,220,147,59,250,107,111,
+84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,189,233,136,168,49,206,22,173,122,191,221,198,236,116,228,145,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,189,
+253,253,204,115,59,97,79,236,152,155,10,243,113,126,239,101,175,81,191,143,163,143,78,247,110,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,152,247,143,175,246,24,91,68,173,219,75,166,87,
+227,250,21,228,145,198,14,67,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,48,229,231,227,89,235,76,137,78,181,87,99,207,251,248,26,110,139,57,71,205,48,12,195,48,12,195,48,12,195,48,12,195,
+48,12,195,48,75,166,60,127,253,217,198,86,194,60,178,162,207,243,172,189,97,93,115,74,165,244,37,134,205,221,203,157,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,76,249,241,120,206,201,232,
+232,123,9,103,78,199,24,142,158,19,210,35,39,186,253,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,17,205,209,11,57,151,148,206,235,220,75,31,150,62,174,35,162,213,
+51,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,120,254,238,81,29,81,71,42,199,54,155,211,183,114,107,238,138,171,209,60,26,213,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,
+179,102,222,63,190,102,90,244,12,141,158,243,209,181,94,35,187,35,253,95,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,61,152,163,39,69,247,148,232,118,218,21,91,191,26,206,61,
+185,163,191,246,70,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,217,155,142,136,26,227,108,209,170,247,219,109,204,78,71,30,73,209,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,
+12,179,106,210,219,223,207,60,183,19,246,196,142,185,169,48,31,231,247,94,246,26,245,251,56,250,232,116,239,86,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,138,121,255,248,106,143,177,69,212,
+186,189,100,122,53,174,95,65,30,105,236,48,100,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,5,83,126,62,158,181,206,148,232,84,123,53,246,188,143,175,225,182,152,115,212,12,195,48,12,195,48,12,
+195,48,12,195,48,12,195,48,12,179,100,202,243,215,159,109,108,37,204,35,43,250,60,207,218,27,214,53,167,84,74,95,98,216,220,189,220,25,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,148,31,
+143,231,156,140,142,190,151,112,230,116,140,225,232,57,33,61,114,162,219,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,27,209,28,189,144,115,73,233,188,206,189,244,
+97,233,227,58,34,90,61,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,143,231,239,30,213,17,117,164,114,108,179,57,125,43,183,230,174,184,26,205,163,81,205,48,12,195,48,12,195,48,12,195,
+48,12,195,48,12,195,48,107,230,253,227,107,166,69,207,208,232,57,31,93,235,53,178,59,210,255,101,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,150,204,222,131,57,122,82,116,79,137,110,167,
+93,177,245,171,225,220,147,59,250,107,111,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,189,233,136,168,49,206,22,173,122,191,221,198,236,116,228,145,20,205,48,12,195,48,12,195,48,
+12,195,48,12,195,48,12,195,48,171,38,189,253,253,204,115,59,97,79,236,152,155,10,243,113,126,239,101,175,81,191,143,163,143,78,247,110,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,172,152,
+247,143,175,246,24,91,68,173,219,75,166,87,227,250,21,228,145,198,14,67,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,48,229,231,227,89,235,76,137,78,181,87,99,207,251,248,26,110,139,57,71,
+205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,166,60,127,253,217,198,86,194,60,178,162,207,243,172,189,97,93,115,74,165,244,37,134,205,221,203,157,97,24,134,97,24,134,97,24,134,97,24,134,
+97,24,134,97,150,76,249,241,120,206,201,232,232,123,9,103,78,199,24,142,158,19,210,35,39,186,253,198,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,75,102,143,168,215,85,183,17,205,209,11,57,151,
+148,206,235,220,75,31,150,62,174,35,162,213,51,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,242,120,254,238,81,29,81,71,42,199,54,155,211,183,114,107,238,138,171,209,60,26,213,12,195,48,
+12,195,48,12,195,48,12,195,48,12,195,48,12,179,102,222,63,190,102,90,244,12,141,158,243,209,181,94,35,187,35,253,95,86,88,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,102,201,236,61,152,163,39,
+69,247,148,232,118,218,21,91,191,26,206,61,185,163,191,246,70,53,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,44,153,217,155,142,136,26,227,108,209,170,247,219,109,204,78,71,30,73,209,12,195,
+48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,106,210,219,223,207,60,183,19,246,196,142,185,169,48,31,231,247,94,246,26,245,251,56,250,232,116,239,86,51,12,195,48,12,195,48,12,195,48,12,195,48,12,
+195,48,204,138,121,255,248,106,143,177,69,212,186,189,100,122,53,174,95,65,30,105,236,48,100,24,134,97,24,134,97,24,134,97,24,134,97,24,134,97,152,5,83,126,62,158,181,206,148,232,84,123,53,246,188,143,
+175,225,182,152,115,212,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,202,243,215,159,109,108,37,204,35,43,250,60,207,218,27,214,53,167,84,74,95,98,216,220,189,220,25,134,97,24,134,97,24,
+134,97,24,134,97,24,134,97,24,102,201,148,31,143,231,156,140,142,190,151,112,230,116,140,225,232,57,33,61,114,162,219,111,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,12,179,100,246,136,122,93,117,
+27,209,28,189,144,115,73,233,188,206,189,244,97,233,227,58,34,90,61,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,41,143,231,239,30,213,17,117,164,114,108,179,57,125,43,183,230,174,184,
+26,205,163,81,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,107,230,253,227,107,166,69,207,208,232,57,31,93,235,53,178,59,210,255,101,133,133,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,
+97,150,204,222,131,57,122,82,116,79,137,110,167,93,177,245,171,225,220,147,59,250,107,111,84,51,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,204,146,153,189,233,136,168,49,206,22,173,122,191,221,
+198,236,116,228,145,20,205,48,12,195,48,12,195,48,12,195,48,12,195,48,12,195,48,171,38,189,253,253,204,115,59,97,79,236,152,155,10,243,113,126,239,101,175,81,191,143,163,143,78,247,110,53,195,48,12,195,
+48,12,195,48,12,195,48,12,195,48,12,195,172,152,247,143,175,246,24,91,68,173,219,75,166,87,227,250,21,228,145,198,14,67,134,97,24,134,97,24,134,97,24,134,97,24,134,97,24,134,89,48,255,4,24,0,148,71,74,
+209,81,42,143,156,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
 
 const char* JuceDemoPluginAudioProcessorEditor::uibg_png = (const char*) resource_JuceDemoPluginAudioProcessorEditor_uibg_png;
-const int JuceDemoPluginAudioProcessorEditor::uibg_pngSize = 14573;
+const int JuceDemoPluginAudioProcessorEditor::uibg_pngSize = 42225;
+
+// JUCER_RESOURCE: off_png, 3044, "../off.png"
+static const unsigned char resource_JuceDemoPluginAudioProcessorEditor_off_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,19,0,0,0,15,8,6,0,0,0,6,68,244,44,0,0,0,9,112,72,89,115,0,0,11,
+19,0,0,11,19,1,0,154,156,24,0,0,10,79,105,67,67,80,80,104,111,116,111,115,104,111,112,32,73,67,67,32,112,114,111,102,105,108,101,0,0,120,218,157,83,103,84,83,233,22,61,247,222,244,66,75,136,128,148,75,
+111,82,21,8,32,82,66,139,128,20,145,38,42,33,9,16,74,136,33,161,217,21,81,193,17,69,69,4,27,200,160,136,3,142,142,128,140,21,81,44,12,138,10,216,7,228,33,162,142,131,163,136,138,202,251,225,123,163,107,
+214,188,247,230,205,254,181,215,62,231,172,243,157,179,207,7,192,8,12,150,72,51,81,53,128,12,169,66,30,17,224,131,199,196,198,225,228,46,64,129,10,36,112,0,16,8,179,100,33,115,253,35,1,0,248,126,60,60,
+43,34,192,7,190,0,1,120,211,11,8,0,192,77,155,192,48,28,135,255,15,234,66,153,92,1,128,132,1,192,116,145,56,75,8,128,20,0,64,122,142,66,166,0,64,70,1,128,157,152,38,83,0,160,4,0,96,203,99,98,227,0,80,
+45,0,96,39,127,230,211,0,128,157,248,153,123,1,0,91,148,33,21,1,160,145,0,32,19,101,136,68,0,104,59,0,172,207,86,138,69,0,88,48,0,20,102,75,196,57,0,216,45,0,48,73,87,102,72,0,176,183,0,192,206,16,11,
+178,0,8,12,0,48,81,136,133,41,0,4,123,0,96,200,35,35,120,0,132,153,0,20,70,242,87,60,241,43,174,16,231,42,0,0,120,153,178,60,185,36,57,69,129,91,8,45,113,7,87,87,46,30,40,206,73,23,43,20,54,97,2,97,154,
+64,46,194,121,153,25,50,129,52,15,224,243,204,0,0,160,145,21,17,224,131,243,253,120,206,14,174,206,206,54,142,182,14,95,45,234,191,6,255,34,98,98,227,254,229,207,171,112,64,0,0,225,116,126,209,254,44,
+47,179,26,128,59,6,128,109,254,162,37,238,4,104,94,11,160,117,247,139,102,178,15,64,181,0,160,233,218,87,243,112,248,126,60,60,69,161,144,185,217,217,229,228,228,216,74,196,66,91,97,202,87,125,254,103,
+194,95,192,87,253,108,249,126,60,252,247,245,224,190,226,36,129,50,93,129,71,4,248,224,194,204,244,76,165,28,207,146,9,132,98,220,230,143,71,252,183,11,255,252,29,211,34,196,73,98,185,88,42,20,227,81,
+18,113,142,68,154,140,243,50,165,34,137,66,146,41,197,37,210,255,100,226,223,44,251,3,62,223,53,0,176,106,62,1,123,145,45,168,93,99,3,246,75,39,16,88,116,192,226,247,0,0,242,187,111,193,212,40,8,3,128,
+104,131,225,207,119,255,239,63,253,71,160,37,0,128,102,73,146,113,0,0,94,68,36,46,84,202,179,63,199,8,0,0,68,160,129,42,176,65,27,244,193,24,44,192,6,28,193,5,220,193,11,252,96,54,132,66,36,196,194,66,
+16,66,10,100,128,28,114,96,41,172,130,66,40,134,205,176,29,42,96,47,212,64,29,52,192,81,104,134,147,112,14,46,194,85,184,14,61,112,15,250,97,8,158,193,40,188,129,9,4,65,200,8,19,97,33,218,136,1,98,138,
+88,35,142,8,23,153,133,248,33,193,72,4,18,139,36,32,201,136,20,81,34,75,145,53,72,49,82,138,84,32,85,72,29,242,61,114,2,57,135,92,70,186,145,59,200,0,50,130,252,134,188,71,49,148,129,178,81,61,212,12,
+181,67,185,168,55,26,132,70,162,11,208,100,116,49,154,143,22,160,155,208,114,180,26,61,140,54,161,231,208,171,104,15,218,143,62,67,199,48,192,232,24,7,51,196,108,48,46,198,195,66,177,56,44,9,147,99,203,
+177,34,172,12,171,198,26,176,86,172,3,187,137,245,99,207,177,119,4,18,129,69,192,9,54,4,119,66,32,97,30,65,72,88,76,88,78,216,72,168,32,28,36,52,17,218,9,55,9,3,132,81,194,39,34,147,168,75,180,38,186,
+17,249,196,24,98,50,49,135,88,72,44,35,214,18,143,19,47,16,123,136,67,196,55,36,18,137,67,50,39,185,144,2,73,177,164,84,210,18,210,70,210,110,82,35,233,44,169,155,52,72,26,35,147,201,218,100,107,178,7,
+57,148,44,32,43,200,133,228,157,228,195,228,51,228,27,228,33,242,91,10,157,98,64,113,164,248,83,226,40,82,202,106,74,25,229,16,229,52,229,6,101,152,50,65,85,163,154,82,221,168,161,84,17,53,143,90,66,173,
+161,182,82,175,81,135,168,19,52,117,154,57,205,131,22,73,75,165,173,162,149,211,26,104,23,104,247,105,175,232,116,186,17,221,149,30,78,151,208,87,210,203,233,71,232,151,232,3,244,119,12,13,134,21,131,
+199,136,103,40,25,155,24,7,24,103,25,119,24,175,152,76,166,25,211,139,25,199,84,48,55,49,235,152,231,153,15,153,111,85,88,42,182,42,124,21,145,202,10,149,74,149,38,149,27,42,47,84,169,170,166,170,222,
+170,11,85,243,85,203,84,143,169,94,83,125,174,70,85,51,83,227,169,9,212,150,171,85,170,157,80,235,83,27,83,103,169,59,168,135,170,103,168,111,84,63,164,126,89,253,137,6,89,195,76,195,79,67,164,81,160,
+177,95,227,188,198,32,11,99,25,179,120,44,33,107,13,171,134,117,129,53,196,38,177,205,217,124,118,42,187,152,253,29,187,139,61,170,169,161,57,67,51,74,51,87,179,82,243,148,102,63,7,227,152,113,248,156,
+116,78,9,231,40,167,151,243,126,138,222,20,239,41,226,41,27,166,52,76,185,49,101,92,107,170,150,151,150,88,171,72,171,81,171,71,235,189,54,174,237,167,157,166,189,69,187,89,251,129,14,65,199,74,39,92,
+39,71,103,143,206,5,157,231,83,217,83,221,167,10,167,22,77,61,58,245,174,46,170,107,165,27,161,187,68,119,191,110,167,238,152,158,190,94,128,158,76,111,167,222,121,189,231,250,28,125,47,253,84,253,109,
+250,167,245,71,12,88,6,179,12,36,6,219,12,206,24,60,197,53,113,111,60,29,47,199,219,241,81,67,93,195,64,67,165,97,149,97,151,225,132,145,185,209,60,163,213,70,141,70,15,140,105,198,92,227,36,227,109,198,
+109,198,163,38,6,38,33,38,75,77,234,77,238,154,82,77,185,166,41,166,59,76,59,76,199,205,204,205,162,205,214,153,53,155,61,49,215,50,231,155,231,155,215,155,223,183,96,90,120,90,44,182,168,182,184,101,
+73,178,228,90,166,89,238,182,188,110,133,90,57,89,165,88,85,90,93,179,70,173,157,173,37,214,187,173,187,167,17,167,185,78,147,78,171,158,214,103,195,176,241,182,201,182,169,183,25,176,229,216,6,219,174,
+182,109,182,125,97,103,98,23,103,183,197,174,195,238,147,189,147,125,186,125,141,253,61,7,13,135,217,14,171,29,90,29,126,115,180,114,20,58,86,58,222,154,206,156,238,63,125,197,244,150,233,47,103,88,207,
+16,207,216,51,227,182,19,203,41,196,105,157,83,155,211,71,103,23,103,185,115,131,243,136,139,137,75,130,203,46,151,62,46,155,27,198,221,200,189,228,74,116,245,113,93,225,122,210,245,157,155,179,155,194,
+237,168,219,175,238,54,238,105,238,135,220,159,204,52,159,41,158,89,51,115,208,195,200,67,224,81,229,209,63,11,159,149,48,107,223,172,126,79,67,79,129,103,181,231,35,47,99,47,145,87,173,215,176,183,165,
+119,170,247,97,239,23,62,246,62,114,159,227,62,227,60,55,222,50,222,89,95,204,55,192,183,200,183,203,79,195,111,158,95,133,223,67,127,35,255,100,255,122,255,209,0,167,128,37,1,103,3,137,129,65,129,91,
+2,251,248,122,124,33,191,142,63,58,219,101,246,178,217,237,65,140,160,185,65,21,65,143,130,173,130,229,193,173,33,104,200,236,144,173,33,247,231,152,206,145,206,105,14,133,80,126,232,214,208,7,97,230,
+97,139,195,126,12,39,133,135,133,87,134,63,142,112,136,88,26,209,49,151,53,119,209,220,67,115,223,68,250,68,150,68,222,155,103,49,79,57,175,45,74,53,42,62,170,46,106,60,218,55,186,52,186,63,198,46,102,
+89,204,213,88,157,88,73,108,75,28,57,46,42,174,54,110,108,190,223,252,237,243,135,226,157,226,11,227,123,23,152,47,200,93,112,121,161,206,194,244,133,167,22,169,46,18,44,58,150,64,76,136,78,56,148,240,
+65,16,42,168,22,140,37,242,19,119,37,142,10,121,194,29,194,103,34,47,209,54,209,136,216,67,92,42,30,78,242,72,42,77,122,146,236,145,188,53,121,36,197,51,165,44,229,185,132,39,169,144,188,76,13,76,221,
+155,58,158,22,154,118,32,109,50,61,58,189,49,131,146,145,144,113,66,170,33,77,147,182,103,234,103,230,102,118,203,172,101,133,178,254,197,110,139,183,47,30,149,7,201,107,179,144,172,5,89,45,10,182,66,
+166,232,84,90,40,215,42,7,178,103,101,87,102,191,205,137,202,57,150,171,158,43,205,237,204,179,202,219,144,55,156,239,159,255,237,18,194,18,225,146,182,165,134,75,87,45,29,88,230,189,172,106,57,178,60,
+113,121,219,10,227,21,5,43,134,86,6,172,60,184,138,182,42,109,213,79,171,237,87,151,174,126,189,38,122,77,107,129,94,193,202,130,193,181,1,107,235,11,85,10,229,133,125,235,220,215,237,93,79,88,47,89,223,
+181,97,250,134,157,27,62,21,137,138,174,20,219,23,151,21,127,216,40,220,120,229,27,135,111,202,191,153,220,148,180,169,171,196,185,100,207,102,210,102,233,230,222,45,158,91,14,150,170,151,230,151,14,110,
+13,217,218,180,13,223,86,180,237,245,246,69,219,47,151,205,40,219,187,131,182,67,185,163,191,60,184,188,101,167,201,206,205,59,63,84,164,84,244,84,250,84,54,238,210,221,181,97,215,248,110,209,238,27,123,
+188,246,52,236,213,219,91,188,247,253,62,201,190,219,85,1,85,77,213,102,213,101,251,73,251,179,247,63,174,137,170,233,248,150,251,109,93,173,78,109,113,237,199,3,210,3,253,7,35,14,182,215,185,212,213,
+29,210,61,84,82,143,214,43,235,71,14,199,31,190,254,157,239,119,45,13,54,13,85,141,156,198,226,35,112,68,121,228,233,247,9,223,247,30,13,58,218,118,140,123,172,225,7,211,31,118,29,103,29,47,106,66,154,
+242,154,70,155,83,154,251,91,98,91,186,79,204,62,209,214,234,222,122,252,71,219,31,15,156,52,60,89,121,74,243,84,201,105,218,233,130,211,147,103,242,207,140,157,149,157,125,126,46,249,220,96,219,162,182,
+123,231,99,206,223,106,15,111,239,186,16,116,225,210,69,255,139,231,59,188,59,206,92,242,184,116,242,178,219,229,19,87,184,87,154,175,58,95,109,234,116,234,60,254,147,211,79,199,187,156,187,154,174,185,
+92,107,185,238,122,189,181,123,102,247,233,27,158,55,206,221,244,189,121,241,22,255,214,213,158,57,61,221,189,243,122,111,247,197,247,245,223,22,221,126,114,39,253,206,203,187,217,119,39,238,173,188,79,
+188,95,244,64,237,65,217,67,221,135,213,63,91,254,220,216,239,220,127,106,192,119,160,243,209,220,71,247,6,133,131,207,254,145,245,143,15,67,5,143,153,143,203,134,13,134,235,158,56,62,57,57,226,63,114,
+253,233,252,167,67,207,100,207,38,158,23,254,162,254,203,174,23,22,47,126,248,213,235,215,206,209,152,209,161,151,242,151,147,191,109,124,165,253,234,192,235,25,175,219,198,194,198,30,190,201,120,51,49,
+94,244,86,251,237,193,119,220,119,29,239,163,223,15,79,228,124,32,127,40,255,104,249,177,245,83,208,167,251,147,25,147,147,255,4,3,152,243,252,99,51,45,219,0,0,0,4,103,65,77,65,0,0,177,142,124,251,81,
+147,0,0,0,32,99,72,82,77,0,0,122,37,0,0,128,131,0,0,249,255,0,0,128,233,0,0,117,48,0,0,234,96,0,0,58,152,0,0,23,111,146,95,197,70,0,0,0,255,73,68,65,84,120,218,236,147,187,74,3,81,20,69,215,185,143,185,
+51,68,34,248,3,146,66,108,252,255,223,81,2,73,97,33,67,50,115,231,113,31,199,94,196,65,72,97,225,42,119,177,96,21,91,84,149,91,97,184,33,127,87,230,190,14,135,195,163,214,82,232,188,195,34,212,178,98,
+196,97,157,144,83,197,90,75,49,194,148,50,175,111,71,249,81,102,214,149,135,253,61,47,207,79,56,21,26,47,244,253,5,191,235,232,135,145,16,58,142,167,19,46,229,237,204,224,91,186,208,114,183,219,163,170,
+180,190,161,214,138,69,200,57,227,189,39,165,196,90,242,118,166,245,134,138,50,140,23,226,165,199,178,99,28,175,84,7,49,14,88,4,81,197,137,217,150,197,24,145,162,156,207,103,202,50,51,205,3,31,125,207,
+158,74,26,34,239,211,194,16,71,112,205,182,108,1,156,192,199,60,97,20,166,146,200,33,208,199,5,99,27,166,178,130,115,168,145,109,25,84,114,94,185,94,19,70,193,68,48,226,88,231,133,16,90,214,170,20,85,
+204,55,153,242,127,167,95,243,57,0,141,185,128,141,137,17,228,67,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
+
+const char* JuceDemoPluginAudioProcessorEditor::off_png = (const char*) resource_JuceDemoPluginAudioProcessorEditor_off_png;
+const int JuceDemoPluginAudioProcessorEditor::off_pngSize = 3044;
+
+// JUCER_RESOURCE: on_orange_png, 492, "../on_orange.png"
+static const unsigned char resource_JuceDemoPluginAudioProcessorEditor_on_orange_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,19,0,0,0,15,8,6,0,0,0,6,68,244,44,0,0,0,4,103,65,77,65,0,
+0,175,200,55,5,138,233,0,0,0,25,116,69,88,116,83,111,102,116,119,97,114,101,0,65,100,111,98,101,32,73,109,97,103,101,82,101,97,100,121,113,201,101,60,0,0,1,126,73,68,65,84,120,218,156,84,65,82,194,48,
+20,77,67,218,10,50,234,200,66,199,5,7,241,18,94,192,149,247,114,231,13,60,136,119,96,197,40,160,204,84,74,155,148,248,95,121,31,51,236,32,51,143,223,38,253,47,47,255,253,144,197,23,131,145,9,6,2,155,68,
+197,241,216,37,232,14,241,53,198,76,200,64,228,4,133,160,20,140,248,92,112,222,30,17,5,65,75,108,4,13,159,131,163,18,36,94,10,174,5,183,140,32,189,224,186,14,40,217,146,100,45,88,49,98,68,221,185,36,193,
+189,96,202,56,17,140,185,145,14,40,168,4,75,193,92,48,227,60,212,122,85,54,162,162,233,187,201,222,60,39,176,139,79,164,111,19,230,95,193,147,137,207,220,160,6,84,89,161,202,80,128,7,193,99,158,239,109,
+113,206,248,77,109,242,220,153,202,7,145,26,205,135,44,12,247,156,56,193,23,97,109,66,6,49,19,252,92,225,179,161,124,30,65,150,247,103,0,51,54,2,121,205,170,179,20,106,152,117,108,11,171,142,162,226,224,
+48,117,45,74,124,95,52,20,232,78,158,81,237,44,116,61,11,93,73,29,207,28,115,15,150,175,248,50,150,100,212,229,70,226,140,54,126,11,126,72,158,255,27,18,152,210,187,185,75,122,102,25,184,186,96,161,45,
+19,23,84,179,225,59,155,111,201,41,228,239,82,178,53,237,238,235,241,73,178,1,207,81,177,79,90,170,44,247,203,115,230,245,100,184,1,5,191,155,156,217,103,115,190,87,170,172,73,58,185,165,213,167,220,128,
+70,143,217,145,64,59,185,38,217,169,119,179,83,55,3,163,39,217,89,255,26,127,2,12,0,74,21,165,77,47,125,194,188,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
+
+const char* JuceDemoPluginAudioProcessorEditor::on_orange_png = (const char*) resource_JuceDemoPluginAudioProcessorEditor_on_orange_png;
+const int JuceDemoPluginAudioProcessorEditor::on_orange_pngSize = 492;
+
+// JUCER_RESOURCE: on_red_png, 488, "../on_red.png"
+static const unsigned char resource_JuceDemoPluginAudioProcessorEditor_on_red_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,19,0,0,0,15,8,6,0,0,0,6,68,244,44,0,0,0,4,103,65,77,65,0,0,175,
+200,55,5,138,233,0,0,0,25,116,69,88,116,83,111,102,116,119,97,114,101,0,65,100,111,98,101,32,73,109,97,103,101,82,101,97,100,121,113,201,101,60,0,0,1,122,73,68,65,84,120,218,172,84,75,74,3,65,20,236,110,
+135,56,25,67,36,70,136,32,228,4,174,60,143,71,16,60,142,123,241,46,158,32,171,1,69,87,19,204,24,98,194,196,137,113,218,122,61,245,72,147,157,146,134,202,235,223,171,174,126,213,19,235,77,104,22,56,2,92,
+20,21,251,173,137,240,19,69,159,144,72,98,7,56,6,50,246,59,156,119,123,68,91,96,67,84,64,205,254,54,161,18,73,60,1,78,129,51,70,33,77,185,174,77,20,124,145,100,1,124,48,26,85,230,168,72,8,46,128,49,227,
+16,232,241,32,109,162,96,5,148,64,1,188,113,94,212,126,171,178,140,138,198,183,214,62,202,177,231,188,99,21,201,254,228,70,105,51,224,222,251,27,30,176,22,168,178,142,42,91,226,231,26,184,203,144,102,
+81,206,52,53,85,89,154,172,219,53,211,245,218,140,188,55,15,152,31,180,156,114,131,119,194,185,136,76,14,29,138,162,75,217,54,192,118,36,10,89,29,252,182,65,153,140,231,8,203,150,108,24,25,230,212,77,
+167,142,246,89,101,51,159,155,105,85,153,17,186,57,112,133,254,139,212,164,14,212,90,200,216,113,43,29,31,91,254,204,206,8,201,82,151,49,226,19,11,35,107,175,36,207,118,134,108,153,31,220,108,162,55,83,
+214,124,56,57,11,173,238,228,180,124,198,113,210,46,151,204,147,252,38,38,91,208,238,80,143,137,217,221,67,72,166,162,54,122,165,253,118,185,96,94,32,179,190,221,223,99,49,255,243,206,10,142,87,170,172,
+142,94,242,134,86,255,229,11,168,85,217,193,190,77,123,200,127,141,95,1,6,0,68,36,154,206,118,63,98,167,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
+
+const char* JuceDemoPluginAudioProcessorEditor::on_red_png = (const char*) resource_JuceDemoPluginAudioProcessorEditor_on_red_png;
+const int JuceDemoPluginAudioProcessorEditor::on_red_pngSize = 488;
+
+// JUCER_RESOURCE: on_yellow_png, 549, "../on_yellow.png"
+static const unsigned char resource_JuceDemoPluginAudioProcessorEditor_on_yellow_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,19,0,0,0,15,8,6,0,0,0,6,68,244,44,0,0,0,4,103,65,77,65,0,
+0,175,200,55,5,138,233,0,0,0,25,116,69,88,116,83,111,102,116,119,97,114,101,0,65,100,111,98,101,32,73,109,97,103,101,82,101,97,100,121,113,201,101,60,0,0,1,183,73,68,65,84,120,218,148,84,75,82,194,64,
+16,205,103,18,32,1,65,96,225,138,171,120,0,175,192,218,173,231,209,181,7,209,171,176,162,164,136,98,197,132,252,102,124,221,211,3,129,29,83,245,232,153,100,250,245,235,79,240,63,94,125,15,139,126,66,32,
+232,89,135,235,165,123,232,156,125,124,214,70,9,17,217,24,24,0,137,236,99,121,30,92,17,181,64,45,40,128,138,246,159,111,65,171,68,9,57,166,192,20,152,139,37,210,161,188,119,139,148,28,133,228,0,100,98,
+105,25,23,121,32,4,15,192,74,236,2,24,75,32,183,72,77,14,236,129,45,176,145,231,164,182,81,105,194,145,19,81,180,202,14,222,187,49,136,32,201,209,222,71,33,2,64,27,107,89,34,18,158,79,189,181,4,40,9,106,
+57,101,101,113,79,153,55,136,112,24,91,167,16,111,171,6,197,67,200,166,181,231,188,180,100,211,148,239,239,4,129,90,204,78,100,164,110,65,42,98,144,45,103,214,57,66,33,254,80,165,24,246,8,13,67,220,140,
+126,45,217,253,29,151,194,53,44,80,147,196,248,82,55,238,104,219,249,76,16,197,35,164,87,122,42,26,121,67,93,242,51,10,68,10,39,169,77,25,190,253,142,251,202,24,223,244,91,222,52,182,78,69,81,114,116,
+213,150,156,38,61,35,165,132,170,182,181,131,111,45,126,154,187,249,147,243,198,205,204,30,103,142,78,105,241,52,251,150,40,247,206,133,39,208,10,66,238,106,33,254,90,125,101,39,50,154,151,237,238,219,
+22,217,45,238,36,206,29,38,44,68,16,173,207,29,134,202,173,248,89,50,56,119,194,158,201,220,172,17,249,114,206,186,147,170,139,57,131,239,70,252,200,191,83,7,155,102,213,155,228,90,90,125,203,23,80,177,
+50,185,80,247,38,185,20,178,155,190,77,86,70,93,144,11,100,27,33,187,249,95,227,233,69,155,127,1,6,0,63,195,209,69,145,104,234,249,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
+
+const char* JuceDemoPluginAudioProcessorEditor::on_yellow_png = (const char*) resource_JuceDemoPluginAudioProcessorEditor_on_yellow_png;
+const int JuceDemoPluginAudioProcessorEditor::on_yellow_pngSize = 549;
 
 
 //[EndFile] You can add extra defines here...

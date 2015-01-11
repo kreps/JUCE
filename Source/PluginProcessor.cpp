@@ -279,7 +279,11 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 		//m_Reverb.setSampleRate(getSampleRate());
 		juce::Reverb::Parameters params = m_Reverb.getParameters();
 		params.roomSize = m_fReverbSize;
-		params.dryLevel = 1.0f;
+		params.dryLevel = 1.0f;//this depends on general dry on/off button only on or off is possible
+		params.damping = 0.0f;
+		//params.freezeMode = 0.0f;//0 or 1
+		//params.wetLevel = 1.0f; //this depends on general wet gain control
+		params.width = 1.0f; 
 		//params.damping = 0.0f;
 		m_Reverb.setParameters(params);
 		//m_Reverb.setParameters(juce::Reverb::Parameters());
