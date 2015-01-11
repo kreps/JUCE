@@ -81,23 +81,29 @@ void GuiLookAndFeel::drawRotarySlider(Graphics& g, int x, int y, int width, int 
     const float ry = centreY - radius;
     const float rw = radius * 2.0f;
     const float angle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
-	 const bool isMouseOver = slider.isMouseOverOrDragging() && slider.isEnabled();
+	const bool isMouseOver = slider.isMouseOverOrDragging() && slider.isEnabled();
 
-	 if (slider.isEnabled())
-	 {
-		 if(name == "gainSlider")
-			 g.setColour((Colours::yellow).withAlpha(isMouseOver? 1.0f: 0.5f));
-		 else if ( name == "panSlider")
-			 g.setColour((Colours::coral).withAlpha(isMouseOver? 1.0f: 0.5f));
-		 else if (name == "delaySlider")
-			 g.setColour((Colours::yellowgreen).withAlpha(isMouseOver? 1.0f: 0.5f));
-		 else 
-			 g.setColour(slider.findColour(Slider::rotarySliderFillColourId).withAlpha(isMouseOver? 1.0f: 0.5f));
-	 }
-	 else
-	 {
-		 g.setColour(Colour(0x80808080));
-	 }
+
+	if (isMouseOver )
+		slider.setMouseCursor(MouseCursor::PointingHandCursor);
+
+	if(name == "gainSlider")
+		g.setColour((Colours::yellow).withAlpha(isMouseOver? 1.0f: 0.5f));
+	else if ( name == "panSlider")
+		g.setColour((Colours::coral).withAlpha(isMouseOver? 1.0f: 0.5f));
+	else if (name == "delaySlider")
+		g.setColour((Colours::yellowgreen).withAlpha(isMouseOver? 1.0f: 0.5f));
+	else if (name == "delayTimeSlider")
+		g.setColour((Colours::limegreen).withAlpha(isMouseOver? 1.0f: 0.5f));
+	else if (name == "hpfSlider")
+		g.setColour((Colours::white).withAlpha(isMouseOver? 1.0f: 0.5f));
+	else if (name == "dfs_violet")
+		g.setColour((Colours::violet).withAlpha(isMouseOver? 1.0f: 0.5f));
+	else 
+		g.setColour(slider.findColour(Slider::rotarySliderFillColourId).withAlpha(isMouseOver? 1.0f: 0.5f));
+
+	if(!slider.isEnabled())
+		g.setColour((Colours::black).withAlpha(0.3f));
 
 	 {
             const float lineThickness = jmin (15.0f, jmin (width, height) * 0.45f) * 0.1f;
@@ -106,15 +112,14 @@ void GuiLookAndFeel::drawRotarySlider(Graphics& g, int x, int y, int width, int 
 			//g.drawEllipse(rx+16, ry+16, rw-36, rw-36,0.0f);
 			//g.fillPath(outlineArc);
             g.strokePath (outlineArc,PathStrokeType (lineThickness));
-        }
+			g.drawLine(centreX-(rw-12),centreY,centreX-(rw-12)/2,centreY,  lineThickness);      }
    
 
     Rectangle<float> r(rx, ry, rw, rw);
-    
-	{
+    {
 		g.setOpacity(1.0f);
-        g.addTransform(AffineTransform::rotation(angle, r.getCentreX(), r.getCentreY()));
-        g.drawImage(chikenKnobImage, rx, ry, radius * 2, radius * 2, 0, 0, chikenKnobImage.getWidth(), chikenKnobImage.getHeight());
+		g.addTransform(AffineTransform::rotation(angle, r.getCentreX(), r.getCentreY()));
+		g.drawImage(chikenKnobImage, rx, ry, radius * 2, radius * 2, 0, 0, chikenKnobImage.getWidth(), chikenKnobImage.getHeight());
     }
 
         //
@@ -133,9 +138,12 @@ void GuiLookAndFeel::drawTickBox(Graphics& g, Component& component,
                  float x, float y, float w, float h,
                  bool ticked,
                  bool isEnabled,
-                 bool /*isMouseOverButton*/,
+                 bool isMouseOverButton,
                  bool /*isButtonDown*/) 
 {
+	if (isMouseOverButton){
+		component.setMouseCursor(MouseCursor::PointingHandCursor);
+	}
    /* const float boxSize = w * 0.7f;
 
     bool isDownOrDragging = component.isEnabled() && (component.isMouseOverOrDragging() || component.isMouseButtonDown());
@@ -278,7 +286,7 @@ void GuiLookAndFeel::setChickKnobImage(Image image)
 void GuiLookAndFeel::drawLabel(Graphics& g, Label& label)
 {
     g.fillAll(label.findColour(Label::backgroundColourId));
-
+	Rectangle<int> textArea(label.getBorderSize().subtractedFrom(label.getLocalBounds()));
     if (!label.isBeingEdited())
     {
         const float alpha = label.isEnabled() ? 1.0f : 0.5f;
@@ -286,9 +294,6 @@ void GuiLookAndFeel::drawLabel(Graphics& g, Label& label)
 		font.setHeight(10.0f);
         g.setColour(label.findColour(Label::textColourId).withMultipliedAlpha(alpha));
         g.setFont(font);
-
-        Rectangle<int> textArea(label.getBorderSize().subtractedFrom(label.getLocalBounds()));
-
         g.drawFittedText(label.getText(), textArea, label.getJustificationType(),
                          jmax(1, (int)(textArea.getHeight() / font.getHeight())),
                          label.getMinimumHorizontalScale());
@@ -299,5 +304,6 @@ void GuiLookAndFeel::drawLabel(Graphics& g, Label& label)
         g.setColour(label.findColour(Label::outlineColourId));
     }
 
-    g.drawRect(label.getLocalBounds());
+    //g.drawRect(label.getLocalBounds());
+	//g.drawRect(textArea);
 }

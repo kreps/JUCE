@@ -35,6 +35,7 @@ void setupCustomLookAndFeelColours (LookAndFeel& laf)
 {
 	laf.setColour (Slider::thumbColourId, Colour::greyLevel (0.95f));
 	laf.setColour (Slider::textBoxOutlineColourId, Colours::black);
+	laf.setColour(Slider::textBoxBackgroundColourId,Colour((0x00ffb5f6)));
 	laf.setColour (Slider::rotarySliderFillColourId, Colour (0xff00b5f6));
 	laf.setColour (Slider::rotarySliderOutlineColourId, Colours::white);
 
@@ -43,6 +44,7 @@ void setupCustomLookAndFeelColours (LookAndFeel& laf)
     laf.setColour(GroupComponent::textColourId, Colour(0xff000000));
 	laf.setColour (TextButton::buttonOnColourId, laf.findColour (TextButton::textColourOffId));
 	laf.setColour (TextButton::textColourOnId, laf.findColour (TextButton::buttonColourId));
+	//laf.setColour(Label::backgroundColourId, Colour(0x33ffffff));
 };
 
 //[/MiscUserDefs]
@@ -80,7 +82,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     gainSlider->setTooltip (TRANS("gain"));
     gainSlider->setRange (0, 1, 0);
     gainSlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    gainSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    gainSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
     gainSlider->addListener (this);
     gainSlider->setSkewFactor (0.3);
 
@@ -112,7 +114,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     panInfoLabel->setColour (TextEditor::textColourId, Colours::black);
     panInfoLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (delayTimeSlider = new Slider ("new slider"));
+    addAndMakeVisible (delayTimeSlider = new Slider ("delayTimeSlider"));
     delayTimeSlider->setRange (0, 1, 0);
     delayTimeSlider->setSliderStyle (Slider::RotaryVerticalDrag);
     delayTimeSlider->setTextBoxStyle (Slider::NoTextBox, true, 80, 20);
@@ -175,7 +177,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     hpfHeader->setColour (TextEditor::textColourId, Colours::black);
     hpfHeader->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (hpfSlider = new Slider ("hi pass filter"));
+    addAndMakeVisible (hpfSlider = new Slider ("hpfSlider"));
     hpfSlider->setTooltip (TRANS("hi pass filter (hz)"));
     hpfSlider->setRange (20, 10000, 0);
     hpfSlider->setSliderStyle (Slider::RotaryVerticalDrag);
@@ -207,11 +209,11 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     reverbSizeHeader->setColour (TextEditor::textColourId, Colours::black);
     reverbSizeHeader->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (delayTimeSlider2 = new Slider ("new slider"));
-    delayTimeSlider2->setRange (0, 1, 0);
-    delayTimeSlider2->setSliderStyle (Slider::RotaryVerticalDrag);
-    delayTimeSlider2->setTextBoxStyle (Slider::NoTextBox, true, 80, 20);
-    delayTimeSlider2->addListener (this);
+    addAndMakeVisible (delayFeedbackSlider = new Slider ("dfs_violet"));
+    delayFeedbackSlider->setRange (0, 1, 0);
+    delayFeedbackSlider->setSliderStyle (Slider::RotaryVerticalDrag);
+    delayFeedbackSlider->setTextBoxStyle (Slider::NoTextBox, true, 80, 20);
+    delayFeedbackSlider->addListener (this);
 
     addAndMakeVisible (delayTimeValueLabel2 = new Label ("new label",
                                                          TRANS("feedback")));
@@ -242,10 +244,10 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     guilaf2Btn->setButtonText (TRANS("guilaf2"));
     guilaf2Btn->addListener (this);
 
-    addAndMakeVisible (dry = new ToggleButton ("new toggle button"));
-    dry->setButtonText (TRANS("dry"));
-    dry->addListener (this);
-    dry->setToggleState (true, dontSendNotification);
+    addAndMakeVisible (dryBtn = new ToggleButton ("new toggle button"));
+    dryBtn->setButtonText (TRANS("dry +"));
+    dryBtn->addListener (this);
+    dryBtn->setToggleState (true, dontSendNotification);
 
     addAndMakeVisible (slider = new Slider ("new slider"));
     slider->setRange (0, 10, 0);
@@ -292,24 +294,15 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     reverbSizeHeader4->setColour (TextEditor::textColourId, Colours::black);
     reverbSizeHeader4->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (donateBtn = new ImageButton ("new button"));
-    donateBtn->addListener (this);
-
-    donateBtn->setImages (false, true, true,
-                          ImageCache::getFromMemory (images1_jpg, images1_jpgSize), 1.000f, Colour (0x00000000),
-                          Image(), 1.000f, Colour (0x00000000),
-                          Image(), 1.000f, Colour (0x00000000));
     addAndMakeVisible (bypassBtn = new ToggleButton ("new toggle button"));
-    bypassBtn->setButtonText (TRANS("bypass"));
+    bypassBtn->setButtonText (TRANS("wet off"));
     bypassBtn->addListener (this);
 
-    addAndMakeVisible (label = new Label ("new label",
-                                          TRANS("+")));
-    label->setFont (Font (15.00f, Font::plain));
-    label->setJustificationType (Justification::centredLeft);
-    label->setEditable (false, false, false);
-    label->setColour (TextEditor::textColourId, Colours::black);
-    label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    addAndMakeVisible (slider4 = new Slider ("new slider"));
+    slider4->setRange (0, 127, 1);
+    slider4->setSliderStyle (Slider::IncDecButtons);
+    slider4->setTextBoxStyle (Slider::TextBoxLeft, false, 80, 20);
+    slider4->addListener (this);
 
     cachedImage_uibg_png = ImageCache::getFromMemory (uibg_png, uibg_pngSize);
 
@@ -331,8 +324,8 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 	//gainSlider->setRotaryParameters(1.0f*3.14f+0.1f,(12.0f/4.0f)*3.14f-0.1f,true);
 	panSlider->setDoubleClickReturnValue(true,0.5f);
 	midSideSlider->setDoubleClickReturnValue(true,0.5f);
-	setupCustomLookAndFeelColours(guilaf);
 	LookAndFeel::setDefaultLookAndFeel(&guilaf);
+	setupCustomLookAndFeelColours(guilaf);
     //guilaf.setDefaultSansSerifTypefaceName("Aharoni");
     guilaf.setImages(
 		ImageCache::getFromMemory(chickknob_png,chickknob_pngSize),
@@ -344,6 +337,8 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 		ImageCache::getFromMemory(off_png,off_pngSize),
 		ImageCache::getFromMemory(on_red_png,on_red_pngSize)
 		);
+	 //gainSlider->setScrollWheelEnabled(false);
+
     //[/Constructor]
 }
 
@@ -374,22 +369,21 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
     reverbSizeSlider = nullptr;
     midsideInfoLabel = nullptr;
     reverbSizeHeader = nullptr;
-    delayTimeSlider2 = nullptr;
+    delayFeedbackSlider = nullptr;
     delayTimeValueLabel2 = nullptr;
     delayAmountHeader = nullptr;
     lnf3Btn = nullptr;
     guilafBtn = nullptr;
     guilaf2Btn = nullptr;
-    dry = nullptr;
+    dryBtn = nullptr;
     slider = nullptr;
     reverbSizeHeader2 = nullptr;
     slider2 = nullptr;
     reverbSizeHeader3 = nullptr;
     slider3 = nullptr;
     reverbSizeHeader4 = nullptr;
-    donateBtn = nullptr;
     bypassBtn = nullptr;
-    label = nullptr;
+    slider4 = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -420,43 +414,42 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    groupComponent->setBounds (8, 8, 144, 112);
+    groupComponent->setBounds (0, 0, 144, 112);
     reverGroupComponent->setBounds (456, 13, 408, 100);
     delayGroupComponent->setBounds (208, 13, 240, 100);
     panSlider->setBounds (100, 159, 80, 50);
     infoLabel->setBounds (40, 432, 400, 25);
-    gainSlider->setBounds (73, 24, 80, 50);
+    gainSlider->setBounds (59, 20, 80, 70);
     delaySlider->setBounds (208, 47, 80, 50);
-    gainInfoLabel->setBounds (73, 72, 80, 20);
+    gainInfoLabel->setBounds (64, 112, 80, 20);
     panInfoLabel->setBounds (100, 209, 80, 20);
     delayTimeSlider->setBounds (288, 47, 80, 50);
     delayTimeValueLabel->setBounds (288, 27, 80, 20);
     panHeader->setBounds (100, 139, 80, 20);
     midSideSlider->setBounds (20, 154, 80, 50);
     midsideHeader->setBounds (10, 134, 80, 20);
-    saturationSlider->setBounds (120, 309, 100, 50);
-    distortionHeader->setBounds (132, 296, 80, 10);
+    saturationSlider->setBounds (144, 253, 100, 50);
+    distortionHeader->setBounds (156, 240, 80, 10);
     hpfHeader->setBounds (258, 150, 80, 30);
     hpfSlider->setBounds (268, 170, 60, 50);
     reverbSizeSlider->setBounds (472, 48, 50, 50);
     midsideInfoLabel->setBounds (10, 209, 80, 30);
     reverbSizeHeader->setBounds (456, 24, 80, 30);
-    delayTimeSlider2->setBounds (368, 47, 80, 50);
+    delayFeedbackSlider->setBounds (368, 47, 80, 50);
     delayTimeValueLabel2->setBounds (368, 27, 80, 20);
     delayAmountHeader->setBounds (208, 24, 80, 24);
     lnf3Btn->setBounds (216, 384, 88, 24);
     guilafBtn->setBounds (320, 384, 88, 24);
     guilaf2Btn->setBounds (432, 384, 88, 24);
-    dry->setBounds (24, 32, 48, 24);
+    dryBtn->setBounds (5, 15, 70, 24);
     slider->setBounds (536, 48, 50, 50);
     reverbSizeHeader2->setBounds (520, 24, 80, 30);
     slider2->setBounds (608, 48, 50, 50);
     reverbSizeHeader3->setBounds (600, 24, 80, 30);
     slider3->setBounds (688, 48, 50, 50);
     reverbSizeHeader4->setBounds (680, 24, 80, 30);
-    donateBtn->setBounds (368, 136, 128, 48);
-    bypassBtn->setBounds (40, 88, 80, 24);
-    label->setBounds (65, 33, 24, 24);
+    bypassBtn->setBounds (5, 40, 64, 24);
+    slider4->setBounds (368, 144, 72, 80);
     //[UserResized] Add your own custom resize handling here..
 	resizer->setBounds(getWidth() - 16, getHeight() - 16, 16, 16);
 
@@ -521,10 +514,10 @@ void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatW
 		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::reverbSizeParam,			(float)reverbSizeSlider->getValue());
         //[/UserSliderCode_reverbSizeSlider]
     }
-    else if (sliderThatWasMoved == delayTimeSlider2)
+    else if (sliderThatWasMoved == delayFeedbackSlider)
     {
-        //[UserSliderCode_delayTimeSlider2] -- add your slider handling code here..
-        //[/UserSliderCode_delayTimeSlider2]
+        //[UserSliderCode_delayFeedbackSlider] -- add your slider handling code here..
+        //[/UserSliderCode_delayFeedbackSlider]
     }
     else if (sliderThatWasMoved == slider)
     {
@@ -540,6 +533,11 @@ void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatW
     {
         //[UserSliderCode_slider3] -- add your slider handling code here..
         //[/UserSliderCode_slider3]
+    }
+    else if (sliderThatWasMoved == slider4)
+    {
+        //[UserSliderCode_slider4] -- add your slider handling code here..
+        //[/UserSliderCode_slider4]
     }
 
     //[UsersliderValueChanged_Post]
@@ -569,38 +567,22 @@ void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasCli
 		LookAndFeel::setDefaultLookAndFeel(&guilaf2);
         //[/UserButtonCode_guilaf2Btn]
     }
-    else if (buttonThatWasClicked == dry)
+    else if (buttonThatWasClicked == dryBtn)
     {
-        //[UserButtonCode_dry] -- add your button handler code here..
-        //[/UserButtonCode_dry]
-    }
-    else if (buttonThatWasClicked == donateBtn)
-    {
-        //[UserButtonCode_donateBtn] -- add your button handler code here..
-        //[/UserButtonCode_donateBtn]
+        //[UserButtonCode_dryBtn] -- add your button handler code here..
+		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::dryOnParam, (float)(dryBtn->getToggleState() == true)?1.0f:0.0f);
+        //[/UserButtonCode_dryBtn]
     }
     else if (buttonThatWasClicked == bypassBtn)
     {
         //[UserButtonCode_bypassBtn] -- add your button handler code here..
 		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::bypassParam, (float)(bypassBtn->getToggleState() == true)?1.0f:0.0f);
+		gainSlider->setEnabled(!bypassBtn->getToggleState());
         //[/UserButtonCode_bypassBtn]
     }
 
     //[UserbuttonClicked_Post]
     //[/UserbuttonClicked_Post]
-}
-
-void JuceDemoPluginAudioProcessorEditor::mouseEnter (const MouseEvent& e)
-{
-    //[UserCode_mouseEnter] -- Add your code here...
-    //[/UserCode_mouseEnter]
-}
-
-void JuceDemoPluginAudioProcessorEditor::mouseExit (const MouseEvent& e)
-{
-    //[UserCode_mouseExit] -- Add your code here...
-	DBG(e.getPosition().toString());
-    //[/UserCode_mouseExit]
 }
 
 
@@ -763,15 +745,11 @@ BEGIN_JUCER_METADATA
                  variableInitialisers="AudioProcessorEditor (ownerFilter)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="0"
                  initialWidth="400" initialHeight="200">
-  <METHODS>
-    <METHOD name="mouseEnter (const MouseEvent&amp; e)"/>
-    <METHOD name="mouseExit (const MouseEvent&amp; e)"/>
-  </METHODS>
   <BACKGROUND backgroundColour="ff777777">
     <IMAGE pos="4 4 1920 1040" resource="uibg_png" opacity="1" mode="0"/>
   </BACKGROUND>
   <GROUPCOMPONENT name="new group" id="7c8c0a2a1419927a" memberName="groupComponent"
-                  virtualName="" explicitFocusOrder="0" pos="8 8 144 112" title="output"/>
+                  virtualName="" explicitFocusOrder="0" pos="0 0 144 112" title="output"/>
   <GROUPCOMPONENT name="new group" id="fb7419eb67152218" memberName="reverGroupComponent"
                   virtualName="" explicitFocusOrder="0" pos="456 13 408 100" title="reverb"/>
   <GROUPCOMPONENT name="new group" id="98be51d9c59fac6f" memberName="delayGroupComponent"
@@ -787,8 +765,8 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="12" bold="0" italic="0" justification="33"/>
   <SLIDER name="gainSlider" id="c31acc4ca22491a9" memberName="gainSlider"
-          virtualName="" explicitFocusOrder="0" pos="73 24 80 50" tooltip="gain"
-          min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
+          virtualName="" explicitFocusOrder="0" pos="59 20 80 70" tooltip="gain"
+          min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.29999999999999999"/>
   <SLIDER name="delaySlider" id="37878e5e9fd60a08" memberName="delaySlider"
           virtualName="" explicitFocusOrder="0" pos="208 47 80 50" tooltip="delay gain&#10;"
@@ -796,7 +774,7 @@ BEGIN_JUCER_METADATA
           min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="gainInfoLabel" id="dde6ff72637f37e7" memberName="gainInfoLabel"
-         virtualName="" explicitFocusOrder="0" pos="73 72 80 20" textCol="ff323232"
+         virtualName="" explicitFocusOrder="0" pos="64 112 80 20" textCol="ff323232"
          edTextCol="ff000000" edBkgCol="0" labelText="0.0 dB&#10;" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="12" bold="0" italic="0" justification="36"/>
@@ -805,7 +783,7 @@ BEGIN_JUCER_METADATA
          edTextCol="ff000000" edBkgCol="0" labelText="C" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
-  <SLIDER name="new slider" id="ead45d255e5f5831" memberName="delayTimeSlider"
+  <SLIDER name="delayTimeSlider" id="ead45d255e5f5831" memberName="delayTimeSlider"
           virtualName="" explicitFocusOrder="0" pos="288 47 80 50" min="0"
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="0" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
@@ -830,11 +808,11 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="mid/side slider" id="2a577f0fc0372cc6" memberName="saturationSlider"
-          virtualName="" explicitFocusOrder="0" pos="120 309 100 50" min="0.001"
+          virtualName="" explicitFocusOrder="0" pos="144 253 100 50" min="0.001"
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="saturation fx" id="eda4710f044030be" memberName="distortionHeader"
-         virtualName="" explicitFocusOrder="0" pos="132 296 80 10" textCol="ff363636"
+         virtualName="" explicitFocusOrder="0" pos="156 240 80 10" textCol="ff363636"
          edTextCol="ff000000" edBkgCol="0" labelText="saturation" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="12"/>
@@ -843,7 +821,7 @@ BEGIN_JUCER_METADATA
          edTextCol="ff000000" edBkgCol="0" labelText="hi pass filter"
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
          fontname="Aharoni" fontsize="10" bold="0" italic="0" justification="36"/>
-  <SLIDER name="hi pass filter" id="253b421224cbac37" memberName="hpfSlider"
+  <SLIDER name="hpfSlider" id="253b421224cbac37" memberName="hpfSlider"
           virtualName="" explicitFocusOrder="0" pos="268 170 60 50" tooltip="hi pass filter (hz)"
           min="20" max="10000" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.20000000000000001"/>
@@ -861,7 +839,7 @@ BEGIN_JUCER_METADATA
          edTextCol="ff000000" edBkgCol="0" labelText="room size" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
-  <SLIDER name="new slider" id="f86ed4bd47474957" memberName="delayTimeSlider2"
+  <SLIDER name="dfs_violet" id="f86ed4bd47474957" memberName="delayFeedbackSlider"
           virtualName="" explicitFocusOrder="0" pos="368 47 80 50" min="0"
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="0" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
@@ -884,8 +862,8 @@ BEGIN_JUCER_METADATA
   <TEXTBUTTON name="new button" id="c18db766ecc28fe6" memberName="guilaf2Btn"
               virtualName="" explicitFocusOrder="0" pos="432 384 88 24" buttonText="guilaf2"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
-  <TOGGLEBUTTON name="new toggle button" id="9fec732da680abce" memberName="dry"
-                virtualName="" explicitFocusOrder="0" pos="24 32 48 24" buttonText="dry"
+  <TOGGLEBUTTON name="new toggle button" id="9fec732da680abce" memberName="dryBtn"
+                virtualName="" explicitFocusOrder="0" pos="5 15 70 24" buttonText="dry +"
                 connectedEdges="0" needsCallback="1" radioGroupId="0" state="1"/>
   <SLIDER name="new slider" id="64dc86b4ed912be" memberName="slider" virtualName=""
           explicitFocusOrder="0" pos="536 48 50 50" min="0" max="10" int="0"
@@ -914,20 +892,13 @@ BEGIN_JUCER_METADATA
          edTextCol="ff000000" edBkgCol="0" labelText="width todo" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
-  <IMAGEBUTTON name="new button" id="d21f807ed0a4cb1b" memberName="donateBtn"
-               virtualName="" explicitFocusOrder="0" pos="368 136 128 48" buttonText="new button"
-               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
-               resourceNormal="images1_jpg" opacityNormal="1" colourNormal="0"
-               resourceOver="" opacityOver="1" colourOver="0" resourceDown=""
-               opacityDown="1" colourDown="0"/>
   <TOGGLEBUTTON name="new toggle button" id="4ce3978395a4d72f" memberName="bypassBtn"
-                virtualName="" explicitFocusOrder="0" pos="40 88 80 24" buttonText="bypass"
+                virtualName="" explicitFocusOrder="0" pos="5 40 64 24" buttonText="wet off"
                 connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
-  <LABEL name="new label" id="66302a18014fd815" memberName="label" virtualName=""
-         explicitFocusOrder="0" pos="65 33 24 24" edTextCol="ff000000"
-         edBkgCol="0" labelText="+" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
-         bold="0" italic="0" justification="33"/>
+  <SLIDER name="new slider" id="48f473b00ab44475" memberName="slider4"
+          virtualName="" explicitFocusOrder="0" pos="368 144 72 80" min="0"
+          max="127" int="1" style="IncDecButtons" textBoxPos="TextBoxLeft"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

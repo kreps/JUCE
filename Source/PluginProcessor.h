@@ -86,6 +86,7 @@ public:
     enum Parameters
     {
         bypassParam = 0,
+		dryOnParam,
         gainParam,
         delayParam,
 		delayTimeParam,
@@ -101,7 +102,7 @@ public:
 		RIGHT_CHANNEL
 	};
 
-    float bypass,m_fGain, m_fDelay, m_fPan,m_fDelayTime,m_fMidSideParam,m_fThreshold,m_dFreq,m_fReverbSize;
+    float bypass, dryOn, m_fGain, m_fDelay, m_fPan,m_fDelayTime,m_fMidSideParam,m_fThreshold,m_dFreq,m_fReverbSize;
 	IIRFilter m_filterL,m_filterR;
 	IIRCoefficients m_ic;
 	juce::Reverb m_Reverb;

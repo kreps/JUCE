@@ -57,8 +57,6 @@ public:
     void resized();
     void sliderValueChanged (Slider* sliderThatWasMoved);
     void buttonClicked (Button* buttonThatWasClicked);
-    void mouseEnter (const MouseEvent& e);
-    void mouseExit (const MouseEvent& e);
 
     // Binary resources:
     static const char* kreps_logo_jpeg;
@@ -124,22 +122,21 @@ private:
     ScopedPointer<Slider> reverbSizeSlider;
     ScopedPointer<Label> midsideInfoLabel;
     ScopedPointer<Label> reverbSizeHeader;
-    ScopedPointer<Slider> delayTimeSlider2;
+    ScopedPointer<Slider> delayFeedbackSlider;
     ScopedPointer<Label> delayTimeValueLabel2;
     ScopedPointer<Label> delayAmountHeader;
     ScopedPointer<TextButton> lnf3Btn;
     ScopedPointer<TextButton> guilafBtn;
     ScopedPointer<TextButton> guilaf2Btn;
-    ScopedPointer<ToggleButton> dry;
+    ScopedPointer<ToggleButton> dryBtn;
     ScopedPointer<Slider> slider;
     ScopedPointer<Label> reverbSizeHeader2;
     ScopedPointer<Slider> slider2;
     ScopedPointer<Label> reverbSizeHeader3;
     ScopedPointer<Slider> slider3;
     ScopedPointer<Label> reverbSizeHeader4;
-    ScopedPointer<ImageButton> donateBtn;
     ScopedPointer<ToggleButton> bypassBtn;
-    ScopedPointer<Label> label;
+    ScopedPointer<Slider> slider4;
     Image cachedImage_uibg_png;
 
 

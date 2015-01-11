@@ -36,7 +36,7 @@ public:
     void setImage(Image img);
     void setChickKnobImage(Image img);
 	void setImages(Image rotarySliderImg,Image checkboxOffImg, Image checkboxOnImg);
-    void GuiLookAndFeel::drawLabel(Graphics& g, Label& label);
+    void drawLabel(Graphics& g, Label& label);
 private:
     Image img,chikenKnobImage,checkboxOffImage,checkboxOnImage;
 	

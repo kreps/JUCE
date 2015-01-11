@@ -14,6 +14,7 @@ It contains the basic startup code for a Juce application.
 AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
 const float kfDefaultBypass = 0.0f;
+const float defaultDry= 1.0f;
 const float kfDefaultGain = 1.0f;
 const float kfDefaultDelay = 0.0f;
 const float kfDefaultDelayTime = 0.01f;
@@ -31,7 +32,8 @@ JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
 	m_fDelay = kfDefaultDelay;
 	m_fDelayTime = kfDefaultDelayTime;
 	m_fPan = kfDefaultPan;
-	//m_fBypass = kfDefaultBypass;
+	bypass = kfDefaultBypass;
+	dryOn = defaultDry;
 	m_fMidSideParam = kfDefaultMidSide;
 	m_fThreshold = 1.0f;
 	m_fReverbSize = 0.5f;
@@ -65,6 +67,8 @@ float JuceDemoPluginAudioProcessor::getParameter(int index)
 	{
 	case bypassParam:
 		return bypass;
+	case dryOnParam:
+		return dryOn;
 	case gainParam:
 		return m_fGain;
 	case delayParam:
@@ -95,6 +99,9 @@ void JuceDemoPluginAudioProcessor::setParameter(int index, float newValue)
 	{
 	case bypassParam:
 		bypass = newValue;
+		break;
+	case dryOnParam:
+		dryOn = newValue;
 		break;
 	case gainParam:
 		m_fGain = newValue;
@@ -130,6 +137,7 @@ float JuceDemoPluginAudioProcessor::getParameterDefaultValue(int index)
 	switch (index)
 	{
 	case bypassParam: return kfDefaultBypass;
+	case dryOnParam: return defaultDry;
 	case gainParam:     return kfDefaultGain;
 	case delayParam:    return kfDefaultDelay;
 	case delayTimeParam:    return kfDefaultDelayTime;
@@ -149,6 +157,7 @@ const String JuceDemoPluginAudioProcessor::getParameterName(int index)
 	switch (index)
 	{
 	case bypassParam:		return "bypass";
+	case dryOnParam:		return "dry on";
 	case gainParam:			return "gain";
 	case delayParam:		return "delay";
 	case delayTimeParam:    return "delay time";
@@ -279,7 +288,7 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 		//m_Reverb.setSampleRate(getSampleRate());
 		juce::Reverb::Parameters params = m_Reverb.getParameters();
 		params.roomSize = m_fReverbSize;
-		params.dryLevel = 0.0f;//this depends on general dry on/off button only on or off is possible
+		params.dryLevel = dryOn;//this depends on general dry on/off button only on or off is possible
 		params.damping = 0.0f;
 		//params.freezeMode = 0.0f;//0 or 1
 		//params.wetLevel = 1.0f; //this depends on general wet gain control
@@ -356,6 +365,7 @@ void JuceDemoPluginAudioProcessor::getStateInformation(MemoryBlock& destData)
 	xml.setAttribute("delay", m_fDelay);
 	xml.setAttribute("delayTime", m_fDelayTime);
 	xml.setAttribute("pan", m_fPan);
+	xml.setAttribute("dry", dryOn);
 
 	// then use this helper function to stuff it into the binary blob and return it..
 	copyXmlToBinary(xml, destData);
@@ -382,6 +392,7 @@ void JuceDemoPluginAudioProcessor::setStateInformation(const void* data, int siz
 			m_fDelay = (float)xmlState->getDoubleAttribute("delay", m_fDelay);
 			m_fDelayTime = (float)xmlState->getDoubleAttribute("delayTime", m_fDelay);
 			m_fPan = (float)xmlState->getDoubleAttribute("pan", m_fPan);
+			dryOn = (float)xmlState->getDoubleAttribute("dry", dryOn);
 		}
 	}
 }
