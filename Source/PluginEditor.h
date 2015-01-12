@@ -135,9 +135,8 @@ private:
     ScopedPointer<Label> reverbSizeHeader3;
     ScopedPointer<Slider> slider3;
     ScopedPointer<Label> reverbSizeHeader4;
-    ScopedPointer<ToggleButton> bypassBtn;
     ScopedPointer<Slider> slider4;
-    ScopedPointer<ImageButton> imageButton;
+    ScopedPointer<ToggleButton> bypassBtn;
     Image cachedImage_uibg_png;
 
 

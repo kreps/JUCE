@@ -23,51 +23,6 @@ GuiLookAndFeel::~GuiLookAndFeel()
 {
 }
 
-/*Gradient rotary knobs drawable*/
-//void GuiLookAndFeel::drawRotarySlider(Graphics& g, int x, int y, int width, int height, float sliderPos,
-//                      float rotaryStartAngle, float rotaryEndAngle, Slider& slider)
-//{
-//    const float radius = jmin(width / 2, height / 2) - 2.0f;
-//    const float centreX = x + width * 0.5f;
-//    const float centreY = y + height * 0.5f;
-//    const float rx = centreX - radius;
-//    const float ry = centreY - radius;
-//    const float rw = radius * 2.0f;
-//    const float angle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
-//    const bool isMouseOver = slider.isMouseOverOrDragging() && slider.isEnabled();
-//
-//    if (slider.isEnabled())
-//        g.setColour(slider.findColour(Slider::rotarySliderFillColourId).withAlpha(isMouseOver ? 1.0f : 0.7f));
-//    else
-//        g.setColour(Colour(0x80808080));
-//
-//    {
-//        Path filledArc2;
-//        //filledArc.addPieSegment (rx, ry, rw, rw, rotaryStartAngle, angle, 0.0);
-//        filledArc2.addEllipse(rx, ry, rw, rw);
-//
-//        g.setGradientFill(ColourGradient(Colours::white, 0, 0, Colours::black, 100, 100, true));
-//        g.fillPath(filledArc2);
-//    }
-//
-//        {
-//            /*const float lineThickness = jmin (15.0f, jmin (width, height) * 0.45f) * 0.1f;
-//            Path outlineArc;
-//            outlineArc.addEllipse(rx, ry, rw, rw);
-//            g.strokePath (outlineArc, PathStrokeType (lineThickness));*/
-//        }
-//        Path needle;
-//        Rectangle<float> r(rx, ry, rw, rw);
-//        Rectangle<float> r2(0.0f, 0.0f, rw*0.05f, rw * 0.3f);
-//        needle.addRectangle(r2.withPosition(Point<float>(r.getCentreX() - (r2.getWidth() / 2.0f), r.getY())));
-//
-//        //g.setColour (slider.findColour (Slider::rotarySliderOutlineColourId));
-//        g.setGradientFill(ColourGradient(Colours::grey, 0, 0, Colours::black, 50, 50, true));
-//        //g.setColour(Colours::black);
-//        g.fillPath(needle, AffineTransform::rotation(angle, r.getCentreX(), r.getCentreY()));
-//}
-
-
 /*Image rotary slider*/
 void GuiLookAndFeel::drawRotarySlider(Graphics& g, int x, int y, int width, int height, float sliderPos,
                                       float rotaryStartAngle, float rotaryEndAngle, Slider& slider)
@@ -82,7 +37,10 @@ void GuiLookAndFeel::drawRotarySlider(Graphics& g, int x, int y, int width, int 
     const float rw = radius * 2.0f;
     const float angle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
 	const bool isMouseOver = slider.isMouseOverOrDragging() && slider.isEnabled();
-
+	
+	/*g.setColour((Colours::black).withAlpha(0.3f));
+	g.drawRect(x,y,width,height,1);*/
+	
 
 	if (isMouseOver )
 		slider.setMouseCursor(MouseCursor::PointingHandCursor);
@@ -139,7 +97,7 @@ void GuiLookAndFeel::drawTickBox(Graphics& g, Component& component,
                  bool ticked,
                  bool isEnabled,
                  bool isMouseOverButton,
-                 bool /*isButtonDown*/) 
+                 bool isButtonDown) 
 {
 	if (isMouseOverButton){
 		component.setMouseCursor(MouseCursor::PointingHandCursor);
@@ -158,7 +116,7 @@ void GuiLookAndFeel::drawTickBox(Graphics& g, Component& component,
 	
     if (ticked)
     {
-		g.drawImage(checkboxOffImage,0,0,checkboxOffImage.getWidth(),checkboxOffImage.getHeight(),0,0,checkboxOffImage.getWidth(),checkboxOffImage.getHeight());
+		g.drawImage(checkboxOffImage,x,y,checkboxOffImage.getWidth(),checkboxOffImage.getHeight(),0,0,checkboxOffImage.getWidth(),checkboxOffImage.getHeight());
 		
         ////const Path tick (LookAndFeel_V3::getTickShape (6.0f));
         //g.setColour(isEnabled ? findColour(TextButton::buttonColourId) : Colours::grey);
@@ -170,13 +128,17 @@ void GuiLookAndFeel::drawTickBox(Graphics& g, Component& component,
         //Rectangle<float> r2(x + boxsize2 / 2.0f, y + (h - boxsize2) * 0.5f, boxsize2, boxsize2);
         //g.fillRoundedRectangle(r2, 1.0f);
     } else {
-		g.drawImage(checkboxOnImage,0,0,checkboxOffImage.getWidth(),checkboxOffImage.getHeight(),0,0,checkboxOffImage.getWidth(),checkboxOffImage.getHeight());
+		g.drawImage(checkboxOnImage,x,y,checkboxOffImage.getWidth(),checkboxOffImage.getHeight(),0,0,checkboxOffImage.getWidth(),checkboxOffImage.getHeight());
 	}
 }
 
 void GuiLookAndFeel::drawToggleButton(Graphics& g, ToggleButton& button,
                       bool isMouseOverButton, bool isButtonDown)
 {
+
+	g.drawRect(0,0,button.getWidth(),button.getHeight(),1);
+	
+
     if (button.hasKeyboardFocus(true))
     {
         //g.setColour (button.findColour (TextEditor::focusedOutlineColourId));
@@ -184,10 +146,9 @@ void GuiLookAndFeel::drawToggleButton(Graphics& g, ToggleButton& button,
     }
 
     float fontSize = 10.0f;//jmin (15.0f, button.getHeight() * 0.75f);
-    const float tickWidth = 20.0f;//fontSize * 1.1f;
+    const float tickWidth = 19.0f;//fontSize * 1.1f;
 
-    drawTickBox(g, button, 4.0f, (button.getHeight() - tickWidth) * 0.5f,
-                tickWidth, tickWidth,
+    drawTickBox(g, button, 0, 0, button.getHeight(), button.getHeight(),
                 button.getToggleState(),
                 button.isEnabled(),
                 isMouseOverButton,
@@ -202,7 +163,7 @@ void GuiLookAndFeel::drawToggleButton(Graphics& g, ToggleButton& button,
     const int textX = (int)tickWidth;
 
     g.drawFittedText(button.getButtonText(),
-                     textX, -4,
+                     textX, 0,
                      button.getWidth() - textX - 2, button.getHeight(),
                      Justification::centredLeft, 10);
 }

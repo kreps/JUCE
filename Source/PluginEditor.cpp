@@ -82,7 +82,10 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     gainSlider->setTooltip (TRANS("gain"));
     gainSlider->setRange (0, 1, 0);
     gainSlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    gainSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
+    gainSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    gainSlider->setColour (Slider::textBoxBackgroundColourId, Colour (0x00ffffff));
+    gainSlider->setColour (Slider::textBoxHighlightColourId, Colour (0x881111ee));
+    gainSlider->setColour (Slider::textBoxOutlineColourId, Colour (0x00000000));
     gainSlider->addListener (this);
     gainSlider->setSkewFactor (0.3);
 
@@ -294,23 +297,16 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     reverbSizeHeader4->setColour (TextEditor::textColourId, Colours::black);
     reverbSizeHeader4->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (bypassBtn = new ToggleButton ("new toggle button"));
-    bypassBtn->setButtonText (TRANS("wet off"));
-    bypassBtn->addListener (this);
-
     addAndMakeVisible (slider4 = new Slider ("new slider"));
     slider4->setRange (0, 127, 1);
     slider4->setSliderStyle (Slider::IncDecButtons);
     slider4->setTextBoxStyle (Slider::TextBoxLeft, false, 80, 20);
     slider4->addListener (this);
 
-    addAndMakeVisible (imageButton = new ImageButton ("new button"));
-    imageButton->addListener (this);
+    addAndMakeVisible (bypassBtn = new ToggleButton ("new toggle button"));
+    bypassBtn->setButtonText (TRANS("bypass"));
+    bypassBtn->addListener (this);
 
-    imageButton->setImages (false, true, true,
-                            ImageCache::getFromMemory (off_png, off_pngSize), 1.000f, Colour (0x00000000),
-                            Image(), 1.000f, Colour (0x00000000),
-                            ImageCache::getFromMemory (on_red_png, on_red_pngSize), 1.000f, Colour (0x00000000));
     cachedImage_uibg_png = ImageCache::getFromMemory (uibg_png, uibg_pngSize);
 
     //[UserPreSize]
@@ -345,7 +341,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 		ImageCache::getFromMemory(on_red_png,on_red_pngSize)
 		);
 	 //gainSlider->setScrollWheelEnabled(false);
-	 imageButton->setClickingTogglesState(true);
+	 bypassBtn->setClickingTogglesState(true);
     //[/Constructor]
 }
 
@@ -389,9 +385,8 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
     reverbSizeHeader3 = nullptr;
     slider3 = nullptr;
     reverbSizeHeader4 = nullptr;
-    bypassBtn = nullptr;
     slider4 = nullptr;
-    imageButton = nullptr;
+    bypassBtn = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -427,7 +422,7 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     delayGroupComponent->setBounds (208, 13, 240, 100);
     panSlider->setBounds (100, 159, 80, 50);
     infoLabel->setBounds (40, 432, 400, 25);
-    gainSlider->setBounds (59, 20, 80, 70);
+    gainSlider->setBounds (52, 40, 50, 50);
     delaySlider->setBounds (208, 47, 80, 50);
     gainInfoLabel->setBounds (64, 112, 80, 20);
     panInfoLabel->setBounds (100, 209, 80, 20);
@@ -456,9 +451,8 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     reverbSizeHeader3->setBounds (600, 24, 80, 30);
     slider3->setBounds (688, 48, 50, 50);
     reverbSizeHeader4->setBounds (680, 24, 80, 30);
-    bypassBtn->setBounds (8, 72, 64, 24);
     slider4->setBounds (368, 144, 72, 80);
-    imageButton->setBounds (144, 80, 56, 24);
+    bypassBtn->setBounds (8, 49, 71, 24);
     //[UserResized] Add your own custom resize handling here..
 	resizer->setBounds(getWidth() - 16, getHeight() - 16, 16, 16);
 
@@ -585,14 +579,7 @@ void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasCli
     else if (buttonThatWasClicked == bypassBtn)
     {
         //[UserButtonCode_bypassBtn] -- add your button handler code here..
-		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::bypassParam, (float)(bypassBtn->getToggleState() == true)?1.0f:0.0f);
-		gainSlider->setEnabled(!bypassBtn->getToggleState());
         //[/UserButtonCode_bypassBtn]
-    }
-    else if (buttonThatWasClicked == imageButton)
-    {
-        //[UserButtonCode_imageButton] -- add your button handler code here..
-        //[/UserButtonCode_imageButton]
     }
 
     //[UserbuttonClicked_Post]
@@ -779,8 +766,9 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="12" bold="0" italic="0" justification="33"/>
   <SLIDER name="gainSlider" id="c31acc4ca22491a9" memberName="gainSlider"
-          virtualName="" explicitFocusOrder="0" pos="59 20 80 70" tooltip="gain"
-          min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
+          virtualName="" explicitFocusOrder="0" pos="52 40 50 50" tooltip="gain"
+          textboxbkgd="ffffff" textboxhighlight="881111ee" textboxoutline="0"
+          min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.29999999999999999"/>
   <SLIDER name="delaySlider" id="37878e5e9fd60a08" memberName="delaySlider"
           virtualName="" explicitFocusOrder="0" pos="208 47 80 50" tooltip="delay gain&#10;"
@@ -906,19 +894,13 @@ BEGIN_JUCER_METADATA
          edTextCol="ff000000" edBkgCol="0" labelText="width todo" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
-  <TOGGLEBUTTON name="new toggle button" id="4ce3978395a4d72f" memberName="bypassBtn"
-                virtualName="" explicitFocusOrder="0" pos="8 72 64 24" buttonText="wet off"
-                connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
   <SLIDER name="new slider" id="48f473b00ab44475" memberName="slider4"
           virtualName="" explicitFocusOrder="0" pos="368 144 72 80" min="0"
           max="127" int="1" style="IncDecButtons" textBoxPos="TextBoxLeft"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <IMAGEBUTTON name="new button" id="78ae118428467ed5" memberName="imageButton"
-               virtualName="" explicitFocusOrder="0" pos="144 80 56 24" buttonText="new button"
-               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
-               resourceNormal="off_png" opacityNormal="1" colourNormal="0" resourceOver=""
-               opacityOver="1" colourOver="0" resourceDown="on_red_png" opacityDown="1"
-               colourDown="0"/>
+  <TOGGLEBUTTON name="new toggle button" id="6a90886856c6d4a2" memberName="bypassBtn"
+                virtualName="" explicitFocusOrder="0" pos="8 49 71 24" buttonText="bypass"
+                connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
