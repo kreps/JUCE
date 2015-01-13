@@ -39,8 +39,8 @@
 */
 class JuceDemoPluginAudioProcessorEditor  : public AudioProcessorEditor,
                                             public Timer,
-                                            public SliderListener,
-                                            public ButtonListener
+                                            public ButtonListener,
+                                            public SliderListener
 {
 public:
     //==============================================================================
@@ -55,8 +55,8 @@ public:
 
     void paint (Graphics& g);
     void resized();
-    void sliderValueChanged (Slider* sliderThatWasMoved);
     void buttonClicked (Button* buttonThatWasClicked);
+    void sliderValueChanged (Slider* sliderThatWasMoved);
 
     // Binary resources:
     static const char* kreps_logo_jpeg;
@@ -102,11 +102,11 @@ private:
 
     //==============================================================================
     ScopedPointer<GroupComponent> groupComponent;
+    ScopedPointer<ToggleButton> bypassBtn;
     ScopedPointer<GroupComponent> reverGroupComponent;
     ScopedPointer<GroupComponent> delayGroupComponent;
     ScopedPointer<Slider> panSlider;
     ScopedPointer<Label> infoLabel;
-    ScopedPointer<Slider> gainSlider;
     ScopedPointer<Slider> delaySlider;
     ScopedPointer<Label> gainInfoLabel;
     ScopedPointer<Label> panInfoLabel;
@@ -136,7 +136,7 @@ private:
     ScopedPointer<Slider> slider3;
     ScopedPointer<Label> reverbSizeHeader4;
     ScopedPointer<Slider> slider4;
-    ScopedPointer<ToggleButton> bypassBtn;
+    ScopedPointer<Slider> gainSlider;
     Image cachedImage_uibg_png;
 
 

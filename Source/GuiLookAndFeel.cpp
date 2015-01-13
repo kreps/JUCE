@@ -70,7 +70,8 @@ void GuiLookAndFeel::drawRotarySlider(Graphics& g, int x, int y, int width, int 
 			//g.drawEllipse(rx+16, ry+16, rw-36, rw-36,0.0f);
 			//g.fillPath(outlineArc);
             g.strokePath (outlineArc,PathStrokeType (lineThickness));
-			g.drawLine(centreX-(rw-12),centreY,centreX-(rw-12)/2,centreY,  lineThickness);      }
+            g.setOpacity(0.5f);
+			g.drawLine(x,centreY,centreX-radius+4,centreY,  lineThickness);      }
    
 
     Rectangle<float> r(rx, ry, rw, rw);
@@ -135,8 +136,8 @@ void GuiLookAndFeel::drawTickBox(Graphics& g, Component& component,
 void GuiLookAndFeel::drawToggleButton(Graphics& g, ToggleButton& button,
                       bool isMouseOverButton, bool isButtonDown)
 {
-
-	g.drawRect(0,0,button.getWidth(),button.getHeight(),1);
+    //g.setColour(button.findColour(ToggleButton::textColourId));
+	//g.drawRect(0,0,button.getWidth(),button.getHeight(),1);
 	
 
     if (button.hasKeyboardFocus(true))
@@ -163,8 +164,8 @@ void GuiLookAndFeel::drawToggleButton(Graphics& g, ToggleButton& button,
     const int textX = (int)tickWidth;
 
     g.drawFittedText(button.getButtonText(),
-                     textX, 0,
-                     button.getWidth() - textX - 2, button.getHeight(),
+                     0, button.getHeight()/2,
+                     button.getWidth() - 2, button.getHeight()/2,
                      Justification::centredLeft, 10);
 }
 

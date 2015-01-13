@@ -41,10 +41,18 @@ void setupCustomLookAndFeelColours (LookAndFeel& laf)
 
 	laf.setColour (TextButton::buttonColourId, Colours::white);
 	laf.setColour (TextButton::textColourOffId, Colour (0xff00b5f6));
-    laf.setColour(GroupComponent::textColourId, Colour(0xff000000));
 	laf.setColour (TextButton::buttonOnColourId, laf.findColour (TextButton::textColourOffId));
 	laf.setColour (TextButton::textColourOnId, laf.findColour (TextButton::buttonColourId));
-	//laf.setColour(Label::backgroundColourId, Colour(0x33ffffff));
+
+    laf.setColour(GroupComponent::textColourId, Colour(0xff000000));
+
+    laf.setColour(Label::textColourId, Colour(0x66000000));
+    //laf.setColour(Label::backgroundColourId, Colour(0x33ffffff));
+
+    laf.setColour(ToggleButton::textColourId, Colour(0x66000000));
+
+
+
 };
 
 //[/MiscUserDefs]
@@ -55,6 +63,11 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 {
     addAndMakeVisible (groupComponent = new GroupComponent ("new group",
                                                             TRANS("output")));
+
+    addAndMakeVisible (bypassBtn = new ToggleButton ("new toggle button"));
+    bypassBtn->setTooltip (TRANS("wet/bypass"));
+    bypassBtn->setButtonText (TRANS("bypass"));
+    bypassBtn->addListener (this);
 
     addAndMakeVisible (reverGroupComponent = new GroupComponent ("new group",
                                                                  TRANS("reverb")));
@@ -77,17 +90,6 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     infoLabel->setColour (Label::textColourId, Colour (0xff414141));
     infoLabel->setColour (TextEditor::textColourId, Colours::black);
     infoLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
-    addAndMakeVisible (gainSlider = new Slider ("gainSlider"));
-    gainSlider->setTooltip (TRANS("gain"));
-    gainSlider->setRange (0, 1, 0);
-    gainSlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    gainSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
-    gainSlider->setColour (Slider::textBoxBackgroundColourId, Colour (0x00ffffff));
-    gainSlider->setColour (Slider::textBoxHighlightColourId, Colour (0x881111ee));
-    gainSlider->setColour (Slider::textBoxOutlineColourId, Colour (0x00000000));
-    gainSlider->addListener (this);
-    gainSlider->setSkewFactor (0.3);
 
     addAndMakeVisible (delaySlider = new Slider ("delaySlider"));
     delaySlider->setTooltip (TRANS("delay gain\n"));
@@ -303,9 +305,16 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     slider4->setTextBoxStyle (Slider::TextBoxLeft, false, 80, 20);
     slider4->addListener (this);
 
-    addAndMakeVisible (bypassBtn = new ToggleButton ("new toggle button"));
-    bypassBtn->setButtonText (TRANS("bypass"));
-    bypassBtn->addListener (this);
+    addAndMakeVisible (gainSlider = new Slider ("gainSlider"));
+    gainSlider->setTooltip (TRANS("gain"));
+    gainSlider->setRange (0, 1, 0);
+    gainSlider->setSliderStyle (Slider::RotaryVerticalDrag);
+    gainSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    gainSlider->setColour (Slider::textBoxBackgroundColourId, Colour (0x00ffffff));
+    gainSlider->setColour (Slider::textBoxHighlightColourId, Colour (0x881111ee));
+    gainSlider->setColour (Slider::textBoxOutlineColourId, Colour (0x00000000));
+    gainSlider->addListener (this);
+    gainSlider->setSkewFactor (0.3);
 
     cachedImage_uibg_png = ImageCache::getFromMemory (uibg_png, uibg_pngSize);
 
@@ -314,22 +323,23 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 	resizeLimits.setSizeLimits(150, 150, 800, 300);
     //[/UserPreSize]
 
-    setSize (400, 200);
+    setSize (800, 400);
 
 
     //[Constructor] You can add your own custom stuff here..
+
 	// set our component's initial size to be the last one that was stored in the filter's settings
 	setSize(ownerFilter->lastUIWidth, ownerFilter->lastUIHeight);
-	setSize(800, 400);
     startTimer(50);
 	gainSlider->setDoubleClickReturnValue(true,0.0f);
 	//cutom rotary start and end position
 	//gainSlider->setRotaryParameters(1.0f*3.14f+0.1f,(12.0f/4.0f)*3.14f-0.1f,true);
 	panSlider->setDoubleClickReturnValue(true,0.5f);
+    panSlider->setLookAndFeel(&guilaf2);
 	midSideSlider->setDoubleClickReturnValue(true,0.5f);
 	LookAndFeel::setDefaultLookAndFeel(&guilaf);
 	setupCustomLookAndFeelColours(guilaf);
-    //guilaf.setDefaultSansSerifTypefaceName("Aharoni");
+    guilaf.setDefaultSansSerifTypefaceName("Aharoni");
     guilaf.setImages(
 		ImageCache::getFromMemory(chickknob_png,chickknob_pngSize),
 		ImageCache::getFromMemory(off_png,off_pngSize),
@@ -342,6 +352,8 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 		);
 	 //gainSlider->setScrollWheelEnabled(false);
 	 bypassBtn->setClickingTogglesState(true);
+     bypassBtn->setToggleState(true, dontSendNotification);
+
     //[/Constructor]
 }
 
@@ -352,11 +364,11 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
     //[/Destructor_pre]
 
     groupComponent = nullptr;
+    bypassBtn = nullptr;
     reverGroupComponent = nullptr;
     delayGroupComponent = nullptr;
     panSlider = nullptr;
     infoLabel = nullptr;
-    gainSlider = nullptr;
     delaySlider = nullptr;
     gainInfoLabel = nullptr;
     panInfoLabel = nullptr;
@@ -386,7 +398,7 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
     slider3 = nullptr;
     reverbSizeHeader4 = nullptr;
     slider4 = nullptr;
-    bypassBtn = nullptr;
+    gainSlider = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -418,16 +430,16 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     //[/UserPreResize]
 
     groupComponent->setBounds (0, 0, 144, 112);
+    bypassBtn->setBounds (10, 64, 80, 30);
     reverGroupComponent->setBounds (456, 13, 408, 100);
     delayGroupComponent->setBounds (208, 13, 240, 100);
     panSlider->setBounds (100, 159, 80, 50);
     infoLabel->setBounds (40, 432, 400, 25);
-    gainSlider->setBounds (52, 40, 50, 50);
     delaySlider->setBounds (208, 47, 80, 50);
     gainInfoLabel->setBounds (64, 112, 80, 20);
     panInfoLabel->setBounds (100, 209, 80, 20);
     delayTimeSlider->setBounds (288, 47, 80, 50);
-    delayTimeValueLabel->setBounds (288, 27, 80, 20);
+    delayTimeValueLabel->setBounds (248, 56, 80, 20);
     panHeader->setBounds (100, 139, 80, 20);
     midSideSlider->setBounds (20, 154, 80, 50);
     midsideHeader->setBounds (10, 134, 80, 20);
@@ -439,8 +451,8 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     midsideInfoLabel->setBounds (10, 209, 80, 30);
     reverbSizeHeader->setBounds (456, 24, 80, 30);
     delayFeedbackSlider->setBounds (368, 47, 80, 50);
-    delayTimeValueLabel2->setBounds (368, 27, 80, 20);
-    delayAmountHeader->setBounds (208, 24, 80, 24);
+    delayTimeValueLabel2->setBounds (336, 56, 80, 20);
+    delayAmountHeader->setBounds (160, 72, 80, 24);
     lnf3Btn->setBounds (216, 384, 88, 24);
     guilafBtn->setBounds (320, 384, 88, 24);
     guilaf2Btn->setBounds (432, 384, 88, 24);
@@ -452,13 +464,54 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     slider3->setBounds (688, 48, 50, 50);
     reverbSizeHeader4->setBounds (680, 24, 80, 30);
     slider4->setBounds (368, 144, 72, 80);
-    bypassBtn->setBounds (8, 49, 71, 24);
+    gainSlider->setBounds (30, 44, 96, 55);
     //[UserResized] Add your own custom resize handling here..
 	resizer->setBounds(getWidth() - 16, getHeight() - 16, 16, 16);
 
 	getProcessor()->lastUIWidth = getWidth();
 	getProcessor()->lastUIHeight = getHeight();
     //[/UserResized]
+}
+
+void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
+{
+    //[UserbuttonClicked_Pre]
+    //[/UserbuttonClicked_Pre]
+
+    if (buttonThatWasClicked == bypassBtn)
+    {
+        //[UserButtonCode_bypassBtn] -- add your button handler code here..
+        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::bypassParam, (bypassBtn->getToggleState() == true) ? 1.0f : 0.0f);
+        gainSlider->setEnabled(bypassBtn->getToggleState());
+        //[/UserButtonCode_bypassBtn]
+    }
+    else if (buttonThatWasClicked == lnf3Btn)
+    {
+        //[UserButtonCode_lnf3Btn] -- add your button handler code here..
+		LookAndFeel::setDefaultLookAndFeel(&lookAndFeelV3);
+        //[/UserButtonCode_lnf3Btn]
+    }
+    else if (buttonThatWasClicked == guilafBtn)
+    {
+        //[UserButtonCode_guilafBtn] -- add your button handler code here..
+		LookAndFeel::setDefaultLookAndFeel(&guilaf);
+        //[/UserButtonCode_guilafBtn]
+    }
+    else if (buttonThatWasClicked == guilaf2Btn)
+    {
+        //[UserButtonCode_guilaf2Btn] -- add your button handler code here..
+		LookAndFeel::setDefaultLookAndFeel(&guilaf2);
+        //[/UserButtonCode_guilaf2Btn]
+    }
+    else if (buttonThatWasClicked == dryBtn)
+    {
+        //[UserButtonCode_dryBtn] -- add your button handler code here..
+		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::dryOnParam, (float)(dryBtn->getToggleState() == true)?1.0f:0.0f);
+        //[/UserButtonCode_dryBtn]
+    }
+
+    //[UserbuttonClicked_Post]
+    //[/UserbuttonClicked_Post]
 }
 
 void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatWasMoved)
@@ -471,15 +524,6 @@ void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatW
         //[UserSliderCode_panSlider] -- add your slider handling code here..
 		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::panParam,                                                  (float)panSlider->getValue());
         //[/UserSliderCode_panSlider]
-    }
-    else if (sliderThatWasMoved == gainSlider)
-    {
-        //[UserSliderCode_gainSlider] -- add your slider handling code here..
-		// It's vital to use setParameterNotifyingHost to change any parameters that are automatable
-		// by the host, rather than just modifying them directly, otherwise the host won't know
-		// that they've changed.
-		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::gainParam,                                                  (float)gainSlider->getValue());
-        //[/UserSliderCode_gainSlider]
     }
     else if (sliderThatWasMoved == delaySlider)
     {
@@ -542,48 +586,18 @@ void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatW
         //[UserSliderCode_slider4] -- add your slider handling code here..
         //[/UserSliderCode_slider4]
     }
+    else if (sliderThatWasMoved == gainSlider)
+    {
+        //[UserSliderCode_gainSlider] -- add your slider handling code here..
+		// It's vital to use setParameterNotifyingHost to change any parameters that are automatable
+		// by the host, rather than just modifying them directly, otherwise the host won't know
+		// that they've changed.
+		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::gainParam,                                                  (float)gainSlider->getValue());
+        //[/UserSliderCode_gainSlider]
+    }
 
     //[UsersliderValueChanged_Post]
     //[/UsersliderValueChanged_Post]
-}
-
-void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
-{
-    //[UserbuttonClicked_Pre]
-    //[/UserbuttonClicked_Pre]
-
-    if (buttonThatWasClicked == lnf3Btn)
-    {
-        //[UserButtonCode_lnf3Btn] -- add your button handler code here..
-		LookAndFeel::setDefaultLookAndFeel(&lookAndFeelV3);
-        //[/UserButtonCode_lnf3Btn]
-    }
-    else if (buttonThatWasClicked == guilafBtn)
-    {
-        //[UserButtonCode_guilafBtn] -- add your button handler code here..
-		LookAndFeel::setDefaultLookAndFeel(&guilaf);
-        //[/UserButtonCode_guilafBtn]
-    }
-    else if (buttonThatWasClicked == guilaf2Btn)
-    {
-        //[UserButtonCode_guilaf2Btn] -- add your button handler code here..
-		LookAndFeel::setDefaultLookAndFeel(&guilaf2);
-        //[/UserButtonCode_guilaf2Btn]
-    }
-    else if (buttonThatWasClicked == dryBtn)
-    {
-        //[UserButtonCode_dryBtn] -- add your button handler code here..
-		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::dryOnParam, (float)(dryBtn->getToggleState() == true)?1.0f:0.0f);
-        //[/UserButtonCode_dryBtn]
-    }
-    else if (buttonThatWasClicked == bypassBtn)
-    {
-        //[UserButtonCode_bypassBtn] -- add your button handler code here..
-        //[/UserButtonCode_bypassBtn]
-    }
-
-    //[UserbuttonClicked_Post]
-    //[/UserbuttonClicked_Post]
 }
 
 
@@ -745,12 +759,16 @@ BEGIN_JUCER_METADATA
                  constructorParams="JuceDemoPluginAudioProcessor* ownerFilter"
                  variableInitialisers="AudioProcessorEditor (ownerFilter)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="0"
-                 initialWidth="400" initialHeight="200">
+                 initialWidth="800" initialHeight="400">
   <BACKGROUND backgroundColour="ff777777">
     <IMAGE pos="4 4 1920 1040" resource="uibg_png" opacity="1" mode="0"/>
   </BACKGROUND>
   <GROUPCOMPONENT name="new group" id="7c8c0a2a1419927a" memberName="groupComponent"
                   virtualName="" explicitFocusOrder="0" pos="0 0 144 112" title="output"/>
+  <TOGGLEBUTTON name="new toggle button" id="6a90886856c6d4a2" memberName="bypassBtn"
+                virtualName="" explicitFocusOrder="0" pos="10 64 80 30" tooltip="wet/bypass"
+                buttonText="bypass" connectedEdges="0" needsCallback="1" radioGroupId="0"
+                state="0"/>
   <GROUPCOMPONENT name="new group" id="fb7419eb67152218" memberName="reverGroupComponent"
                   virtualName="" explicitFocusOrder="0" pos="456 13 408 100" title="reverb"/>
   <GROUPCOMPONENT name="new group" id="98be51d9c59fac6f" memberName="delayGroupComponent"
@@ -765,11 +783,6 @@ BEGIN_JUCER_METADATA
          edTextCol="ff000000" edBkgCol="0" labelText="aaa" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="12" bold="0" italic="0" justification="33"/>
-  <SLIDER name="gainSlider" id="c31acc4ca22491a9" memberName="gainSlider"
-          virtualName="" explicitFocusOrder="0" pos="52 40 50 50" tooltip="gain"
-          textboxbkgd="ffffff" textboxhighlight="881111ee" textboxoutline="0"
-          min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.29999999999999999"/>
   <SLIDER name="delaySlider" id="37878e5e9fd60a08" memberName="delaySlider"
           virtualName="" explicitFocusOrder="0" pos="208 47 80 50" tooltip="delay gain&#10;"
           trackcol="ffffffff" textboxhighlight="ff1111ee" textboxoutline="ff808080"
@@ -790,7 +803,7 @@ BEGIN_JUCER_METADATA
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="0" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="3b34631ac55e0fe6" memberName="delayTimeValueLabel"
-         virtualName="" explicitFocusOrder="0" pos="288 27 80 20" textCol="ff282828"
+         virtualName="" explicitFocusOrder="0" pos="248 56 80 20" textCol="ff282828"
          edTextCol="ff000000" edBkgCol="0" labelText="time" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
@@ -846,12 +859,12 @@ BEGIN_JUCER_METADATA
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="0" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="b702d23a464e1ffe" memberName="delayTimeValueLabel2"
-         virtualName="" explicitFocusOrder="0" pos="368 27 80 20" textCol="ff282828"
+         virtualName="" explicitFocusOrder="0" pos="336 56 80 20" textCol="ff282828"
          edTextCol="ff000000" edBkgCol="0" labelText="feedback" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="17713b10facdb0a1" memberName="delayAmountHeader"
-         virtualName="" explicitFocusOrder="0" pos="208 24 80 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="160 72 80 24" edTextCol="ff000000"
          edBkgCol="0" labelText="amount" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Aharoni" fontsize="10" bold="0"
          italic="0" justification="36"/>
@@ -898,9 +911,11 @@ BEGIN_JUCER_METADATA
           virtualName="" explicitFocusOrder="0" pos="368 144 72 80" min="0"
           max="127" int="1" style="IncDecButtons" textBoxPos="TextBoxLeft"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <TOGGLEBUTTON name="new toggle button" id="6a90886856c6d4a2" memberName="bypassBtn"
-                virtualName="" explicitFocusOrder="0" pos="8 49 71 24" buttonText="bypass"
-                connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
+  <SLIDER name="gainSlider" id="c31acc4ca22491a9" memberName="gainSlider"
+          virtualName="" explicitFocusOrder="0" pos="30 44 96 55" tooltip="gain"
+          textboxbkgd="ffffff" textboxhighlight="881111ee" textboxoutline="0"
+          min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.29999999999999999"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
