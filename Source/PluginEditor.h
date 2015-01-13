@@ -101,7 +101,6 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<GroupComponent> groupComponent;
     ScopedPointer<GroupComponent> reverGroupComponent;
     ScopedPointer<GroupComponent> delayGroupComponent;
     ScopedPointer<Slider> panSlider;
