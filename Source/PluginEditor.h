@@ -39,8 +39,8 @@
 */
 class JuceDemoPluginAudioProcessorEditor  : public AudioProcessorEditor,
                                             public Timer,
-                                            public ButtonListener,
-                                            public SliderListener
+                                            public SliderListener,
+                                            public ButtonListener
 {
 public:
     //==============================================================================
@@ -55,8 +55,9 @@ public:
 
     void paint (Graphics& g);
     void resized();
-    void buttonClicked (Button* buttonThatWasClicked);
     void sliderValueChanged (Slider* sliderThatWasMoved);
+    void buttonClicked (Button* buttonThatWasClicked);
+    void mouseEnter (const MouseEvent& e);
 
     // Binary resources:
     static const char* kreps_logo_jpeg;
@@ -65,16 +66,22 @@ public:
     static const int chickknob_pngSize;
     static const char* uibg_png;
     static const int uibg_pngSize;
-    static const char* off_png;
-    static const int off_pngSize;
     static const char* on_orange_png;
     static const int on_orange_pngSize;
     static const char* on_red_png;
     static const int on_red_pngSize;
     static const char* on_yellow_png;
     static const int on_yellow_pngSize;
-    static const char* images1_jpg;
-    static const int images1_jpgSize;
+    static const char* off_png;
+    static const int off_pngSize;
+    static const char* dry_on_png;
+    static const int dry_on_pngSize;
+    static const char* dry_off_png;
+    static const int dry_off_pngSize;
+    static const char* wet_off_png;
+    static const int wet_off_pngSize;
+    static const char* wet_on_png;
+    static const int wet_on_pngSize;
 
 
 private:
@@ -101,15 +108,9 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-<<<<<<< HEAD
-    ScopedPointer<GroupComponent> groupComponent;
-    ScopedPointer<ToggleButton> bypassBtn;
-=======
->>>>>>> origin/master
-    ScopedPointer<GroupComponent> reverGroupComponent;
-    ScopedPointer<GroupComponent> delayGroupComponent;
     ScopedPointer<Slider> panSlider;
     ScopedPointer<Label> infoLabel;
+    ScopedPointer<Slider> gainSlider;
     ScopedPointer<Slider> delaySlider;
     ScopedPointer<Label> gainInfoLabel;
     ScopedPointer<Label> panInfoLabel;
@@ -138,8 +139,9 @@ private:
     ScopedPointer<Label> reverbSizeHeader3;
     ScopedPointer<Slider> slider3;
     ScopedPointer<Label> reverbSizeHeader4;
-    ScopedPointer<Slider> slider4;
-    ScopedPointer<Slider> gainSlider;
+    ScopedPointer<ToggleButton> bypassBtn;
+    ScopedPointer<ImageButton> dryOnBtn;
+    ScopedPointer<ImageButton> wetOnBtn;
     Image cachedImage_uibg_png;
 
 

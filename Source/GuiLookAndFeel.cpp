@@ -23,6 +23,36 @@ GuiLookAndFeel::~GuiLookAndFeel()
 {
 }
 
+void GuiLookAndFeel::drawImageButton(Graphics& g, Image* image,
+                                     int imageX, int imageY, int imageW, int imageH,
+                                     const Colour& overlayColour,
+                                     float imageOpacity,
+                                     ImageButton& button)
+{
+    const bool isMouseOver = button.isMouseOverOrDragging() && button.isEnabled();
+    if (isMouseOver)
+        button.setMouseCursor(MouseCursor::PointingHandCursor);
+
+    if (!button.isEnabled())
+        imageOpacity *= 0.3f;
+
+    AffineTransform t = RectanglePlacement(RectanglePlacement::stretchToFit)
+        .getTransformToFit(image->getBounds().toFloat(),
+        Rectangle<int>(imageX, imageY, imageW, imageH).toFloat());
+
+    if (!overlayColour.isOpaque())
+    {
+        g.setOpacity(imageOpacity);
+        g.drawImageTransformed(*image, t, false);
+    }
+
+    if (!overlayColour.isTransparent())
+    {
+        g.setColour(overlayColour);
+        g.drawImageTransformed(*image, t, true);
+    }
+}
+
 /*Image rotary slider*/
 void GuiLookAndFeel::drawRotarySlider(Graphics& g, int x, int y, int width, int height, float sliderPos,
                                       float rotaryStartAngle, float rotaryEndAngle, Slider& slider)
@@ -115,11 +145,10 @@ void GuiLookAndFeel::drawTickBox(Graphics& g, Component& component,
 void GuiLookAndFeel::drawToggleButton(Graphics& g, ToggleButton& button,
                       bool isMouseOverButton, bool isButtonDown)
 {
-<<<<<<< .mine    //g.setColour(button.findColour(ToggleButton::textColourId));
+    //g.setColour(button.findColour(ToggleButton::textColourId));
 	//g.drawRect(0,0,button.getWidth(),button.getHeight(),1);
-=======
 	//g.drawRect(0,0,button.getWidth(),button.getHeight(),1);
->>>>>>> .theirs	
+
 
     if (button.hasKeyboardFocus(true))
     {

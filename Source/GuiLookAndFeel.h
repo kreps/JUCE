@@ -37,6 +37,11 @@ public:
     void setChickKnobImage(Image img);
 	void setImages(Image rotarySliderImg,Image checkboxOffImg, Image checkboxOnImg);
     void drawLabel(Graphics& g, Label& label);
+    void drawImageButton(Graphics& g, Image* image,
+                                         int imageX, int imageY, int imageW, int imageH,
+                                         const Colour& overlayColour,
+                                         float imageOpacity,
+                                         ImageButton& button);
 private:
     Image img,chikenKnobImage,checkboxOffImage,checkboxOnImage;
 	
