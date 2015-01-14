@@ -101,8 +101,11 @@ private:
     //[/UserVariables]
 
     //==============================================================================
+<<<<<<< HEAD
     ScopedPointer<GroupComponent> groupComponent;
     ScopedPointer<ToggleButton> bypassBtn;
+=======
+>>>>>>> origin/master
     ScopedPointer<GroupComponent> reverGroupComponent;
     ScopedPointer<GroupComponent> delayGroupComponent;
     ScopedPointer<Slider> panSlider;
