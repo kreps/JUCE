@@ -58,6 +58,7 @@ public:
     void sliderValueChanged (Slider* sliderThatWasMoved);
     void buttonClicked (Button* buttonThatWasClicked);
     void mouseEnter (const MouseEvent& e);
+    bool keyPressed (const KeyPress& key);
 
     // Binary resources:
     static const char* kreps_logo_jpeg;
@@ -110,7 +111,6 @@ private:
     //==============================================================================
     ScopedPointer<Slider> panSlider;
     ScopedPointer<Label> infoLabel;
-    ScopedPointer<Slider> gainSlider;
     ScopedPointer<Slider> delaySlider;
     ScopedPointer<Label> gainInfoLabel;
     ScopedPointer<Label> panInfoLabel;
@@ -142,6 +142,7 @@ private:
     ScopedPointer<ToggleButton> bypassBtn;
     ScopedPointer<ImageButton> dryOnBtn;
     ScopedPointer<ImageButton> wetOnBtn;
+    ScopedPointer<Slider> gainSlider;
     Image cachedImage_uibg_png;
 
 
