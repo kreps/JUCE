@@ -13,7 +13,7 @@ It contains the basic startup code for a Juce application.
 
 AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
-const float kfDefaultBypass = 0.0f;
+const float defaultWet = 1.0f;
 const float defaultDry= 1.0f;
 const float kfDefaultGain = 1.0f;
 const float kfDefaultDelay = 0.0f;
@@ -32,7 +32,7 @@ JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
 	m_fDelay = kfDefaultDelay;
 	m_fDelayTime = kfDefaultDelayTime;
 	m_fPan = kfDefaultPan;
-	bypass = kfDefaultBypass;
+	wetOn = defaultWet;
 	dryOn = defaultDry;
 	m_fMidSideParam = kfDefaultMidSide;
 	m_fThreshold = 1.0f;
@@ -46,7 +46,7 @@ JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
 	m_ic = IIRCoefficients::makeHighPass (getSampleRate(), m_dFreq);
 	m_filterL.setCoefficients( m_ic );
 	m_filterR.setCoefficients( m_ic );
-	
+
 }
 
 JuceDemoPluginAudioProcessor::~JuceDemoPluginAudioProcessor()
@@ -66,7 +66,7 @@ float JuceDemoPluginAudioProcessor::getParameter(int index)
 	switch (index)
 	{
 	case bypassParam:
-		return bypass;
+		return wetOn;
 	case dryOnParam:
 		return dryOn;
 	case gainParam:
@@ -98,7 +98,7 @@ void JuceDemoPluginAudioProcessor::setParameter(int index, float newValue)
 	switch (index)
 	{
 	case bypassParam:
-		bypass = newValue;
+		wetOn = newValue;
 		break;
 	case dryOnParam:
 		dryOn = newValue;
@@ -136,7 +136,7 @@ float JuceDemoPluginAudioProcessor::getParameterDefaultValue(int index)
 {
 	switch (index)
 	{
-	case bypassParam: return kfDefaultBypass;
+	case bypassParam: return defaultWet;
 	case dryOnParam: return defaultDry;
 	case gainParam:     return kfDefaultGain;
 	case delayParam:    return kfDefaultDelay;
@@ -210,11 +210,11 @@ float JuceDemoPluginAudioProcessor::sigmoid(float x)
 
 float JuceDemoPluginAudioProcessor::distortion(float in, float threshold)
 {
-  if (in>threshold || in<-threshold)
-  {
-    in= (in + fabs(fabs(fmod(in - threshold, threshold*4)) - threshold*2) - threshold)/2.0f;
-  }
-  return in;
+	if (in>threshold || in<-threshold)
+	{
+		in= (in + fabs(fabs(fmod(in - threshold, threshold*4)) - threshold*2) - threshold)/2.0f;
+	}
+	return in;
 }
 
 float JuceDemoPluginAudioProcessor::Saturate(float x, float t) { 
@@ -222,30 +222,17 @@ float JuceDemoPluginAudioProcessor::Saturate(float x, float t) {
 		return x; 
 	else { 
 		if(x > 0.0f) 
-		    return   t + (1.f-t)*sigmoid((x-t)/((1-t)*1.5f)); 
+			return   t + (1.f-t)*sigmoid((x-t)/((1-t)*1.5f)); 
 		else
-			return -(t + (1.f-t)*sigmoid((-x-t)/((1-t)*1.5f))); } } 
+			return -(t + (1.f-t)*sigmoid((-x-t)/((1-t)*1.5f))); 
+	} 
+} 
 
-
-//float JuceDemoPluginAudioProcessor::Saturate(float x, float t)
-//{
-//	//threshold
-//	//t = 0.5f;
-//	if(fabs(x)<t)
-//		return x;
-//	else
-//	{
-//		if(x > 0.f)
-//			return t + (1.f-t)*tanh((x-t)/(1-t));
-//		else
-//			return -(t + (1.f-t)*tanh((-x-t)/(1-t)));
-//	}
-//}
 
 void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
 
-	if (bypass == 1.0f || getNumInputChannels() < 2)
+	if (wetOn == 0.0f || getNumInputChannels() < 2)
 	{
 		return;
 	}
@@ -260,8 +247,7 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 	if (m_fPan < 0.5f)
 	{ 
 		rGain = 1 - (0.5f - m_fPan) * 2;
-	} else
-		if (m_fPan > 0.5f)
+	} else if (m_fPan > 0.5f)
 		{
 			lGain = 1 - (m_fPan - 0.5f) * 2;
 		}
@@ -274,41 +260,36 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 			fSideGain = 1 - (0.5f - m_fMidSideParam) * 2;
 		}
 
-		float* leftData = buffer.getWritePointer(LEFT_CHANNEL);
-		float* rightData = buffer.getWritePointer(RIGHT_CHANNEL);
-		float* leftDelayData = delayBuffer.getWritePointer (LEFT_CHANNEL);
-		float* rightDelayData = delayBuffer.getWritePointer (RIGHT_CHANNEL);
+		float* leftData = buffer.getWritePointer(0);
+		float* rightData = buffer.getWritePointer(1);
+		float* leftDelayData = delayBuffer.getWritePointer (0);
+		float* rightDelayData = delayBuffer.getWritePointer (1);
 		dp = delayPosition;
-		m_ic = IIRCoefficients::makeHighPass (getSampleRate(), m_dFreq);
+		m_ic = juce::IIRCoefficients::makeHighPass (getSampleRate(), m_dFreq);
 		m_filterL.setCoefficients( m_ic );
 		m_filterR.setCoefficients( m_ic );
 		m_filterL.processSamples(leftData,numSamples);
 		m_filterR.processSamples(rightData,numSamples);
-		
-		//m_Reverb.setSampleRate(getSampleRate());
+
 		juce::Reverb::Parameters params = m_Reverb.getParameters();
 		params.roomSize = m_fReverbSize;
 		params.dryLevel = dryOn;//this depends on general dry on/off button only on or off is possible
-		params.damping = 0.0f;
-		//params.freezeMode = 0.0f;//0 or 1
-		//params.wetLevel = 1.0f; //this depends on general wet gain control
-		params.width = 1.0f; 
-		//params.damping = 0.0f;
+		//params.damping = 0.5f;
+		////params.freezeMode = 0.0f;//0 or 1
+		params.wetLevel = 1.0f; //this depends on general wet gain control
+		////params.width = 1.0f; 
 		m_Reverb.setParameters(params);
-		//m_Reverb.setParameters(juce::Reverb::Parameters());
 		m_Reverb.processStereo(leftData,rightData,numSamples);
-		
+
 		for (int i = 0; i < numSamples; ++i)
 		{
-			//float coef_S = m_fMidSideParam*0.5;
-
+			
 			float m = fMidGain*(leftData[i] + rightData[i]) / 2;
 			float s = fSideGain*((rightData[i] - leftData[i]) / 2);
 
 			leftData[i] = distortion((m - s)*lGain*m_fGain,m_fThreshold);
 			rightData[i] = distortion((m + s)*rGain*m_fGain,m_fThreshold);
-
-			//delay implementation
+		
 			const float inLeft = leftData[i];
 			leftData[i] += leftDelayData[dp];
 			leftDelayData[dp] = ( inLeft) * m_fDelay;
@@ -316,31 +297,20 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 			const float inRight = rightData[i];
 			rightData[i] += rightDelayData[dp];
 			rightDelayData[dp] = (inRight) * m_fDelay;
-
 			
+			leftData[i] = clipper.clip(leftData[i],-1.0f,1.0f);
+			rightData[i] = clipper.clip(rightData[i],-1.0f,1.0f);
+
 			if (++dp >= static_cast<int>(m_fDelayTime * knMaxDelayBufferLength))
 				dp = 0;
 		}
 		delayPosition = dp;
 
-		// In case we have more outputs than inputs, we'll clear any output
-		// channels that didn't contain input data, (because these aren't
-		// guaranteed to be empty - they may contain garbage).
+		//	// In case we have more outputs than inputs, we'll clear any output
+		//	// channels that didn't contain input data, (because these aren't
+		//	// guaranteed to be empty - they may contain garbage).
 		for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
 			buffer.clear(i, 0, buffer.getNumSamples());
-
-		// ask the host for the current time so we can display it...
-		AudioPlayHead::CurrentPositionInfo newTime;
-
-		if (getPlayHead() != nullptr && getPlayHead()->getCurrentPosition(newTime))
-		{
-			// Successfully got the current time from the host..
-			lastPosInfo = newTime;
-		} else
-		{
-			// If the host fails to fill-in the current time, we'll just clear it to a default..
-			lastPosInfo.resetToDefault();
-		}
 }
 
 //==============================================================================

@@ -61,20 +61,10 @@ public:
     bool keyPressed (const KeyPress& key);
 
     // Binary resources:
-    static const char* kreps_logo_jpeg;
-    static const int kreps_logo_jpegSize;
     static const char* chickknob_png;
     static const int chickknob_pngSize;
     static const char* uibg_png;
     static const int uibg_pngSize;
-    static const char* on_orange_png;
-    static const int on_orange_pngSize;
-    static const char* on_red_png;
-    static const int on_red_pngSize;
-    static const char* on_yellow_png;
-    static const int on_yellow_pngSize;
-    static const char* off_png;
-    static const int off_pngSize;
     static const char* dry_on_png;
     static const int dry_on_pngSize;
     static const char* dry_off_png;
@@ -83,6 +73,10 @@ public:
     static const int wet_off_pngSize;
     static const char* wet_on_png;
     static const int wet_on_pngSize;
+    static const char* off_png;
+    static const int off_pngSize;
+    static const char* on_red_png;
+    static const int on_red_pngSize;
 
 
 private:
@@ -96,8 +90,6 @@ private:
         return static_cast <JuceDemoPluginAudioProcessor*> (getAudioProcessor());
     }
 
-    void displayPositionInfo (const AudioPlayHead::CurrentPositionInfo& pos);
-
     //CustomLookAndFeel laf;
     GuiLookAndFeel guilaf;
 	GuiLookAndFeel2 guilaf2;
@@ -110,9 +102,7 @@ private:
 
     //==============================================================================
     ScopedPointer<Slider> panSlider;
-    ScopedPointer<Label> infoLabel;
     ScopedPointer<Slider> delaySlider;
-    ScopedPointer<Label> gainInfoLabel;
     ScopedPointer<Label> panInfoLabel;
     ScopedPointer<Slider> delayTimeSlider;
     ScopedPointer<Label> delayTimeValueLabel;
@@ -132,17 +122,16 @@ private:
     ScopedPointer<TextButton> lnf3Btn;
     ScopedPointer<TextButton> guilafBtn;
     ScopedPointer<TextButton> guilaf2Btn;
-    ScopedPointer<ToggleButton> dryBtn;
     ScopedPointer<Slider> slider;
     ScopedPointer<Label> reverbSizeHeader2;
     ScopedPointer<Slider> slider2;
     ScopedPointer<Label> reverbSizeHeader3;
     ScopedPointer<Slider> slider3;
     ScopedPointer<Label> reverbSizeHeader4;
-    ScopedPointer<ToggleButton> bypassBtn;
     ScopedPointer<ImageButton> dryOnBtn;
     ScopedPointer<ImageButton> wetOnBtn;
     ScopedPointer<Slider> gainSlider;
+    ScopedPointer<Label> gainInfoLabel;
     Image cachedImage_uibg_png;
 
 

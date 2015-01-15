@@ -1,6 +1,4 @@
-*dry level implementation
 *separate dry(on/off) wet(1-100%) chain
-*hard clipper at 0db
 *full reverb implementation
 *functionalities to separate classes
 *delay time change glitch fix(param smoothing)
@@ -9,6 +7,8 @@
 
 
 Done
++hard clipper at 0db
++dry on button
 +texturized bg
 +bypass button fix
 +image rotary slider 

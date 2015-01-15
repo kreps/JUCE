@@ -292,6 +292,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\Clipper.cpp">
+      <Filter>JuceDemoPlugin</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\GuiLookAndFeel2.cpp">
       <Filter>JuceDemoPlugin</Filter>
     </ClCompile>
@@ -1497,6 +1500,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\Clipper.h">
+      <Filter>JuceDemoPlugin</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\GuiLookAndFeel2.h">
       <Filter>JuceDemoPlugin</Filter>
     </ClInclude>

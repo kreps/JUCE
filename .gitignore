@@ -52,3 +52,9 @@ Builds/VisualStudio2010/Debug/
 *.sdf
 Builds/VisualStudio2012/x64/Debug/
 Builds/VisualStudio2012/Release/
+Builds/VisualStudio2012/CodeAnalyst/
+*.imd
+kreps-vst/Session 2.tbp.dir/
+*.map
+*.osv
+*.tbp

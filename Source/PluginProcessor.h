@@ -12,7 +12,7 @@
 #define __PLUGINPROCESSOR_H_526ED7A9__
 
 #include "../JuceLibraryCode/JuceHeader.h"
-
+#include "Clipper.h"
 
 //==============================================================================
 /**
@@ -97,15 +97,12 @@ public:
 		reverbSizeParam,
         totalNumParams
 	};
-	enum Channel{
-		LEFT_CHANNEL,
-		RIGHT_CHANNEL
-	};
-
-    float bypass, dryOn, m_fGain, m_fDelay, m_fPan,m_fDelayTime,m_fMidSideParam,m_fThreshold,m_dFreq,m_fReverbSize;
+	
+    float wetOn, dryOn, m_fGain, m_fDelay, m_fPan,m_fDelayTime,m_fMidSideParam,m_fThreshold,m_dFreq,m_fReverbSize;
 	IIRFilter m_filterL,m_filterR;
 	IIRCoefficients m_ic;
 	juce::Reverb m_Reverb;
+	Clipper clipper;
 
 private:
     //==============================================================================
