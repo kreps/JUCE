@@ -20,7 +20,7 @@ const float kfDefaultDelay = 0.0f;
 const float kfDefaultDelayTime = 0.01f;
 const float kfDefaultPan = 0.5f;
 const float kfDefaultMidSide = 0.5f;
-const int knMaxDelayBufferLength= 24000;
+const int knMaxDelayBufferLength= 48000;
 
 
 //==============================================================================

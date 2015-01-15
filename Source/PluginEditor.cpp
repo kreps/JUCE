@@ -431,7 +431,34 @@ void JuceDemoPluginAudioProcessorEditor::resized()
 	getProcessor()->lastUIHeight = getHeight();
     //[/UserResized]
 }
+class CParamSmooth
+{
+public:
+    CParamSmooth(float smoothingTimeInMs, float samplingRate)
+    {
+        const float c_twoPi = 6.283185307179586476925286766559f;
+        
+        a = exp(-c_twoPi / (smoothingTimeInMs * 0.001f * samplingRate));
+        b = 1.0f - a;
+        z = 0.0f;
+    }
 
+    ~CParamSmooth()
+    {
+        
+    }
+
+    inline float process(float in)
+    {
+        z = (in * b) + (z * a);
+        return z;
+    }
+
+private:
+    float a;
+    float b;
+    float z;
+};
 void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatWasMoved)
 {
     //[UsersliderValueChanged_Pre]
@@ -452,7 +479,8 @@ void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatW
     else if (sliderThatWasMoved == delayTimeSlider)
     {
         //[UserSliderCode_delayTimeSlider] -- add your slider handling code here..
-		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::delayTimeParam,			(float)delayTimeSlider->getValue());
+		CParamSmooth cps(100.0f,44100.0f);
+		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::delayTimeParam,			cps.process((float)delayTimeSlider->getValue()));
         //[/UserSliderCode_delayTimeSlider]
     }
     else if (sliderThatWasMoved == midSideSlider)
