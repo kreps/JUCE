@@ -479,8 +479,8 @@ void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatW
     else if (sliderThatWasMoved == delayTimeSlider)
     {
         //[UserSliderCode_delayTimeSlider] -- add your slider handling code here..
-		CParamSmooth cps(100.0f,44100.0f);
-		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::delayTimeParam,			cps.process((float)delayTimeSlider->getValue()));
+		CParamSmooth paramSmooth(100.0f,44100.0f);
+		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::delayTimeParam,			paramSmooth.process((float)delayTimeSlider->getValue()));
         //[/UserSliderCode_delayTimeSlider]
     }
     else if (sliderThatWasMoved == midSideSlider)
