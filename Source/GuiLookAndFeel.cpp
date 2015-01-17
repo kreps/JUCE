@@ -68,10 +68,6 @@ void GuiLookAndFeel::drawRotarySlider(Graphics& g, int x, int y, int width, int 
 	const float angle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
 	const bool isMouseOver = slider.isMouseOverOrDragging() && slider.isEnabled();
 
-	/*g.setColour((Colours::black).withAlpha(0.3f));
-	g.drawRect(x,y,width,height,1);*/
-
-
 	if (isMouseOver )
 		slider.setMouseCursor(MouseCursor::PointingHandCursor);
 
@@ -119,62 +115,6 @@ void GuiLookAndFeel::drawRotarySlider(Graphics& g, int x, int y, int width, int 
 	////g.setColour(Colours::black);
 	//g.fillPath(needle, AffineTransform::rotation(angle, r.getCentreX(), r.getCentreY()));
 
-}
-void GuiLookAndFeel::drawTickBox(Graphics& g, Component& component,
-								 float x, float y, float w, float h,
-								 bool ticked,
-								 bool isEnabled,
-								 bool isMouseOverButton,
-								 bool isButtonDown) 
-{
-	if (isMouseOverButton){
-		component.setMouseCursor(MouseCursor::PointingHandCursor);
-	}
-
-	if (ticked)
-	{		
-		g.drawImage(checkboxOffImage,0,0,checkboxOffImage.getWidth(),checkboxOffImage.getHeight(),0,0,checkboxOffImage.getWidth(),checkboxOffImage.getHeight());
-	} else 
-	{
-		g.drawImage(checkboxOnImage,0,0,checkboxOffImage.getWidth(),checkboxOffImage.getHeight(),0,0,checkboxOffImage.getWidth(),checkboxOffImage.getHeight());
-	}
-}
-
-void GuiLookAndFeel::drawToggleButton(Graphics& g, ToggleButton& button,
-									  bool isMouseOverButton, bool isButtonDown)
-{
-	//g.setColour(button.findColour(ToggleButton::textColourId));
-	//g.drawRect(0,0,button.getWidth(),button.getHeight(),1);
-	//g.drawRect(0,0,button.getWidth(),button.getHeight(),1);
-
-
-	if (button.hasKeyboardFocus(true))
-	{
-		//g.setColour (button.findColour (TextEditor::focusedOutlineColourId));
-		//g.drawRect (0, 0, button.getWidth(), button.getHeight());
-	}
-
-	float fontSize = 10.0f;//jmin (15.0f, button.getHeight() * 0.75f);
-	const float tickWidth = 19.0f;//fontSize * 1.1f;
-
-	drawTickBox(g, button, 0, 0, button.getHeight(), button.getHeight(),
-		button.getToggleState(),
-		button.isEnabled(),
-		isMouseOverButton,
-		isButtonDown);
-
-	g.setColour(button.findColour(ToggleButton::textColourId));
-	g.setFont(fontSize);
-
-	if (!button.isEnabled())
-		g.setOpacity(0.5f);
-
-	/*const int textX = (int)tickWidth;
-
-	g.drawFittedText(button.getButtonText(),
-	0, button.getHeight()/2,
-	button.getWidth() - 2, button.getHeight()/2,
-	Justification::centredLeft, 10);*/
 }
 
 void GuiLookAndFeel::drawGroupComponentOutline(Graphics& g, int width, int height,

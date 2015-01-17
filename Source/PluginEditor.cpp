@@ -583,13 +583,13 @@ void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasCli
     //[/UserbuttonClicked_Post]
 }
 
-void JuceDemoPluginAudioProcessorEditor::mouseEnter (const MouseEvent& e)
+void JuceDemoPluginAudioProcessorEditor::mouseEnter (const MouseEvent& /*e*/)
 {
     //[UserCode_mouseEnter] -- Add your code here...
     //[/UserCode_mouseEnter]
 }
 
-bool JuceDemoPluginAudioProcessorEditor::keyPressed (const KeyPress& key)
+bool JuceDemoPluginAudioProcessorEditor::keyPressed (const KeyPress& /*key*/)
 {
     //[UserCode_keyPressed] -- Add your code here...
     return false;  // Return true if your handler uses this key event, or false to allow it to be passed-on.
@@ -606,19 +606,19 @@ void JuceDemoPluginAudioProcessorEditor::timerCallback()
 {
 	JuceDemoPluginAudioProcessor* ourProcessor = getProcessor();
 
-	gainSlider->setValue(ourProcessor->m_fGain);
+	gainSlider->setValue(ourProcessor->m_fGain,dontSendNotification);
 
 	//set db display
 	String dbString = amountToDb(ourProcessor->m_fGain);
 	gainInfoLabel->setText(dbString, dontSendNotification);
 
-	delaySlider->setValue(ourProcessor->m_fDelay);
+	delaySlider->setValue(ourProcessor->m_fDelay, dontSendNotification);
 
-	panSlider->setValue(ourProcessor->m_fPan);
+	panSlider->setValue(ourProcessor->m_fPan, dontSendNotification);
 
-	midSideSlider->setValue(ourProcessor->m_fMidSideParam);
+	midSideSlider->setValue(ourProcessor->m_fMidSideParam, dontSendNotification);
 
-	reverbSizeSlider->setValue(ourProcessor->m_fReverbSize);
+	reverbSizeSlider->setValue(ourProcessor->m_fReverbSize, dontSendNotification);
 
 	float pan = ourProcessor->m_fPan;
 

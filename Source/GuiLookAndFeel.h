@@ -23,13 +23,6 @@ public:
     ~GuiLookAndFeel();
     void drawRotarySlider(Graphics& g, int x, int y, int width, int height, float sliderPos,
                                           float rotaryStartAngle, float rotaryEndAngle, Slider& slider);
-    void drawTickBox(Graphics& g, Component& component,
-                                     float x, float y, float w, float h,
-                                     bool ticked,
-                                     bool isEnabled,
-                                     bool /*isMouseOverButton*/,
-                                     bool /*isButtonDown*/);
-    void drawToggleButton(Graphics& g, ToggleButton& button,bool isMouseOverButton, bool isButtonDown);
     void drawGroupComponentOutline(Graphics& g, int width, int height,
                                                    const String& text, const Justification& position,
                                                    GroupComponent& group);

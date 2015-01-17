@@ -178,7 +178,7 @@ const String JuceDemoPluginAudioProcessor::getParameterText(int index)
 }
 
 //==============================================================================
-void JuceDemoPluginAudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock*/)
+void JuceDemoPluginAudioProcessor::prepareToPlay(double /*sampleRate*/, int /*samplesPerBlock*/)
 {
 	// Use this method as the place to do any pre-playback
 	// initialisation that you need..
@@ -229,7 +229,7 @@ float JuceDemoPluginAudioProcessor::Saturate(float x, float t) {
 } 
 
 
-void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
+void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& /*midiMessages*/)
 {
 
 	if (wetOn == 0.0f || getNumInputChannels() < 2)
