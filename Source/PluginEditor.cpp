@@ -304,7 +304,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 	gainSlider->setDoubleClickReturnValue(true,0.0f);
 	panSlider->setDoubleClickReturnValue(true,0.5f);
 	midSideSlider->setDoubleClickReturnValue(true,0.5f);
-	LookAndFeel::setDefaultLookAndFeel(&guilaf);
+	LookAndFeel::setDefaultLookAndFeel(&guilaf2);
 	setupCustomLookAndFeelColours(guilaf);
 	setupCustomLookAndFeelColours(guilaf2);
     guilaf.setDefaultSansSerifTypefaceName("Aharoni");
@@ -422,7 +422,7 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     reverbSizeHeader4->setBounds (896, 32, 80, 30);
     dryOnBtn->setBounds (7, 9, 35, 13);
     wetOnBtn->setBounds (7, 27, 36, 23);
-    gainSlider->setBounds (38, 19, 50, 50);
+    gainSlider->setBounds (38, 9, 70, 70);
     gainInfoLabel->setBounds (16, 47, 30, 10);
     //[UserResized] Add your own custom resize handling here..
 	resizer->setBounds(getWidth() - 16, getHeight() - 16, 16, 16);
@@ -568,7 +568,7 @@ void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasCli
     {
         //[UserButtonCode_dryOnBtn] -- add your button handler code here..
 		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::dryOnParam, (dryOnBtn->getToggleState() == true) ? 1.0f : 0.0f);
-        
+
         //[/UserButtonCode_dryOnBtn]
     }
     else if (buttonThatWasClicked == wetOnBtn)
@@ -583,13 +583,13 @@ void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasCli
     //[/UserbuttonClicked_Post]
 }
 
-void JuceDemoPluginAudioProcessorEditor::mouseEnter (const MouseEvent& /*e*/)
+void JuceDemoPluginAudioProcessorEditor::mouseEnter (const MouseEvent& e)
 {
     //[UserCode_mouseEnter] -- Add your code here...
     //[/UserCode_mouseEnter]
 }
 
-bool JuceDemoPluginAudioProcessorEditor::keyPressed (const KeyPress& /*key*/)
+bool JuceDemoPluginAudioProcessorEditor::keyPressed (const KeyPress& key)
 {
     //[UserCode_keyPressed] -- Add your code here...
     return false;  // Return true if your handler uses this key event, or false to allow it to be passed-on.
@@ -828,7 +828,7 @@ BEGIN_JUCER_METADATA
                resourceOver="" opacityOver="1" colourOver="0" resourceDown="wet_on_png"
                opacityDown="1" colourDown="0"/>
   <SLIDER name="gainSlider" id="c31acc4ca22491a9" memberName="gainSlider"
-          virtualName="" explicitFocusOrder="0" pos="38 19 50 50" tooltip="gain"
+          virtualName="" explicitFocusOrder="0" pos="38 9 70 70" tooltip="gain"
           textboxbkgd="ffffff" textboxhighlight="881111ee" textboxoutline="0"
           min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.29999999999999999"/>
