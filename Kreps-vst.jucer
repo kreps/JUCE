@@ -15,12 +15,15 @@
               companyWebsite="www.moya.com" companyEmail="info@moya.com">
   <EXPORTFORMATS>
     <VS2012 targetFolder="Builds/VisualStudio2012" vstFolder="c:\SDKs\VST3 SDK"
-            vst3Folder="c:\SDKs\VST3 SDK">
+            vst3Folder="c:\SDKs\VST3 SDK" externalLibraries="" extraDefs=""
+            extraCompilerFlags="" extraLinkerFlags="">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="1" optimisation="1" targetName="JuceDemoPlugin"/>
+                       isDebug="1" optimisation="3" targetName="JuceDemoPlugin" headerPath="C:\DSPFilters\shared\DSPFilters\include"
+                       libraryPath=""/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="0" optimisation="2" targetName="JuceDemoPlugin"/>
+                       isDebug="0" optimisation="3" targetName="JuceDemoPlugin" headerPath="C:\DSPFilters\shared\DSPFilters\include"
+                       libraryPath=""/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_gui_extra" path="c:/juce/modules"/>
@@ -62,50 +65,50 @@
     </VS2013>
   </EXPORTFORMATS>
   <MAINGROUP id="dYAMo6Ykd" name="JuceDemoPlugin">
-    <GROUP id="{F24D9D2D-DD72-0AED-C805-398D1BD63820}" name="Dsp">
-      <FILE id="E8QuiH" name="Bessel.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Bessel.cpp"/>
-      <FILE id="k3nBvA" name="Biquad.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Biquad.cpp"/>
-      <FILE id="JHRmqC" name="Butterworth.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Butterworth.cpp"/>
-      <FILE id="PhLoJV" name="Cascade.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Cascade.cpp"/>
-      <FILE id="ChscEW" name="ChebyshevI.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/ChebyshevI.cpp"/>
-      <FILE id="SNQO4G" name="ChebyshevII.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/ChebyshevII.cpp"/>
-      <FILE id="WCkgfa" name="Custom.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Custom.cpp"/>
-      <FILE id="YROVVI" name="Design.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Design.cpp"/>
-      <FILE id="tCoyro" name="Documentation.cpp" compile="1" resource="0"
+    <GROUP id="{F24D9D2D-DD72-0AED-C805-398D1BD63820}" name="DspFilters">
+      <FILE id="DtuUzD" name="Bessel.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Bessel.cpp"/>
+      <FILE id="noWw36" name="Biquad.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Biquad.cpp"/>
+      <FILE id="oM1i9A" name="Butterworth.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Butterworth.cpp"/>
+      <FILE id="oYAZgZ" name="Cascade.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Cascade.cpp"/>
+      <FILE id="n86Tjp" name="ChebyshevI.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/ChebyshevI.cpp"/>
+      <FILE id="yroiaf" name="ChebyshevII.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/ChebyshevII.cpp"/>
+      <FILE id="uaSptq" name="Custom.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Custom.cpp"/>
+      <FILE id="MeBj7w" name="Design.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Design.cpp"/>
+      <FILE id="Kr3HRH" name="Documentation.cpp" compile="1" resource="0"
             file="../../../../DSPFilters/shared/DSPFilters/source/Documentation.cpp"/>
-      <FILE id="qilcVB" name="Elliptic.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Elliptic.cpp"/>
-      <FILE id="mACn39" name="Filter.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Filter.cpp"/>
-      <FILE id="d4ihJK" name="Legendre.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Legendre.cpp"/>
-      <FILE id="DJatQG" name="Param.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Param.cpp"/>
-      <FILE id="qccyVi" name="PoleFilter.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/PoleFilter.cpp"/>
-      <FILE id="ZRO4jb" name="RBJ.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/RBJ.cpp"/>
-      <FILE id="w2UT1s" name="RootFinder.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/RootFinder.cpp"/>
-      <FILE id="nc2AJ3" name="State.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/State.cpp"/>
-      <FILE id="hoKgEf" name="Bessel.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Bessel.h"/>
-      <FILE id="RK6vyT" name="Biquad.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Biquad.h"/>
-      <FILE id="HgA55n" name="Butterworth.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Butterworth.h"/>
-      <FILE id="teBw0y" name="Cascade.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Cascade.h"/>
-      <FILE id="FrCIXW" name="ChebyshevI.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/ChebyshevI.h"/>
-      <FILE id="DcVFQg" name="ChebyshevII.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/ChebyshevII.h"/>
-      <FILE id="kmY70l" name="Common.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Common.h"/>
-      <FILE id="zw3iI7" name="Custom.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Custom.h"/>
-      <FILE id="YWRhHK" name="Design.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Design.h"/>
-      <FILE id="ayEFSv" name="Dsp.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Dsp.h"/>
-      <FILE id="b0dbL5" name="Elliptic.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Elliptic.h"/>
-      <FILE id="muAqra" name="Filter.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Filter.h"/>
-      <FILE id="IfXrPo" name="Layout.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Layout.h"/>
-      <FILE id="UJu1ls" name="Legendre.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Legendre.h"/>
-      <FILE id="FFBBaf" name="MathSupplement.h" compile="0" resource="0"
+      <FILE id="NBAHqf" name="Elliptic.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Elliptic.cpp"/>
+      <FILE id="nbjlKB" name="Filter.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Filter.cpp"/>
+      <FILE id="P8iVuX" name="Legendre.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Legendre.cpp"/>
+      <FILE id="OzRfmt" name="Param.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Param.cpp"/>
+      <FILE id="uHQPyJ" name="PoleFilter.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/PoleFilter.cpp"/>
+      <FILE id="MYceUN" name="RBJ.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/RBJ.cpp"/>
+      <FILE id="YhMg9u" name="RootFinder.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/RootFinder.cpp"/>
+      <FILE id="nY6bLM" name="State.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/State.cpp"/>
+      <FILE id="rJXYtS" name="Bessel.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Bessel.h"/>
+      <FILE id="hH2LhW" name="Biquad.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Biquad.h"/>
+      <FILE id="KPJRzF" name="Butterworth.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Butterworth.h"/>
+      <FILE id="ENlSNB" name="Cascade.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Cascade.h"/>
+      <FILE id="KsUIis" name="ChebyshevI.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/ChebyshevI.h"/>
+      <FILE id="pi7F1F" name="ChebyshevII.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/ChebyshevII.h"/>
+      <FILE id="NklcAq" name="Common.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Common.h"/>
+      <FILE id="qqGbFW" name="Custom.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Custom.h"/>
+      <FILE id="icyt27" name="Design.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Design.h"/>
+      <FILE id="Z2T5tT" name="Dsp.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Dsp.h"/>
+      <FILE id="j5tRIY" name="Elliptic.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Elliptic.h"/>
+      <FILE id="OK7C4t" name="Filter.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Filter.h"/>
+      <FILE id="zI35Tm" name="Layout.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Layout.h"/>
+      <FILE id="jybO0H" name="Legendre.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Legendre.h"/>
+      <FILE id="LTTS6o" name="MathSupplement.h" compile="0" resource="0"
             file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/MathSupplement.h"/>
-      <FILE id="m898y8" name="Params.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Params.h"/>
-      <FILE id="QFkNAJ" name="PoleFilter.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/PoleFilter.h"/>
-      <FILE id="DBSuEO" name="RBJ.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/RBJ.h"/>
-      <FILE id="zt12nk" name="RootFinder.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/RootFinder.h"/>
-      <FILE id="Mpefi7" name="SmoothedFilter.h" compile="0" resource="0"
+      <FILE id="Jsh1JA" name="Params.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Params.h"/>
+      <FILE id="C1r8Mz" name="PoleFilter.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/PoleFilter.h"/>
+      <FILE id="cbOmxb" name="RBJ.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/RBJ.h"/>
+      <FILE id="RK9jJz" name="RootFinder.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/RootFinder.h"/>
+      <FILE id="uK67Ua" name="SmoothedFilter.h" compile="0" resource="0"
             file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/SmoothedFilter.h"/>
-      <FILE id="iqiy5j" name="State.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/State.h"/>
-      <FILE id="basJnJ" name="Types.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Types.h"/>
-      <FILE id="jwZjXq" name="Utilities.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Utilities.h"/>
+      <FILE id="MTH4BR" name="State.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/State.h"/>
+      <FILE id="nJki3L" name="Types.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Types.h"/>
+      <FILE id="noGHaG" name="Utilities.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Utilities.h"/>
     </GROUP>
     <FILE id="PYYDf0" name="OnePoleFilter.cpp" compile="1" resource="0"
           file="Source/OnePoleFilter.cpp"/>

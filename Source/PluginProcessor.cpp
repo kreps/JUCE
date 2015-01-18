@@ -298,7 +298,7 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 		params.wetLevel = 1.0f; //this depends on general wet gain control
 		////params.width = 1.0f; 
 		m_Reverb.setParameters(params);
-		//m_Reverb.processStereo(leftData,rightData,numSamples);
+		m_Reverb.processStereo(leftData,rightData,numSamples);
 		
 		for (int i = 0; i < numSamples; ++i)
 		{
