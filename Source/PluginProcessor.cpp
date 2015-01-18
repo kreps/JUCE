@@ -20,7 +20,7 @@ const float kfDefaultDelay = 0.0f;
 const float kfDefaultDelayTime = 0.01f;
 const float kfDefaultPan = 0.5f;
 const float kfDefaultMidSide = 0.5f;
-const int knMaxDelayBufferLength= 48000;
+const int knMaxDelayBufferLength= 4800;
 
 
 //==============================================================================
@@ -286,7 +286,7 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 		////params.width = 1.0f; 
 		m_Reverb.setParameters(params);
 		m_Reverb.processStereo(leftData,rightData,numSamples);
-
+		
 		for (int i = 0; i < numSamples; ++i)
 		{
 			
@@ -312,7 +312,7 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 			leftData[i] = clipper.clip(leftData[i],-1.0f,1.0f);
 			rightData[i] = clipper.clip(rightData[i],-1.0f,1.0f);
 
-			if (++dp >= static_cast<int>(m_fDelayTime * knMaxDelayBufferLength))
+			if (++dp >= static_cast<int>(opf.Process(m_fDelayTime) * knMaxDelayBufferLength))
 				dp = 0;
 		}
 		delayPosition = dp;

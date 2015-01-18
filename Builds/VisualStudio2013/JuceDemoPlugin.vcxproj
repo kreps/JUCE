@@ -133,6 +133,7 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\OnePoleFilter.cpp"/>
     <ClCompile Include="..\..\Source\Clipper.cpp"/>
     <ClCompile Include="..\..\Source\GuiLookAndFeel2.cpp"/>
     <ClCompile Include="..\..\Source\GuiLookAndFeel.cpp"/>
@@ -1217,6 +1218,7 @@
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_audio_plugin_client\VST3\juce_VST3_Wrapper.cpp"/>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\OnePoleFilter.h"/>
     <ClInclude Include="..\..\Source\Clipper.h"/>
     <ClInclude Include="..\..\Source\GuiLookAndFeel2.h"/>
     <ClInclude Include="..\..\Source\GuiLookAndFeel.h"/>

@@ -109,7 +109,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     addAndMakeVisible (delayTimeSlider = new Slider ("delayTimeSlider"));
     delayTimeSlider->setRange (0, 1, 0);
     delayTimeSlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    delayTimeSlider->setTextBoxStyle (Slider::NoTextBox, true, 80, 20);
+    delayTimeSlider->setTextBoxStyle (Slider::TextBoxBelow, true, 80, 20);
     delayTimeSlider->addListener (this);
 
     addAndMakeVisible (delayTimeValueLabel = new Label ("new label",
@@ -421,15 +421,15 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    panSlider->setBounds (100, 159, 80, 50);
+    panSlider->setBounds (256, 8, 70, 70);
     delaySlider->setBounds (424, 55, 80, 50);
-    panInfoLabel->setBounds (100, 209, 80, 20);
-    delayTimeSlider->setBounds (504, 55, 80, 50);
+    panInfoLabel->setBounds (208, 48, 80, 20);
+    delayTimeSlider->setBounds (504, 55, 80, 80);
     delayTimeValueLabel->setBounds (504, 35, 80, 20);
-    panHeader->setBounds (101, 148, 80, 20);
+    panHeader->setBounds (208, 24, 80, 20);
     midSideSlider->setBounds (155, 9, 70, 70);
     midsideHeader->setBounds (94, 29, 80, 20);
-    saturationSlider->setBounds (360, 261, 100, 50);
+    saturationSlider->setBounds (280, 248, 40, 32);
     distortionHeader->setBounds (372, 248, 80, 10);
     hpfHeader->setBounds (474, 158, 80, 30);
     hpfSlider->setBounds (484, 178, 60, 50);
@@ -450,7 +450,7 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     reverbSizeHeader4->setBounds (896, 32, 80, 30);
     dryOnBtn->setBounds (7, 9, 35, 13);
     wetOnBtn->setBounds (7, 27, 36, 23);
-    gainSlider->setBounds (38, 9, 70, 70);
+    gainSlider->setBounds (44, 9, 70, 70);
     gainInfoLabel->setBounds (16, 47, 30, 10);
     //[UserResized] Add your own custom resize handling here..
 	resizer->setBounds(getWidth() - 16, getHeight() - 16, 16, 16);
@@ -482,6 +482,8 @@ void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatW
         //[UserSliderCode_delayTimeSlider] -- add your slider handling code here..
 		CParamSmooth paramSmooth(100.0f,44100.0f);
 		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::delayTimeParam,			paramSmooth.process((float)delayTimeSlider->getValue()));
+		//CParamSmooth paramSmooth(100.0f,44100.0f);
+		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::delayTimeParam, (float)delayTimeSlider->getValue());
         //[/UserSliderCode_delayTimeSlider]
     }
     else if (sliderThatWasMoved == midSideSlider)
@@ -697,7 +699,7 @@ BEGIN_JUCER_METADATA
     <IMAGE pos="580 412 400 230" resource="uibg_png" opacity="1" mode="2"/>
   </BACKGROUND>
   <SLIDER name="panSlider" id="324eec4d274919f3" memberName="panSlider"
-          virtualName="" explicitFocusOrder="0" pos="100 159 80 50" min="0"
+          virtualName="" explicitFocusOrder="0" pos="256 8 70 70" min="0"
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <SLIDER name="delaySlider" id="37878e5e9fd60a08" memberName="delaySlider"
@@ -706,13 +708,13 @@ BEGIN_JUCER_METADATA
           min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="64ddab567eb77e3c" memberName="panInfoLabel"
-         virtualName="" explicitFocusOrder="0" pos="100 209 80 20" textCol="ff282828"
+         virtualName="" explicitFocusOrder="0" pos="208 48 80 20" textCol="ff282828"
          edTextCol="ff000000" edBkgCol="0" labelText="C" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="delayTimeSlider" id="ead45d255e5f5831" memberName="delayTimeSlider"
-          virtualName="" explicitFocusOrder="0" pos="504 55 80 50" min="0"
-          max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
+          virtualName="" explicitFocusOrder="0" pos="504 55 80 80" min="0"
+          max="1" int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
           textBoxEditable="0" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="3b34631ac55e0fe6" memberName="delayTimeValueLabel"
          virtualName="" explicitFocusOrder="0" pos="504 35 80 20" textCol="ff282828"
@@ -720,7 +722,7 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="ec32effd76232b82" memberName="panHeader"
-         virtualName="" explicitFocusOrder="0" pos="101 148 80 20" textCol="ff363636"
+         virtualName="" explicitFocusOrder="0" pos="208 24 80 20" textCol="ff363636"
          edTextCol="ff000000" edBkgCol="0" labelText="pan&#10;" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
@@ -735,7 +737,7 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="mid/side slider" id="2a577f0fc0372cc6" memberName="saturationSlider"
-          virtualName="" explicitFocusOrder="0" pos="360 261 100 50" min="0.001"
+          virtualName="" explicitFocusOrder="0" pos="280 248 40 32" min="0.001"
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="saturation fx" id="eda4710f044030be" memberName="distortionHeader"
@@ -829,7 +831,7 @@ BEGIN_JUCER_METADATA
                resourceOver="" opacityOver="1" colourOver="0" resourceDown="wet_on_png"
                opacityDown="1" colourDown="0"/>
   <SLIDER name="gainSlider" id="c31acc4ca22491a9" memberName="gainSlider"
-          virtualName="" explicitFocusOrder="0" pos="38 9 70 70" tooltip="gain"
+          virtualName="" explicitFocusOrder="0" pos="44 9 70 70" tooltip="gain"
           textboxbkgd="ffffff" textboxhighlight="881111ee" textboxoutline="0"
           min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.29999999999999999"/>

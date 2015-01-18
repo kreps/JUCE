@@ -292,6 +292,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\OnePoleFilter.cpp">
+      <Filter>JuceDemoPlugin</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\Clipper.cpp">
       <Filter>JuceDemoPlugin</Filter>
     </ClCompile>
@@ -1500,6 +1503,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\OnePoleFilter.h">
+      <Filter>JuceDemoPlugin</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\Clipper.h">
       <Filter>JuceDemoPlugin</Filter>
     </ClInclude>

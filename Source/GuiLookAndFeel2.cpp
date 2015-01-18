@@ -57,28 +57,30 @@ void GuiLookAndFeel2::drawRotarySlider(Graphics& g, int x, int y, int width, int
 	if(!slider.isEnabled())
 		g.setColour((Colours::black).withAlpha(0.3f));
 
-	float f = radius;
+	
 	{
 		const float lineThickness = jmin (15.0f, jmin (width, height) * 0.45f) * 0.1f;
 		Path outlineArc;
-		outlineArc.addEllipse(rx+6, ry+6, rw-12, rw-12);
+		outlineArc.addEllipse(rx, ry, rw, rw);
 		g.strokePath (outlineArc,PathStrokeType (lineThickness));  
 	}
 	if (slider.isEnabled())
 		g.setColour(slider.findColour(Slider::rotarySliderFillColourId).withAlpha(isMouseOver ? 1.0f : 0.7f));
 	else
 		g.setColour(Colour(0x80808080));
-
+	
+	float f = 1.0f + radius*0.2f;
 	{
 		Path filledArc2;
-		filledArc2.addEllipse(rx+12, ry+12, rw-24, rw-24);
+		filledArc2.addEllipse(rx+f, ry+f, rw-2*f, rw-2*f);
 		g.setColour(Colours::darkgrey);
 		g.fillPath(filledArc2);
 	}
 
 	Path needle;
-	Rectangle<float> r(rx+12, ry+12, rw-24, rw-24);
-	Rectangle<float> r2(0.0f, 0.0f, rw*0.05f, rw * 0.2f);
+	
+	Rectangle<float> r(rx+f, ry+f, rw-2.0f*f, rw-2*f);
+	Rectangle<float> r2(0.0f, 0.0f, 2.0f+f*0.25f, f*2.5f);
 	needle.addRectangle(r2.withPosition(Point<float>(r.getCentreX() - (r2.getWidth() / 2.0f), r.getY())));
 
 	g.setColour (Colours::whitesmoke);

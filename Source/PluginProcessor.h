@@ -13,6 +13,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Clipper.h"
+#include "OnePoleFilter.h"
 
 //==============================================================================
 /**
@@ -103,6 +104,7 @@ public:
 	IIRCoefficients m_ic;
 	juce::Reverb m_Reverb;
 	Clipper clipper;
+	OnePoleFilter opf;
 
 private:
     //==============================================================================
