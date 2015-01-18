@@ -57,6 +57,7 @@ void GuiLookAndFeel2::drawRotarySlider(Graphics& g, int x, int y, int width, int
 	if(!slider.isEnabled())
 		g.setColour((Colours::black).withAlpha(0.3f));
 
+	float f = radius;
 	{
 		const float lineThickness = jmin (15.0f, jmin (width, height) * 0.45f) * 0.1f;
 		Path outlineArc;

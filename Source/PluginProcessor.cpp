@@ -229,9 +229,11 @@ float JuceDemoPluginAudioProcessor::Saturate(float x, float t) {
 } 
 
 
+
 void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& /*midiMessages*/)
 {
 
+	inputBuffer = buffer;
 	if (wetOn == 0.0f || getNumInputChannels() < 2)
 	{
 		return;
@@ -261,7 +263,11 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 		}
 
 		float* leftData = buffer.getWritePointer(0);
+		float* leftInData = inputBuffer.getWritePointer(0);
+
 		float* rightData = buffer.getWritePointer(1);
+		float* rightInData = inputBuffer.getWritePointer(1);
+
 		float* leftDelayData = delayBuffer.getWritePointer (0);
 		float* rightDelayData = delayBuffer.getWritePointer (1);
 		dp = delayPosition;
@@ -273,7 +279,7 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 
 		juce::Reverb::Parameters params = m_Reverb.getParameters();
 		params.roomSize = m_fReverbSize;
-		params.dryLevel = dryOn;//this depends on general dry on/off button only on or off is possible
+		params.dryLevel = 0.0f;//never used because wil have separte dry signal
 		//params.damping = 0.5f;
 		////params.freezeMode = 0.0f;//0 or 1
 		params.wetLevel = 1.0f; //this depends on general wet gain control
@@ -297,7 +303,12 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 			const float inRight = rightData[i];
 			rightData[i] += rightDelayData[dp];
 			rightDelayData[dp] = (inRight) * m_fDelay;
-			
+
+			if (dryOn == 1.0f){
+				leftData[i] +=leftInData[i];
+				rightData[i] +=rightInData[i];
+			}
+
 			leftData[i] = clipper.clip(leftData[i],-1.0f,1.0f);
 			rightData[i] = clipper.clip(rightData[i],-1.0f,1.0f);
 

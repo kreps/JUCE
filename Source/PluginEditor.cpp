@@ -47,6 +47,34 @@ void setupCustomLookAndFeelColours (LookAndFeel& laf)
 	//laf.setColour(Label::backgroundColourId, Colour(0x33ffffff));
 };
 
+class CParamSmooth
+{
+public:
+    CParamSmooth(float smoothingTimeInMs, float samplingRate)
+    {
+        const float c_twoPi = 6.283185307179586476925286766559f;
+        
+        a = exp(-c_twoPi / (smoothingTimeInMs * 0.001f * samplingRate));
+        b = 1.0f - a;
+        z = 0.0f;
+    }
+
+    ~CParamSmooth()
+    {
+        
+    }
+
+    inline float process(float in)
+    {
+        z = (in * b) + (z * a);
+        return z;
+    }
+
+private:
+    float a;
+    float b;
+    float z;
+};
 //[/MiscUserDefs]
 
 //==============================================================================
@@ -399,14 +427,14 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     delayTimeSlider->setBounds (504, 55, 80, 50);
     delayTimeValueLabel->setBounds (504, 35, 80, 20);
     panHeader->setBounds (101, 148, 80, 20);
-    midSideSlider->setBounds (104, 24, 80, 80);
-    midsideHeader->setBounds (104, 8, 80, 20);
+    midSideSlider->setBounds (155, 9, 70, 70);
+    midsideHeader->setBounds (94, 29, 80, 20);
     saturationSlider->setBounds (360, 261, 100, 50);
     distortionHeader->setBounds (372, 248, 80, 10);
     hpfHeader->setBounds (474, 158, 80, 30);
     hpfSlider->setBounds (484, 178, 60, 50);
     reverbSizeSlider->setBounds (688, 56, 50, 50);
-    midsideInfoLabel->setBounds (104, 88, 80, 30);
+    midsideInfoLabel->setBounds (112, 46, 40, 10);
     reverbSizeHeader->setBounds (672, 32, 80, 30);
     delayFeedbackSlider->setBounds (584, 55, 80, 50);
     delayTimeValueLabel2->setBounds (584, 35, 80, 20);
@@ -431,34 +459,7 @@ void JuceDemoPluginAudioProcessorEditor::resized()
 	getProcessor()->lastUIHeight = getHeight();
     //[/UserResized]
 }
-class CParamSmooth
-{
-public:
-    CParamSmooth(float smoothingTimeInMs, float samplingRate)
-    {
-        const float c_twoPi = 6.283185307179586476925286766559f;
-        
-        a = exp(-c_twoPi / (smoothingTimeInMs * 0.001f * samplingRate));
-        b = 1.0f - a;
-        z = 0.0f;
-    }
 
-    ~CParamSmooth()
-    {
-        
-    }
-
-    inline float process(float in)
-    {
-        z = (in * b) + (z * a);
-        return z;
-    }
-
-private:
-    float a;
-    float b;
-    float z;
-};
 void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatWasMoved)
 {
     //[UsersliderValueChanged_Pre]
@@ -724,12 +725,12 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="mid/side slider" id="84706171dc5b90dd" memberName="midSideSlider"
-          virtualName="" explicitFocusOrder="0" pos="104 24 80 80" min="0"
+          virtualName="" explicitFocusOrder="0" pos="155 9 70 70" min="0"
           max="1" int="0.0050000000000000001" style="RotaryVerticalDrag"
           textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="fcf994bed06bf6ab" memberName="midsideHeader"
-         virtualName="" explicitFocusOrder="0" pos="104 8 80 20" textCol="ff363636"
+         virtualName="" explicitFocusOrder="0" pos="94 29 80 20" textCol="ff363636"
          edTextCol="ff000000" edBkgCol="0" labelText="mid/side" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
@@ -756,7 +757,7 @@ BEGIN_JUCER_METADATA
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="63580ead55c45fe" memberName="midsideInfoLabel"
-         virtualName="" explicitFocusOrder="0" pos="104 88 80 30" textCol="ff363636"
+         virtualName="" explicitFocusOrder="0" pos="112 46 40 10" textCol="ff363636"
          edTextCol="ff000000" edBkgCol="0" labelText="80%" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="15" bold="0" italic="0" justification="36"/>

@@ -1,12 +1,11 @@
-*separate dry(on/off) wet(1-100%) chain
 *full reverb implementation
 *functionalities to separate classes
 *delay time change glitch fix(param smoothing)
 *c++ tutorial++
 *implement mda detune
 
-
 Done
++separate dry(on/off) wet(1-100%) chain
 +hard clipper at 0db
 +dry on button
 +texturized bg
