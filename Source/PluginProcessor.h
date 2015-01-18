@@ -7,18 +7,27 @@
 
   ==============================================================================
 */
-
 #ifndef __PLUGINPROCESSOR_H_526ED7A9__
 #define __PLUGINPROCESSOR_H_526ED7A9__
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Clipper.h"
 #include "OnePoleFilter.h"
+#include "DspFilters\Common.h"
+#include "DspFilters\Filter.h"
+#include "DspFilters\RBJ.h"
+#include "DspFilters\SmoothedFilter.h"
+
+
+
+
+
 
 //==============================================================================
 /**
     As the name suggest, this class does the actual audio processing.
 */
+
 class JuceDemoPluginAudioProcessor  : public AudioProcessor
 {
 public:
@@ -104,8 +113,10 @@ public:
 	IIRCoefficients m_ic;
 	juce::Reverb m_Reverb;
 	Clipper clipper;
-	OnePoleFilter opf;
-
+	OnePoleFilter opf;	
+	
+	 Dsp::Filter* f;
+	 Dsp::Params params;
 private:
     //==============================================================================
     AudioSampleBuffer delayBuffer;

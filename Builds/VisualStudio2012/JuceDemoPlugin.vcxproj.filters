@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="JuceDemoPlugin">
@@ -290,8 +289,62 @@
     <Filter Include="Juce Library Code">
       <UniqueIdentifier>{8B4D1BAA-6DB4-CAEC-A0FA-271F354D5C61}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Dsp">
+      <UniqueIdentifier>{FCF9A2B3-7266-FCC8-1F9D-ADA822F16C08}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Bessel.cpp">
+      <Filter>Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Biquad.cpp">
+      <Filter>Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Butterworth.cpp">
+      <Filter>Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Cascade.cpp">
+      <Filter>Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\ChebyshevI.cpp">
+      <Filter>Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\ChebyshevII.cpp">
+      <Filter>Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Custom.cpp">
+      <Filter>Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Design.cpp">
+      <Filter>Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Documentation.cpp">
+      <Filter>Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Elliptic.cpp">
+      <Filter>Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Filter.cpp">
+      <Filter>Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Legendre.cpp">
+      <Filter>Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Param.cpp">
+      <Filter>Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\PoleFilter.cpp">
+      <Filter>Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\RBJ.cpp">
+      <Filter>Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\RootFinder.cpp">
+      <Filter>Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\State.cpp">
+      <Filter>Dsp</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\OnePoleFilter.cpp">
       <Filter>JuceDemoPlugin</Filter>
     </ClCompile>
@@ -412,12 +465,6 @@
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_audio_devices\native\juce_linux_Midi.cpp">
       <Filter>Juce Modules\juce_audio_devices\native</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_audio_devices\native\juce_mac_AudioCDBurner.mm">
-      <Filter>Juce Modules\juce_audio_devices\native</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_audio_devices\native\juce_mac_AudioCDReader.mm">
-      <Filter>Juce Modules\juce_audio_devices\native</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_audio_devices\native\juce_mac_CoreAudio.cpp">
       <Filter>Juce Modules\juce_audio_devices\native</Filter>
     </ClCompile>
@@ -493,21 +540,6 @@
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_audio_formats\sampler\juce_Sampler.cpp">
       <Filter>Juce Modules\juce_audio_formats\sampler</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_audio_plugin_client\AU\juce_AU_Wrapper.mm">
-      <Filter>Juce Modules\juce_audio_plugin_client\AU</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_audio_plugin_client\RTAS\juce_RTAS_MacUtilities.mm">
-      <Filter>Juce Modules\juce_audio_plugin_client\RTAS</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_audio_plugin_client\VST\juce_VST_Wrapper.mm">
-      <Filter>Juce Modules\juce_audio_plugin_client\VST</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_audio_plugin_client\VST3\juce_VST3_Wrapper.mm">
-      <Filter>Juce Modules\juce_audio_plugin_client\VST3</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_audio_plugin_client\AAX\juce_AAX_Wrapper.mm">
-      <Filter>Juce Modules\juce_audio_plugin_client\AAX</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_audio_processors\processors\juce_AudioProcessor.cpp">
       <Filter>Juce Modules\juce_audio_processors\processors</Filter>
     </ClCompile>
@@ -528,9 +560,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_audio_processors\format\juce_AudioPluginFormatManager.cpp">
       <Filter>Juce Modules\juce_audio_processors\format</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_audio_processors\format_types\juce_AudioUnitPluginFormat.mm">
-      <Filter>Juce Modules\juce_audio_processors\format_types</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_audio_processors\format_types\juce_LADSPAPluginFormat.cpp">
       <Filter>Juce Modules\juce_audio_processors\format_types</Filter>
@@ -775,21 +804,6 @@
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_core\native\juce_linux_Threads.cpp">
       <Filter>Juce Modules\juce_core\native</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_core\native\juce_mac_Files.mm">
-      <Filter>Juce Modules\juce_core\native</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_core\native\juce_mac_Network.mm">
-      <Filter>Juce Modules\juce_core\native</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_core\native\juce_mac_Strings.mm">
-      <Filter>Juce Modules\juce_core\native</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_core\native\juce_mac_SystemStats.mm">
-      <Filter>Juce Modules\juce_core\native</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_core\native\juce_mac_Threads.mm">
-      <Filter>Juce Modules\juce_core\native</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_core\native\juce_posix_NamedPipe.cpp">
       <Filter>Juce Modules\juce_core\native</Filter>
     </ClCompile>
@@ -862,13 +876,7 @@
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_events\native\juce_android_Messaging.cpp">
       <Filter>Juce Modules\juce_events\native</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_events\native\juce_ios_MessageManager.mm">
-      <Filter>Juce Modules\juce_events\native</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_events\native\juce_linux_Messaging.cpp">
-      <Filter>Juce Modules\juce_events\native</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_events\native\juce_mac_MessageManager.mm">
       <Filter>Juce Modules\juce_events\native</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_events\native\juce_win32_Messaging.cpp">
@@ -968,12 +976,6 @@
       <Filter>Juce Modules\juce_graphics\native</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_graphics\native\juce_linux_Fonts.cpp">
-      <Filter>Juce Modules\juce_graphics\native</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_graphics\native\juce_mac_CoreGraphicsContext.mm">
-      <Filter>Juce Modules\juce_graphics\native</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_graphics\native\juce_mac_Fonts.mm">
       <Filter>Juce Modules\juce_graphics\native</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_graphics\native\juce_win32_Direct2DGraphicsContext.cpp">
@@ -1324,12 +1326,6 @@
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_gui_basics\native\juce_android_Windowing.cpp">
       <Filter>Juce Modules\juce_gui_basics\native</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_gui_basics\native\juce_ios_UIViewComponentPeer.mm">
-      <Filter>Juce Modules\juce_gui_basics\native</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_gui_basics\native\juce_ios_Windowing.mm">
-      <Filter>Juce Modules\juce_gui_basics\native</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_gui_basics\native\juce_linux_Clipboard.cpp">
       <Filter>Juce Modules\juce_gui_basics\native</Filter>
     </ClCompile>
@@ -1337,21 +1333,6 @@
       <Filter>Juce Modules\juce_gui_basics\native</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_gui_basics\native\juce_linux_Windowing.cpp">
-      <Filter>Juce Modules\juce_gui_basics\native</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_gui_basics\native\juce_mac_FileChooser.mm">
-      <Filter>Juce Modules\juce_gui_basics\native</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_gui_basics\native\juce_mac_MainMenu.mm">
-      <Filter>Juce Modules\juce_gui_basics\native</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_gui_basics\native\juce_mac_MouseCursor.mm">
-      <Filter>Juce Modules\juce_gui_basics\native</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_gui_basics\native\juce_mac_NSViewComponentPeer.mm">
-      <Filter>Juce Modules\juce_gui_basics\native</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_gui_basics\native\juce_mac_Windowing.mm">
       <Filter>Juce Modules\juce_gui_basics\native</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_gui_basics\native\juce_win32_DragAndDrop.cpp">
@@ -1411,25 +1392,13 @@
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_gui_extra\native\juce_android_WebBrowserComponent.cpp">
       <Filter>Juce Modules\juce_gui_extra\native</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_gui_extra\native\juce_ios_UIViewComponent.mm">
-      <Filter>Juce Modules\juce_gui_extra\native</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_gui_extra\native\juce_linux_SystemTrayIcon.cpp">
       <Filter>Juce Modules\juce_gui_extra\native</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_gui_extra\native\juce_linux_WebBrowserComponent.cpp">
       <Filter>Juce Modules\juce_gui_extra\native</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_gui_extra\native\juce_mac_AppleRemote.mm">
-      <Filter>Juce Modules\juce_gui_extra\native</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_gui_extra\native\juce_mac_NSViewComponent.mm">
-      <Filter>Juce Modules\juce_gui_extra\native</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_gui_extra\native\juce_mac_SystemTrayIcon.cpp">
-      <Filter>Juce Modules\juce_gui_extra\native</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_gui_extra\native\juce_mac_WebBrowserComponent.mm">
       <Filter>Juce Modules\juce_gui_extra\native</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\juce\modules\juce_gui_extra\native\juce_win32_ActiveXComponent.cpp">
@@ -1503,6 +1472,75 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Bessel.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Biquad.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Butterworth.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Cascade.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\ChebyshevI.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\ChebyshevII.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Common.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Custom.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Design.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Dsp.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Elliptic.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Filter.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Layout.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Legendre.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\MathSupplement.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Params.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\PoleFilter.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\RBJ.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\RootFinder.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\SmoothedFilter.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\State.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Types.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Utilities.h">
+      <Filter>Dsp</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\OnePoleFilter.h">
       <Filter>JuceDemoPlugin</Filter>
     </ClInclude>

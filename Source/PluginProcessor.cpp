@@ -20,7 +20,7 @@ const float kfDefaultDelay = 0.0f;
 const float kfDefaultDelayTime = 0.01f;
 const float kfDefaultPan = 0.5f;
 const float kfDefaultMidSide = 0.5f;
-const int knMaxDelayBufferLength= 4800;
+const int knMaxDelayBufferLength= 1200;
 
 
 //==============================================================================
@@ -47,6 +47,14 @@ JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
 	m_filterL.setCoefficients( m_ic );
 	m_filterR.setCoefficients( m_ic );
 
+	// "1024" is the number of samples over which to fade parameter changes
+f = new Dsp::SmoothedFilterDesign<Dsp::RBJ::Design::LowPass, 2> (1024);
+  
+    params[0] = 44100; // sample rate
+    params[1] = 500; // cutoff frequency
+    params[2] = 1.25; // Q
+    f->setParams (params);
+    
 }
 
 JuceDemoPluginAudioProcessor::~JuceDemoPluginAudioProcessor()
@@ -230,7 +238,7 @@ float JuceDemoPluginAudioProcessor::Saturate(float x, float t) {
 
 
 
-void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& /*midiMessages*/)
+void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
 
 	inputBuffer = buffer;
@@ -238,11 +246,16 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 	{
 		return;
 	}
-
+	
+  
 	const int numSamples = buffer.getNumSamples();
-
 	int dp = 0;
-
+	  // Note we use the raw filter instead of the one
+    // from the Design namespace.
+	params[1] = m_dFreq; // cutoff frequency
+	 f->setParams (params);
+	f->process(numSamples, buffer.getArrayOfWritePointers());
+	//return;
 	//calculate left and right gain according to pan param
 	float lGain = 1;
 	float rGain = 1;
@@ -271,11 +284,11 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 		float* leftDelayData = delayBuffer.getWritePointer (0);
 		float* rightDelayData = delayBuffer.getWritePointer (1);
 		dp = delayPosition;
-		m_ic = juce::IIRCoefficients::makeHighPass (getSampleRate(), m_dFreq);
+		/*m_ic = juce::IIRCoefficients::makeHighPass (getSampleRate(), m_dFreq);
 		m_filterL.setCoefficients( m_ic );
 		m_filterR.setCoefficients( m_ic );
 		m_filterL.processSamples(leftData,numSamples);
-		m_filterR.processSamples(rightData,numSamples);
+		m_filterR.processSamples(rightData,numSamples);*/
 
 		juce::Reverb::Parameters params = m_Reverb.getParameters();
 		params.roomSize = m_fReverbSize;
@@ -285,7 +298,7 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 		params.wetLevel = 1.0f; //this depends on general wet gain control
 		////params.width = 1.0f; 
 		m_Reverb.setParameters(params);
-		m_Reverb.processStereo(leftData,rightData,numSamples);
+		//m_Reverb.processStereo(leftData,rightData,numSamples);
 		
 		for (int i = 0; i < numSamples; ++i)
 		{

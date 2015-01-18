@@ -62,6 +62,51 @@
     </VS2013>
   </EXPORTFORMATS>
   <MAINGROUP id="dYAMo6Ykd" name="JuceDemoPlugin">
+    <GROUP id="{F24D9D2D-DD72-0AED-C805-398D1BD63820}" name="Dsp">
+      <FILE id="E8QuiH" name="Bessel.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Bessel.cpp"/>
+      <FILE id="k3nBvA" name="Biquad.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Biquad.cpp"/>
+      <FILE id="JHRmqC" name="Butterworth.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Butterworth.cpp"/>
+      <FILE id="PhLoJV" name="Cascade.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Cascade.cpp"/>
+      <FILE id="ChscEW" name="ChebyshevI.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/ChebyshevI.cpp"/>
+      <FILE id="SNQO4G" name="ChebyshevII.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/ChebyshevII.cpp"/>
+      <FILE id="WCkgfa" name="Custom.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Custom.cpp"/>
+      <FILE id="YROVVI" name="Design.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Design.cpp"/>
+      <FILE id="tCoyro" name="Documentation.cpp" compile="1" resource="0"
+            file="../../../../DSPFilters/shared/DSPFilters/source/Documentation.cpp"/>
+      <FILE id="qilcVB" name="Elliptic.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Elliptic.cpp"/>
+      <FILE id="mACn39" name="Filter.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Filter.cpp"/>
+      <FILE id="d4ihJK" name="Legendre.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Legendre.cpp"/>
+      <FILE id="DJatQG" name="Param.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Param.cpp"/>
+      <FILE id="qccyVi" name="PoleFilter.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/PoleFilter.cpp"/>
+      <FILE id="ZRO4jb" name="RBJ.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/RBJ.cpp"/>
+      <FILE id="w2UT1s" name="RootFinder.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/RootFinder.cpp"/>
+      <FILE id="nc2AJ3" name="State.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/State.cpp"/>
+      <FILE id="hoKgEf" name="Bessel.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Bessel.h"/>
+      <FILE id="RK6vyT" name="Biquad.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Biquad.h"/>
+      <FILE id="HgA55n" name="Butterworth.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Butterworth.h"/>
+      <FILE id="teBw0y" name="Cascade.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Cascade.h"/>
+      <FILE id="FrCIXW" name="ChebyshevI.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/ChebyshevI.h"/>
+      <FILE id="DcVFQg" name="ChebyshevII.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/ChebyshevII.h"/>
+      <FILE id="kmY70l" name="Common.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Common.h"/>
+      <FILE id="zw3iI7" name="Custom.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Custom.h"/>
+      <FILE id="YWRhHK" name="Design.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Design.h"/>
+      <FILE id="ayEFSv" name="Dsp.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Dsp.h"/>
+      <FILE id="b0dbL5" name="Elliptic.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Elliptic.h"/>
+      <FILE id="muAqra" name="Filter.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Filter.h"/>
+      <FILE id="IfXrPo" name="Layout.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Layout.h"/>
+      <FILE id="UJu1ls" name="Legendre.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Legendre.h"/>
+      <FILE id="FFBBaf" name="MathSupplement.h" compile="0" resource="0"
+            file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/MathSupplement.h"/>
+      <FILE id="m898y8" name="Params.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Params.h"/>
+      <FILE id="QFkNAJ" name="PoleFilter.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/PoleFilter.h"/>
+      <FILE id="DBSuEO" name="RBJ.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/RBJ.h"/>
+      <FILE id="zt12nk" name="RootFinder.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/RootFinder.h"/>
+      <FILE id="Mpefi7" name="SmoothedFilter.h" compile="0" resource="0"
+            file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/SmoothedFilter.h"/>
+      <FILE id="iqiy5j" name="State.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/State.h"/>
+      <FILE id="basJnJ" name="Types.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Types.h"/>
+      <FILE id="jwZjXq" name="Utilities.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Utilities.h"/>
+    </GROUP>
     <FILE id="PYYDf0" name="OnePoleFilter.cpp" compile="1" resource="0"
           file="Source/OnePoleFilter.cpp"/>
     <FILE id="vWhZQ2" name="OnePoleFilter.h" compile="0" resource="0" file="Source/OnePoleFilter.h"/>

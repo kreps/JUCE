@@ -53,7 +53,7 @@ public:
     CParamSmooth(float smoothingTimeInMs, float samplingRate)
     {
         const float c_twoPi = 6.283185307179586476925286766559f;
-        
+
         a = exp(-c_twoPi / (smoothingTimeInMs * 0.001f * samplingRate));
         b = 1.0f - a;
         z = 0.0f;
@@ -61,7 +61,7 @@ public:
 
     ~CParamSmooth()
     {
-        
+
     }
 
     inline float process(float in)
@@ -173,7 +173,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     hpfSlider->setTooltip (TRANS("hi pass filter (hz)"));
     hpfSlider->setRange (20, 10000, 0);
     hpfSlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    hpfSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    hpfSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
     hpfSlider->addListener (this);
     hpfSlider->setSkewFactor (0.2);
 
@@ -432,7 +432,7 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     saturationSlider->setBounds (280, 248, 40, 32);
     distortionHeader->setBounds (372, 248, 80, 10);
     hpfHeader->setBounds (474, 158, 80, 30);
-    hpfSlider->setBounds (484, 178, 60, 50);
+    hpfSlider->setBounds (484, 178, 60, 86);
     reverbSizeSlider->setBounds (688, 56, 50, 50);
     midsideInfoLabel->setBounds (112, 46, 40, 10);
     reverbSizeHeader->setBounds (672, 32, 80, 30);
@@ -751,8 +751,8 @@ BEGIN_JUCER_METADATA
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
          fontname="Aharoni" fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="hpfSlider" id="253b421224cbac37" memberName="hpfSlider"
-          virtualName="" explicitFocusOrder="0" pos="484 178 60 50" tooltip="hi pass filter (hz)"
-          min="20" max="10000" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
+          virtualName="" explicitFocusOrder="0" pos="484 178 60 86" tooltip="hi pass filter (hz)"
+          min="20" max="10000" int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.20000000000000001"/>
   <SLIDER name="new slider" id="81b8a5f3e2f90d2e" memberName="reverbSizeSlider"
           virtualName="" explicitFocusOrder="0" pos="688 56 50 50" min="0.01"

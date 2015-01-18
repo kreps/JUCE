@@ -5,6 +5,9 @@
     <Filter Include="JuceDemoPlugin">
       <UniqueIdentifier>{98B5FD41-69F0-DE4B-B5A1-16802D627A6C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="JuceDemoPlugin\Dsp">
+      <UniqueIdentifier>{FCF9A2B3-7266-FCC8-1F9D-ADA822F16C08}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Juce Modules">
       <UniqueIdentifier>{422C46B7-0467-2DB0-BF3C-16DFCAFD69AC}</UniqueIdentifier>
     </Filter>
@@ -292,6 +295,57 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Bessel.cpp">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Biquad.cpp">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Butterworth.cpp">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Cascade.cpp">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\ChebyshevI.cpp">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\ChebyshevII.cpp">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Custom.cpp">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Design.cpp">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Documentation.cpp">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Elliptic.cpp">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Filter.cpp">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Legendre.cpp">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\Param.cpp">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\PoleFilter.cpp">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\RBJ.cpp">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\RootFinder.cpp">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\State.cpp">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\OnePoleFilter.cpp">
       <Filter>JuceDemoPlugin</Filter>
     </ClCompile>
@@ -1503,6 +1557,75 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Bessel.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Biquad.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Butterworth.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Cascade.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\ChebyshevI.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\ChebyshevII.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Common.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Custom.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Design.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Dsp.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Elliptic.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Filter.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Layout.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Legendre.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\MathSupplement.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Params.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\PoleFilter.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\RBJ.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\RootFinder.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\SmoothedFilter.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\State.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Types.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Utilities.h">
+      <Filter>JuceDemoPlugin\Dsp</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\OnePoleFilter.h">
       <Filter>JuceDemoPlugin</Filter>
     </ClInclude>
