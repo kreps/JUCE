@@ -103,35 +103,25 @@ private:
     //==============================================================================
     ScopedPointer<Slider> panSlider;
     ScopedPointer<Slider> delaySlider;
-    ScopedPointer<Label> panInfoLabel;
     ScopedPointer<Slider> delayTimeSlider;
     ScopedPointer<Label> delayTimeValueLabel;
     ScopedPointer<Label> panHeader;
     ScopedPointer<Slider> midSideSlider;
     ScopedPointer<Label> midsideHeader;
     ScopedPointer<Slider> saturationSlider;
-    ScopedPointer<Label> distortionHeader;
     ScopedPointer<Label> hpfHeader;
     ScopedPointer<Slider> hpfSlider;
     ScopedPointer<Slider> reverbSizeSlider;
-    ScopedPointer<Label> midsideInfoLabel;
     ScopedPointer<Label> reverbSizeHeader;
-    ScopedPointer<Slider> delayFeedbackSlider;
-    ScopedPointer<Label> delayTimeValueLabel2;
     ScopedPointer<Label> delayAmountHeader;
     ScopedPointer<TextButton> lnf3Btn;
     ScopedPointer<TextButton> guilafBtn;
     ScopedPointer<TextButton> guilaf2Btn;
-    ScopedPointer<Slider> slider;
-    ScopedPointer<Label> reverbSizeHeader2;
-    ScopedPointer<Slider> slider2;
-    ScopedPointer<Label> reverbSizeHeader3;
-    ScopedPointer<Slider> slider3;
-    ScopedPointer<Label> reverbSizeHeader4;
     ScopedPointer<ImageButton> dryOnBtn;
     ScopedPointer<ImageButton> wetOnBtn;
     ScopedPointer<Slider> gainSlider;
-    ScopedPointer<Label> gainInfoLabel;
+    ScopedPointer<Label> label;
+    ScopedPointer<Label> wetLabel;
     Image cachedImage_uibg_png;
 
 

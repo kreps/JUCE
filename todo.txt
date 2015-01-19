@@ -1,3 +1,4 @@
+*Daw save prject remain vst parameter values and visual positions
 *full reverb implementation
 *functionalities to separate classes
 *delay time change glitch fix(param smoothing)

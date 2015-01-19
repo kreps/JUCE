@@ -16,6 +16,8 @@
 #include "DspFilters\Common.h"
 #include "DspFilters\Filter.h"
 #include "DspFilters\RBJ.h"
+#include "DspFilters\Bessel.h"
+#include "DspFilters\Butterworth.h"
 #include "DspFilters\SmoothedFilter.h"
 
 

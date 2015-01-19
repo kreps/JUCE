@@ -43,16 +43,17 @@ JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
 	lastPosInfo.resetToDefault();
 	delayPosition = 0;
 	m_dFreq = 0;
-	m_ic = IIRCoefficients::makeHighPass (getSampleRate(), m_dFreq);
+	/*m_ic = IIRCoefficients::makeHighPass (getSampleRate(), m_dFreq);
 	m_filterL.setCoefficients( m_ic );
-	m_filterR.setCoefficients( m_ic );
+	m_filterR.setCoefficients( m_ic );*/
 
 	// "1024" is the number of samples over which to fade parameter changes
-f = new Dsp::SmoothedFilterDesign<Dsp::RBJ::Design::LowPass, 2> (1024);
-  
-    params[0] = 44100; // sample rate
-    params[1] = 500; // cutoff frequency
-    params[2] = 1.25; // Q
+	f = new Dsp::SmoothedFilterDesign<Dsp::RBJ::Design::BandStop, 2> (1024);
+	params[0] = 44100; // sample rate
+	params[1] = 1000; // cutoff frequency
+	params[2] = 1; // Q
+
+
     f->setParams (params);
     
 }
@@ -253,7 +254,7 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 	  // Note we use the raw filter instead of the one
     // from the Design namespace.
 	params[1] = m_dFreq; // cutoff frequency
-	 f->setParams (params);
+	f->setParams (params);
 	f->process(numSamples, buffer.getArrayOfWritePointers());
 	//return;
 	//calculate left and right gain according to pan param
