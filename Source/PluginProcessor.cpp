@@ -357,10 +357,13 @@ void JuceDemoPluginAudioProcessor::getStateInformation(MemoryBlock& destData)
 	xml.setAttribute("uiWidth", lastUIWidth);
 	xml.setAttribute("uiHeight", lastUIHeight);
 	xml.setAttribute("gain", m_fGain);
-	xml.setAttribute("delay", m_fDelay);
-	xml.setAttribute("delayTime", m_fDelayTime);
+	xml.setAttribute("delayamount", m_fDelay);
+	xml.setAttribute("delaytime", m_fDelayTime);
 	xml.setAttribute("pan", m_fPan);
 	xml.setAttribute("dry", dryOn);
+	xml.setAttribute("weton", wetOn);
+	xml.setAttribute("midside", m_fMidSideParam);
+	xml.setAttribute("roomsize", m_fReverbSize);
 
 	// then use this helper function to stuff it into the binary blob and return it..
 	copyXmlToBinary(xml, destData);
@@ -388,6 +391,9 @@ void JuceDemoPluginAudioProcessor::setStateInformation(const void* data, int siz
 			m_fDelayTime = (float)xmlState->getDoubleAttribute("delayTime", m_fDelay);
 			m_fPan = (float)xmlState->getDoubleAttribute("pan", m_fPan);
 			dryOn = (float)xmlState->getDoubleAttribute("dry", dryOn);
+			wetOn = (float)xmlState->getDoubleAttribute("weton", wetOn);
+			m_fMidSideParam = (float)xmlState->getDoubleAttribute("midside",m_fMidSideParam); 
+			m_fReverbSize = (float)xmlState->getDoubleAttribute("roomsize",m_fReverbSize);
 		}
 	}
 }

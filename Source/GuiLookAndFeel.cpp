@@ -101,7 +101,7 @@ void GuiLookAndFeel::drawRotarySlider(Graphics& g, int x, int y, int width, int 
 	{
 		g.setOpacity(1.0f);
 		g.addTransform(AffineTransform::rotation(angle, r.getCentreX(), r.getCentreY()));
-		g.drawImage(chikenKnobImage, rx, ry, radius * 2, radius * 2, 0, 0, chikenKnobImage.getWidth(), chikenKnobImage.getHeight());
+		g.drawImage(chikenKnobImage, static_cast<int>(rx),  static_cast<int>(ry), static_cast<int>(2*radius) , static_cast<int>(2*radius), 0, 0, chikenKnobImage.getWidth(), chikenKnobImage.getHeight());
 	}
 
 	//
