@@ -14,48 +14,48 @@ It contains the basic startup code for a Juce application.
 AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
 const float defaultWet = 1.0f;
-const float defaultDry= 1.0f;
+const float defaultDry = 1.0f;
 const float kfDefaultGain = 1.0f;
 const float kfDefaultDelay = 0.0f;
 const float kfDefaultDelayTime = 0.01f;
 const float kfDefaultPan = 0.5f;
 const float kfDefaultMidSide = 0.5f;
-const int knMaxDelayBufferLength= 1200;
+const int knMaxDelayBufferLength = 1200;
 
 
 //==============================================================================
 JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
-	: delayBuffer(2, knMaxDelayBufferLength)
+    : delayBuffer(2, knMaxDelayBufferLength)
 {
-	// Set up some default values..
-	m_fGain = kfDefaultGain;
-	m_fDelay = kfDefaultDelay;
-	m_fDelayTime = kfDefaultDelayTime;
-	m_fPan = kfDefaultPan;
-	wetOn = defaultWet;
-	dryOn = defaultDry;
-	m_fMidSideParam = kfDefaultMidSide;
-	m_fThreshold = 1.0f;
-	m_fReverbSize = 0.5f;
-	lastUIWidth = 400;
-	lastUIHeight = 200;
+    // Set up some default values..
+    wetGain = kfDefaultGain;
+    delayAmount = kfDefaultDelay;
+    delayTime = kfDefaultDelayTime;
+    pan = kfDefaultPan;
+    wetOn = defaultWet;
+    dryOn = defaultDry;
+    midSideAmount = kfDefaultMidSide;
+    saturationAmount = 1.0f;
+    roomSize = 0.5f;
+    lastUIWidth = 400;
+    lastUIHeight = 200;
 
-	lastPosInfo.resetToDefault();
-	delayPosition = 0;
-	m_dFreq = 0;
-	/*m_ic = IIRCoefficients::makeHighPass (getSampleRate(), m_dFreq);
-	m_filterL.setCoefficients( m_ic );
-	m_filterR.setCoefficients( m_ic );*/
+    lastPosInfo.resetToDefault();
+    delayPosition = 0;
+    hpfFrequency = 0;
+    /*m_ic = IIRCoefficients::makeHighPass (getSampleRate(), m_dFreq);
+    m_filterL.setCoefficients( m_ic );
+    m_filterR.setCoefficients( m_ic );*/
 
-	// "1024" is the number of samples over which to fade parameter changes
-	f = new Dsp::SmoothedFilterDesign<Dsp::RBJ::Design::BandStop, 2,Dsp::DirectFormI> (1024);
-	params[0] = 44100; // sample rate
-	params[1] = 1000; // cutoff frequency
-	params[2] = 1; // Q
+    // "1024" is the number of samples over which to fade parameter changes
+    dspFilter = new Dsp::SmoothedFilterDesign<Dsp::RBJ::Design::HighPass, 2>(1024);
+    dspFilterParams[0] = getSampleRate(); // sample rate
+    dspFilterParams[1] = 20; // cutoff frequency
+    dspFilterParams[2] = 1.25; // Q
+    dspFilter->setParams(dspFilterParams);
 
-
-    f->setParams (params);
-    
+    reverbParams = reverb.getParameters();
+    reverbParams.dryLevel = 0.0f;
 }
 
 JuceDemoPluginAudioProcessor::~JuceDemoPluginAudioProcessor()
@@ -64,391 +64,374 @@ JuceDemoPluginAudioProcessor::~JuceDemoPluginAudioProcessor()
 //==============================================================================
 int JuceDemoPluginAudioProcessor::getNumParameters()
 {
-	return totalNumParams;
+    return totalNumParams;
 }
 
 float JuceDemoPluginAudioProcessor::getParameter(int index)
 {
-	// This method will be called by the host, probably on the audio thread, so
-	// it's absolutely time-critical. Don't use critical sections or anything
-	// UI-related, or anything at all that may block in any way!
-	switch (index)
-	{
-	case bypassParam:
-		return wetOn;
-	case dryOnParam:
-		return dryOn;
-	case gainParam:
-		return m_fGain;
-	case delayParam:
-		return m_fDelay;
-	case delayTimeParam:
-		return m_fDelayTime;
-	case panParam:
-		return m_fPan;
-	case midSideParam:
-		return m_fMidSideParam;
-	case thresholdParam:
-		return m_fThreshold;
-	case hpfParam:
-		return m_dFreq;
-	case reverbSizeParam:
-		return m_fReverbSize;
-	default:
-		return 0.0f;
-	}
+    // This method will be called by the host, probably on the audio thread, so
+    // it's absolutely time-critical. Don't use critical sections or anything
+    // UI-related, or anything at all that may block in any way!
+    switch (index)
+    {
+        case wetOnParam:
+            return wetOn;
+        case dryOnParam:
+            return dryOn;
+        case gainParam:
+            return wetGain;
+        case delayParam:
+            return delayAmount;
+        case delayTimeParam:
+            return delayTime;
+        case panParam:
+            return pan;
+        case midSideParam:
+            return midSideAmount;
+        case saturationAmountParam:
+            return saturationAmount;
+        case hpfParam:
+            return hpfFrequency;
+        case reverbSizeParam:
+            return roomSize;
+        default:
+            return 0.0f;
+    }
 }
 
 void JuceDemoPluginAudioProcessor::setParameter(int index, float newValue)
 {
-	// This method will be called by the host, probably on the audio thread, so
-	// it's absolutely time-critical. Don't use critical sections or anything
-	// UI-related, or anything at all that may block in any way!
-	switch (index)
-	{
-	case bypassParam:
-		wetOn = newValue;
-		break;
-	case dryOnParam:
-		dryOn = newValue;
-		break;
-	case gainParam:
-		m_fGain = newValue;
-		break;
-	case delayParam:
-		m_fDelay = newValue;
-		break;
-	case delayTimeParam:
-		m_fDelayTime = newValue;
-		break;
-	case panParam:
-		m_fPan = newValue;
-		break;
-	case midSideParam:
-		m_fMidSideParam = newValue;
-		break;
-	case thresholdParam:
-		m_fThreshold = newValue;
-		break;
-	case hpfParam:
-		m_dFreq = newValue;
-		break;
-	case reverbSizeParam:
-		m_fReverbSize = newValue;
-		break;
-	default:
-		break;
-	}
+    // This method will be called by the host, probably on the audio thread, so
+    // it's absolutely time-critical. Don't use critical sections or anything
+    // UI-related, or anything at all that may block in any way!
+    switch (index)
+    {
+        case wetOnParam:
+            wetOn = newValue;
+            break;
+        case dryOnParam:
+            dryOn = newValue;
+            break;
+        case gainParam:
+            wetGain = newValue;
+            break;
+        case delayParam:
+            delayAmount = newValue;
+            break;
+        case delayTimeParam:
+            delayTime = newValue;
+            break;
+        case panParam:
+            pan = newValue;
+            break;
+        case midSideParam:
+            midSideAmount = newValue;
+            break;
+        case saturationAmountParam:
+            saturationAmount = newValue;
+            break;
+        case hpfParam:
+            hpfFrequency = newValue;
+            break;
+        case reverbSizeParam:
+            roomSize = newValue;
+            break;
+        default:
+            break;
+    }
 }
 
 float JuceDemoPluginAudioProcessor::getParameterDefaultValue(int index)
 {
-	switch (index)
-	{
-	case bypassParam: return defaultWet;
-	case dryOnParam: return defaultDry;
-	case gainParam:     return kfDefaultGain;
-	case delayParam:    return kfDefaultDelay;
-	case delayTimeParam:    return kfDefaultDelayTime;
-	case panParam:    return kfDefaultPan;
-	case midSideParam:    return kfDefaultMidSide;
-	case thresholdParam: return 1.0f;
-	case hpfParam: return 0.0f;
-	case reverbSizeParam: return 0.0f;
-	default:            break;
-	}
+    switch (index)
+    {
+        case wetOnParam: return defaultWet;
+        case dryOnParam: return defaultDry;
+        case gainParam:     return kfDefaultGain;
+        case delayParam:    return kfDefaultDelay;
+        case delayTimeParam:    return kfDefaultDelayTime;
+        case panParam:    return kfDefaultPan;
+        case midSideParam:    return kfDefaultMidSide;
+        case saturationAmountParam: return 1.0f;
+        case hpfParam: return 0.0f;
+        case reverbSizeParam: return 0.0f;
+        default:            break;
+    }
 
-	return 0.0f;
+    return 0.0f;
 }
 
 const String JuceDemoPluginAudioProcessor::getParameterName(int index)
 {
-	switch (index)
-	{
-	case bypassParam:		return "bypass";
-	case dryOnParam:		return "dry on";
-	case gainParam:			return "gain";
-	case delayParam:		return "delay";
-	case delayTimeParam:    return "delay time";
-	case panParam:			return "pan";
-	case midSideParam:		return "mid/side";
-	case thresholdParam:	return "threshold";
-	case hpfParam:			return "hpf";
-	case reverbSizeParam: return "reverb size";
-	default:				break;
-	}
+    switch (index)
+    {
+        case wetOnParam:		return "bypass";
+        case dryOnParam:		return "dry on";
+        case gainParam:			return "gain";
+        case delayParam:		return "delay";
+        case delayTimeParam:    return "delay time";
+        case panParam:			return "pan";
+        case midSideParam:		return "mid/side";
+        case saturationAmountParam:	return "threshold";
+        case hpfParam:			return "hpf";
+        case reverbSizeParam: return "reverb size";
+        default:				break;
+    }
 
-	return String::empty;
+    return String::empty;
 }
 
 const String JuceDemoPluginAudioProcessor::getParameterText(int index)
 {
-	return String(getParameter(index), 2);
+    return String(getParameter(index), 2);
 }
 
 //==============================================================================
 void JuceDemoPluginAudioProcessor::prepareToPlay(double /*sampleRate*/, int /*samplesPerBlock*/)
 {
-	// Use this method as the place to do any pre-playback
-	// initialisation that you need..
-	delayBuffer.clear();
+    // Use this method as the place to do any pre-playback
+    // initialisation that you need..
+    delayBuffer.clear();
 }
 
 void JuceDemoPluginAudioProcessor::releaseResources()
 {
-	// When playback stops, you can use this as an opportunity to free up any
-	// spare memory, etc.
-	//keyboardState.reset();
+    // When playback stops, you can use this as an opportunity to free up any
+    // spare memory, etc.
+    //keyboardState.reset();
 }
 
 void JuceDemoPluginAudioProcessor::reset()
 {
-	// Use this method as the place to clear any delay lines, buffers, etc, as it
-	// means there's been a break in the audio's continuity.
-	delayBuffer.clear();
-	//m_Reverb.reset();
+    // Use this method as the place to clear any delay lines, buffers, etc, as it
+    // means there's been a break in the audio's continuity.
+    delayBuffer.clear();
+    //m_Reverb.reset();
 }
 
-float JuceDemoPluginAudioProcessor::sigmoid(float x) 
-{ 
-	if(fabs(x)<1) 
-		return x*(1.5f - 0.5f*x*x); 
-	else 
-		return x > 0.f ? 1.f : -1.f; 
+float JuceDemoPluginAudioProcessor::sigmoid(float x)
+{
+    if (fabs(x) < 1)
+        return x*(1.5f - 0.5f*x*x);
+    else
+        return x > 0.f ? 1.f : -1.f;
 }
 
 float JuceDemoPluginAudioProcessor::distortion(float in, float threshold)
 {
-	if (in>threshold || in<-threshold)
-	{
-		in= (in + fabs(fabs(fmod(in - threshold, threshold*4)) - threshold*2) - threshold)/2.0f;
-	}
-	return in;
+    if (in > threshold || in < -threshold)
+    {
+        in = (in + fabs(fabs(fmod(in - threshold, threshold * 4)) - threshold * 2) - threshold) / 2.0f;
+    }
+    return in;
 }
 
-float JuceDemoPluginAudioProcessor::Saturate(float x, float t) { 
-	if(abs(x)<t) 
-		return x; 
-	else { 
-		if(x > 0.0f) 
-			return   t + (1.f-t)*sigmoid((x-t)/((1-t)*1.5f)); 
-		else
-			return -(t + (1.f-t)*sigmoid((-x-t)/((1-t)*1.5f))); 
-	} 
-} 
+float JuceDemoPluginAudioProcessor::Saturate(float x, float t)
+{
+    if (abs(x) < t)
+        return x;
+    else
+    {
+        if (x > 0.0f)
+            return   t + (1.f - t)*sigmoid((x - t) / ((1 - t)*1.5f));
+        else
+            return -(t + (1.f - t)*sigmoid((-x - t) / ((1 - t)*1.5f)));
+    }
+}
 
 
 
 void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
+    inputBuffer = buffer;
+    if (wetOn == 0.0f || getNumInputChannels() < 2)
+    {
+        return;
+    }
 
-	inputBuffer = buffer;
-	if (wetOn == 0.0f || getNumInputChannels() < 2)
-	{
-		return;
-	}
-	
-  
-	const int numSamples = buffer.getNumSamples();
-	int dp = 0;
-	  // Note we use the raw filter instead of the one
+    const int numSamples = buffer.getNumSamples();
+    int dp = 0;
+    // Note we use the raw filter instead of the one
     // from the Design namespace.
-	params[1] = m_dFreq; // cutoff frequency
-	f->setParams (params);
-	f->process(numSamples, buffer.getArrayOfWritePointers());
-	//return;
-	//calculate left and right gain according to pan param
-	float lGain = 1;
-	float rGain = 1;
-	if (m_fPan < 0.5f)
-	{ 
-		rGain = 1 - (0.5f - m_fPan) * 2;
-	} else if (m_fPan > 0.5f)
-		{
-			lGain = 1 - (m_fPan - 0.5f) * 2;
-		}
+    dspFilterParams[1] = hpfFrequency; // cutoff frequency
+    dspFilter->setParams(dspFilterParams);
+    dspFilter->process(numSamples, buffer.getArrayOfWritePointers());
+    //return;
+    //calculate left and right gain according to pan param
+    float lGain = (pan > 0.5f) ? 1.0f - (pan - 0.5f) * 2.0f : 1.0f;
+    float rGain = (pan < 0.5f) ? 1.0f - (0.5f - pan) * 2.0f : 1.0f;
 
-		float fMidGain = 1.0f;
-		float fSideGain= 1.0f;
-		if (m_fMidSideParam > 0.5f){
-			fMidGain = 1- (m_fMidSideParam-0.5f)*2;
-		} else if(m_fMidSideParam < 0.5f){
-			fSideGain = 1 - (0.5f - m_fMidSideParam) * 2;
-		}
+    float fMidGain = (midSideAmount > 0.5f) ? 1.0f - (midSideAmount - 0.5f) * 2.0f : 1.0f;
+    float fSideGain = (midSideAmount < 0.5f) ? 1.0f - (0.5f - midSideAmount) * 2.0f:1.0f;
 
-		float* leftData = buffer.getWritePointer(0);
-		float* leftInData = inputBuffer.getWritePointer(0);
+    float* leftData = buffer.getWritePointer(0);
+    float* leftInData = inputBuffer.getWritePointer(0);
 
-		float* rightData = buffer.getWritePointer(1);
-		float* rightInData = inputBuffer.getWritePointer(1);
+    float* rightData = buffer.getWritePointer(1);
+    float* rightInData = inputBuffer.getWritePointer(1);
 
-		float* leftDelayData = delayBuffer.getWritePointer (0);
-		float* rightDelayData = delayBuffer.getWritePointer (1);
-		dp = delayPosition;
-		/*m_ic = juce::IIRCoefficients::makeHighPass (getSampleRate(), m_dFreq);
-		m_filterL.setCoefficients( m_ic );
-		m_filterR.setCoefficients( m_ic );
-		m_filterL.processSamples(leftData,numSamples);
-		m_filterR.processSamples(rightData,numSamples);*/
+    float* leftDelayData = delayBuffer.getWritePointer(0);
+    float* rightDelayData = delayBuffer.getWritePointer(1);
+    dp = delayPosition;
+    /*m_ic = juce::IIRCoefficients::makeHighPass (getSampleRate(), m_dFreq);
+    m_filterL.setCoefficients( m_ic );
+    m_filterR.setCoefficients( m_ic );
+    m_filterL.processSamples(leftData,numSamples);
+    m_filterR.processSamples(rightData,numSamples);*/
 
-		juce::Reverb::Parameters params = m_Reverb.getParameters();
-		params.roomSize = m_fReverbSize;
-		params.dryLevel = 0.0f;//never used because wil have separte dry signal
-		//params.damping = 0.5f;
-		////params.freezeMode = 0.0f;//0 or 1
-		params.wetLevel = 1.0f; //this depends on general wet gain control
-		////params.width = 1.0f; 
-		m_Reverb.setParameters(params);
-		m_Reverb.processStereo(leftData,rightData,numSamples);
-		
-		for (int i = 0; i < numSamples; ++i)
-		{
-			
-			float m = fMidGain*(leftData[i] + rightData[i]) / 2;
-			float s = fSideGain*((rightData[i] - leftData[i]) / 2);
+    reverbParams.roomSize = roomSize;
+    reverbParams.wetLevel = 1.0f; //this depends on general wet gain control
+    reverb.setParameters(reverbParams);
+    reverb.processStereo(leftData, rightData, numSamples);
 
-			leftData[i] = distortion((m - s)*lGain*m_fGain,m_fThreshold);
-			rightData[i] = distortion((m + s)*rGain*m_fGain,m_fThreshold);
-		
-			const float inLeft = leftData[i];
-			leftData[i] += leftDelayData[dp];
-			leftDelayData[dp] = ( inLeft) * m_fDelay;
+    for (int i = 0; i < numSamples; ++i)
+    {
 
-			const float inRight = rightData[i];
-			rightData[i] += rightDelayData[dp];
-			rightDelayData[dp] = (inRight) * m_fDelay;
+        float m = fMidGain*(leftData[i] + rightData[i]) / 2;
+        float s = fSideGain*((rightData[i] - leftData[i]) / 2);
 
-			if (dryOn == 1.0f){
-				leftData[i] +=leftInData[i];
-				rightData[i] +=rightInData[i];
-			}
+        leftData[i] = distortion((m - s)*lGain*wetGain, saturationAmount);
+        rightData[i] = distortion((m + s)*rGain*wetGain, saturationAmount);
 
-			leftData[i] = clipper.clip(leftData[i],-1.0f,1.0f);
-			rightData[i] = clipper.clip(rightData[i],-1.0f,1.0f);
+        const float inLeft = leftData[i];
+        leftData[i] += leftDelayData[dp];
+        leftDelayData[dp] = (inLeft)* delayAmount;
 
-			if (++dp >= static_cast<int>(opf.Process(m_fDelayTime) * knMaxDelayBufferLength))
-				dp = 0;
-		}
-		delayPosition = dp;
+        const float inRight = rightData[i];
+        rightData[i] += rightDelayData[dp];
+        rightDelayData[dp] = (inRight)* delayAmount;
 
-		//	// In case we have more outputs than inputs, we'll clear any output
-		//	// channels that didn't contain input data, (because these aren't
-		//	// guaranteed to be empty - they may contain garbage).
-		for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
-			buffer.clear(i, 0, buffer.getNumSamples());
+        if (dryOn == 1.0f)
+        {
+            leftData[i] += leftInData[i];
+            rightData[i] += rightInData[i];
+        }
+
+        leftData[i] = clipper.clip(leftData[i], -1.0f, 1.0f);
+        rightData[i] = clipper.clip(rightData[i], -1.0f, 1.0f);
+
+        if (++dp >= static_cast<int>(opf.Process(delayTime) * knMaxDelayBufferLength))
+            dp = 0;
+    }
+    delayPosition = dp;
+
+    //	// In case we have more outputs than inputs, we'll clear any output
+    //	// channels that didn't contain input data, (because these aren't
+    //	// guaranteed to be empty - they may contain garbage).
+    for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
+        buffer.clear(i, 0, buffer.getNumSamples());
 }
 
 //==============================================================================
 AudioProcessorEditor* JuceDemoPluginAudioProcessor::createEditor()
 {
-	return new JuceDemoPluginAudioProcessorEditor(this);
+    return new JuceDemoPluginAudioProcessorEditor(this);
 }
 
 //==============================================================================
 void JuceDemoPluginAudioProcessor::getStateInformation(MemoryBlock& destData)
 {
-	// You should use this method to store your parameters in the memory block.
-	// Here's an example of how you can use XML to make it easy and more robust:
+    // You should use this method to store your parameters in the memory block.
+    // Here's an example of how you can use XML to make it easy and more robust:
 
-	// Create an outer XML element..
-	XmlElement xml("MYPLUGINSETTINGS");
+    // Create an outer XML element..
+    XmlElement xml("MYPLUGINSETTINGS");
 
-	// add some attributes to it..
-	xml.setAttribute("uiWidth", lastUIWidth);
-	xml.setAttribute("uiHeight", lastUIHeight);
-	xml.setAttribute("gain", m_fGain);
-	xml.setAttribute("delayamount", m_fDelay);
-	xml.setAttribute("delaytime", m_fDelayTime);
-	xml.setAttribute("pan", m_fPan);
-	xml.setAttribute("dry", dryOn);
-	xml.setAttribute("weton", wetOn);
-	xml.setAttribute("midside", m_fMidSideParam);
-	xml.setAttribute("roomsize", m_fReverbSize);
+    // add some attributes to it..
+    xml.setAttribute("uiWidth", lastUIWidth);
+    xml.setAttribute("uiHeight", lastUIHeight);
+    xml.setAttribute("wetGain", wetGain);
+    xml.setAttribute("delayAmount", delayAmount);
+    xml.setAttribute("delayTime", delayTime);
+    xml.setAttribute("pan", pan);
+    xml.setAttribute("dryOn", dryOn);
+    xml.setAttribute("midSide", midSideAmount);
+    xml.setAttribute("roomSize", roomSize);
+    xml.setAttribute("hpfFreq", hpfFrequency);
 
-	// then use this helper function to stuff it into the binary blob and return it..
-	copyXmlToBinary(xml, destData);
+    // then use this helper function to stuff it into the binary blob and return it..
+    copyXmlToBinary(xml, destData);
 }
 
 void JuceDemoPluginAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 {
-	// You should use this method to restore your parameters from this memory block,
-	// whose contents will have been created by the getStateInformation() call.
+    // You should use this method to restore your parameters from this memory block,
+    // whose contents will have been created by the getStateInformation() call.
 
-	// This getXmlFromBinary() helper function retrieves our XML from the binary blob..
-	ScopedPointer<XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+    // This getXmlFromBinary() helper function retrieves our XML from the binary blob..
+    ScopedPointer<XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
 
-	if (xmlState != nullptr)
-	{
-		// make sure that it's actually our type of XML object..
-		if (xmlState->hasTagName("MYPLUGINSETTINGS"))
-		{
-			// ok, now pull out our parameters..
-			lastUIWidth = xmlState->getIntAttribute("uiWidth", lastUIWidth);
-			lastUIHeight = xmlState->getIntAttribute("uiHeight", lastUIHeight);
-
-			m_fGain = (float)xmlState->getDoubleAttribute("gain", m_fGain);
-			m_fDelay = (float)xmlState->getDoubleAttribute("delay", m_fDelay);
-			m_fDelayTime = (float)xmlState->getDoubleAttribute("delayTime", m_fDelay);
-			m_fPan = (float)xmlState->getDoubleAttribute("pan", m_fPan);
-			dryOn = (float)xmlState->getDoubleAttribute("dry", dryOn);
-			wetOn = (float)xmlState->getDoubleAttribute("weton", wetOn);
-			m_fMidSideParam = (float)xmlState->getDoubleAttribute("midside",m_fMidSideParam); 
-			m_fReverbSize = (float)xmlState->getDoubleAttribute("roomsize",m_fReverbSize);
-		}
-	}
+    if (xmlState != nullptr)
+    {
+        // make sure that it's actually our type of XML object..
+        if (xmlState->hasTagName("MYPLUGINSETTINGS"))
+        {
+            // ok, now pull out our parameters..
+            lastUIWidth = xmlState->getIntAttribute("uiWidth", lastUIWidth);
+            lastUIHeight = xmlState->getIntAttribute("uiHeight", lastUIHeight);
+            wetGain = (float)xmlState->getDoubleAttribute("wetGain", wetGain);
+            delayAmount = (float)xmlState->getDoubleAttribute("delayAmount", delayAmount);
+            delayTime = (float)xmlState->getDoubleAttribute("delayTime", delayAmount);
+            pan = (float)xmlState->getDoubleAttribute("pan", pan);
+            dryOn = (float)xmlState->getDoubleAttribute("dryOn", dryOn);
+            midSideAmount = (float)xmlState->getDoubleAttribute("midSide", midSideAmount);
+            roomSize = (float)xmlState->getDoubleAttribute("roomSize", roomSize);
+            hpfFrequency = (float)xmlState->getDoubleAttribute("hpfFreq", hpfFrequency);
+        }
+    }
 }
 
 const String JuceDemoPluginAudioProcessor::getInputChannelName(const int channelIndex) const
 {
-	return String(channelIndex + 1);
+    return String(channelIndex + 1);
 }
 
 const String JuceDemoPluginAudioProcessor::getOutputChannelName(const int channelIndex) const
 {
-	return String(channelIndex + 1);
+    return String(channelIndex + 1);
 }
 
 bool JuceDemoPluginAudioProcessor::isInputChannelStereoPair(int /*index*/) const
 {
-	return true;
+    return true;
 }
 
 bool JuceDemoPluginAudioProcessor::isOutputChannelStereoPair(int /*index*/) const
 {
-	return true;
+    return true;
 }
 
 bool JuceDemoPluginAudioProcessor::acceptsMidi() const
 {
 #if JucePlugin_WantsMidiInput
-	return true;
+    return true;
 #else
-	return false;
+    return false;
 #endif
 }
 
 bool JuceDemoPluginAudioProcessor::producesMidi() const
 {
 #if JucePlugin_ProducesMidiOutput
-	return true;
+    return true;
 #else
-	return false;
+    return false;
 #endif
 }
 
 bool JuceDemoPluginAudioProcessor::silenceInProducesSilenceOut() const
 {
-	return false;
+    return false;
 }
 
 double JuceDemoPluginAudioProcessor::getTailLengthSeconds() const
 {
-	return 0.0;
+    return 0.0;
 }
 
 //==============================================================================
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-	return new JuceDemoPluginAudioProcessor();
+    return new JuceDemoPluginAudioProcessor();
 }

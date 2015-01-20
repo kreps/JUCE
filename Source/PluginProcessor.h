@@ -20,11 +20,6 @@
 #include "DspFilters\Butterworth.h"
 #include "DspFilters\SmoothedFilter.h"
 
-
-
-
-
-
 //==============================================================================
 /**
     As the name suggest, this class does the actual audio processing.
@@ -97,28 +92,29 @@ public:
     //==============================================================================
     enum Parameters
     {
-        bypassParam = 0,
+        wetOnParam = 0,
 		dryOnParam,
         gainParam,
         delayParam,
 		delayTimeParam,
 		panParam,
         midSideParam,
-		thresholdParam,
+		saturationAmountParam,
 		hpfParam,
 		reverbSizeParam,
         totalNumParams
 	};
 	
-    float wetOn, dryOn, m_fGain, m_fDelay, m_fPan,m_fDelayTime,m_fMidSideParam,m_fThreshold,m_dFreq,m_fReverbSize;
+    float wetOn, dryOn, wetGain, delayAmount, pan,delayTime,midSideAmount,saturationAmount,hpfFrequency,roomSize;
 	IIRFilter m_filterL,m_filterR;
 	IIRCoefficients m_ic;
-	juce::Reverb m_Reverb;
+	juce::Reverb reverb;
+    juce::Reverb::Parameters reverbParams;
 	Clipper clipper;
 	OnePoleFilter opf;	
 	
-	 Dsp::Filter* f;
-	 Dsp::Params params;
+	 Dsp::Filter* dspFilter;
+	 Dsp::Params dspFilterParams;
 private:
     //==============================================================================
     AudioSampleBuffer delayBuffer;

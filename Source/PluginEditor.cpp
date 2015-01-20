@@ -143,7 +143,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     saturationSlider->addListener (this);
 
     addAndMakeVisible (hpfHeader = new Label ("new label",
-                                              TRANS("band stop")));
+                                              TRANS("hi pass")));
     hpfHeader->setFont (Font ("Aharoni", 10.00f, Font::plain));
     hpfHeader->setJustificationType (Justification::centred);
     hpfHeader->setEditable (false, false, false);
@@ -336,17 +336,17 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    panSlider->setBounds (186, 39, 60, 60);
+    panSlider->setBounds (186, 39, 60, 55);
     delaySlider->setBounds (112, 151, 80, 50);
     delayTimeSlider->setBounds (192, 151, 80, 80);
     delayTimeValueLabel->setBounds (192, 131, 80, 20);
     panHeader->setBounds (186, 29, 60, 10);
-    midSideSlider->setBounds (126, 39, 60, 60);
+    midSideSlider->setBounds (126, 39, 60, 55);
     midsideHeader->setBounds (126, 29, 60, 10);
-    saturationSlider->setBounds (366, 39, 60, 60);
+    saturationSlider->setBounds (366, 39, 60, 55);
     hpfHeader->setBounds (246, 29, 60, 10);
-    hpfSlider->setBounds (246, 39, 60, 60);
-    reverbSizeSlider->setBounds (306, 39, 60, 60);
+    hpfSlider->setBounds (246, 39, 60, 55);
+    reverbSizeSlider->setBounds (306, 39, 60, 55);
     reverbSizeHeader->setBounds (306, 29, 60, 10);
     delayAmountHeader->setBounds (152, 128, 80, 24);
     lnf3Btn->setBounds (216, 384, 88, 24);
@@ -354,7 +354,7 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     guilaf2Btn->setBounds (432, 384, 88, 24);
     dryOnBtn->setBounds (23, 32, 35, 13);
     wetOnBtn->setBounds (28, 50, 36, 23);
-    gainSlider->setBounds (66, 39, 60, 60);
+    gainSlider->setBounds (66, 39, 60, 55);
     label->setBounds (366, 29, proportionOfWidth (0.0422f), proportionOfHeight (0.0083f));
     wetLabel->setBounds (66, 29, 60, 10);
     //[UserResized] Add your own custom resize handling here..
@@ -400,7 +400,7 @@ void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatW
     else if (sliderThatWasMoved == saturationSlider)
     {
         //[UserSliderCode_saturationSlider] -- add your slider handling code here..
-		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::thresholdParam,                                                  (float)saturationSlider->getValue());
+		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::saturationAmountParam,                                                  (float)saturationSlider->getValue());
         //[/UserSliderCode_saturationSlider]
     }
     else if (sliderThatWasMoved == hpfSlider)
@@ -462,7 +462,7 @@ void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasCli
     else if (buttonThatWasClicked == wetOnBtn)
     {
         //[UserButtonCode_wetOnBtn] -- add your button handler code here..
-        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::bypassParam, (wetOnBtn->getToggleState() == true) ? 1.0f : 0.0f);
+        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::wetOnParam, (wetOnBtn->getToggleState() == true) ? 1.0f : 0.0f);
         gainSlider->setEnabled(wetOnBtn->getToggleState());
         //[/UserButtonCode_wetOnBtn]
     }
@@ -493,16 +493,14 @@ bool JuceDemoPluginAudioProcessorEditor::keyPressed (const KeyPress& key)
 void JuceDemoPluginAudioProcessorEditor::timerCallback()
 {
 	JuceDemoPluginAudioProcessor* ourProcessor = getProcessor();
-	gainSlider->setValue(ourProcessor->m_fGain,dontSendNotification);
-	delaySlider->setValue(ourProcessor->m_fDelay, dontSendNotification);
-	panSlider->setValue(ourProcessor->m_fPan, dontSendNotification);
-	midSideSlider->setValue(ourProcessor->m_fMidSideParam, dontSendNotification);
-	reverbSizeSlider->setValue(ourProcessor->m_fReverbSize, dontSendNotification);
+	gainSlider->setValue(ourProcessor->wetGain,dontSendNotification);
+	delaySlider->setValue(ourProcessor->delayAmount, dontSendNotification);
+	panSlider->setValue(ourProcessor->pan, dontSendNotification);
+	midSideSlider->setValue(ourProcessor->midSideAmount, dontSendNotification);
+	reverbSizeSlider->setValue(ourProcessor->roomSize, dontSendNotification);
 	dryOnBtn->setToggleState(ourProcessor->dryOn==1.0f, dontSendNotification);
-
-	//do not read weton value, this makes the fx pointless
-	/*wetOnBtn->setToggleState(ourProcessor->wetOn==1.0f,dontSendNotification);
-	gainSlider->setEnabled(ourProcessor->wetOn==1.0f);*/
+    hpfSlider->setValue(ourProcessor->hpfFrequency,dontSendNotification);
+    saturationSlider->setValue(ourProcessor->saturationAmount,dontSendNotification);
 }
 //[/MiscUserCode]
 
@@ -531,7 +529,7 @@ BEGIN_JUCER_METADATA
     <ROUNDRECT pos="0 0 450 120" cornerSize="10" fill="solid: ff373737" hasStroke="0"/>
   </BACKGROUND>
   <SLIDER name="panSlider" id="324eec4d274919f3" memberName="panSlider"
-          virtualName="" explicitFocusOrder="0" pos="186 39 60 60" min="0"
+          virtualName="" explicitFocusOrder="0" pos="186 39 60 55" min="0"
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <SLIDER name="delaySlider" id="37878e5e9fd60a08" memberName="delaySlider"
@@ -554,7 +552,7 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="mid/side slider" id="84706171dc5b90dd" memberName="midSideSlider"
-          virtualName="" explicitFocusOrder="0" pos="126 39 60 60" min="0"
+          virtualName="" explicitFocusOrder="0" pos="126 39 60 55" min="0"
           max="1" int="0.0050000000000000001" style="RotaryVerticalDrag"
           textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="80"
           textBoxHeight="20" skewFactor="1"/>
@@ -564,20 +562,20 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="mid/side slider" id="2a577f0fc0372cc6" memberName="saturationSlider"
-          virtualName="" explicitFocusOrder="0" pos="366 39 60 60" min="0.001"
+          virtualName="" explicitFocusOrder="0" pos="366 39 60 55" min="0.001"
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="f53c45ed3e69f449" memberName="hpfHeader"
          virtualName="" explicitFocusOrder="0" pos="246 29 60 10" textCol="ffababab"
-         edTextCol="ff000000" edBkgCol="0" labelText="band stop" editableSingleClick="0"
+         edTextCol="ff000000" edBkgCol="0" labelText="hi pass" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="hpfSlider" id="253b421224cbac37" memberName="hpfSlider"
-          virtualName="" explicitFocusOrder="0" pos="246 39 60 60" tooltip="hi pass filter (hz)"
+          virtualName="" explicitFocusOrder="0" pos="246 39 60 55" tooltip="hi pass filter (hz)"
           min="20" max="10000" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.20000000000000001"/>
   <SLIDER name="new slider" id="81b8a5f3e2f90d2e" memberName="reverbSizeSlider"
-          virtualName="" explicitFocusOrder="0" pos="306 39 60 60" min="0.01"
+          virtualName="" explicitFocusOrder="0" pos="306 39 60 55" min="0.01"
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="9e5a6f98ed1157ee" memberName="reverbSizeHeader"
@@ -612,7 +610,7 @@ BEGIN_JUCER_METADATA
                resourceOver="" opacityOver="1" colourOver="0" resourceDown="wet_on_png"
                opacityDown="1" colourDown="0"/>
   <SLIDER name="gainSlider" id="c31acc4ca22491a9" memberName="gainSlider"
-          virtualName="" explicitFocusOrder="0" pos="66 39 60 60" tooltip="gain"
+          virtualName="" explicitFocusOrder="0" pos="66 39 60 55" tooltip="gain"
           textboxbkgd="ffffff" textboxhighlight="881111ee" textboxoutline="0"
           min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.29999999999999999"/>
