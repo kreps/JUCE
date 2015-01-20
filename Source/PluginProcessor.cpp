@@ -49,7 +49,7 @@ JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
 
     // "1024" is the number of samples over which to fade parameter changes
     dspFilter = new Dsp::SmoothedFilterDesign<Dsp::RBJ::Design::HighPass, 2>(1024);
-    dspFilterParams[0] = getSampleRate(); // sample rate
+    dspFilterParams[0] = 44100; // sample rate
     dspFilterParams[1] = 20; // cutoff frequency
     dspFilterParams[2] = 1.25; // Q
     dspFilter->setParams(dspFilterParams);
