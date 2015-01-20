@@ -44,9 +44,9 @@
             aaxFolder="c:\SDKs\AAX">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="1" optimisation="1" targetName="JuceDemoPlugin"/>
+                       isDebug="1" optimisation="3" targetName="JuceDemoPlugin" headerPath="C:\DSPFilters\shared\DSPFilters\include"/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="0" optimisation="2" targetName="JuceDemoPlugin"/>
+                       isDebug="0" optimisation="3" targetName="JuceDemoPlugin" headerPath="C:\DSPFilters\shared\DSPFilters\include"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_gui_extra" path="c:/juce/modules"/>

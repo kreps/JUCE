@@ -355,7 +355,7 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     dryOnBtn->setBounds (23, 32, 35, 13);
     wetOnBtn->setBounds (28, 50, 36, 23);
     gainSlider->setBounds (66, 39, 60, 60);
-    label->setBounds (366, 29, proportionOfWidth (0.0430f), proportionOfHeight (0.0106f));
+    label->setBounds (366, 29, proportionOfWidth (0.0422f), proportionOfHeight (0.0083f));
     wetLabel->setBounds (66, 29, 60, 10);
     //[UserResized] Add your own custom resize handling here..
 	resizer->setBounds(getWidth() - 16, getHeight() - 16, 16, 16);
@@ -499,7 +499,7 @@ void JuceDemoPluginAudioProcessorEditor::timerCallback()
 	midSideSlider->setValue(ourProcessor->m_fMidSideParam, dontSendNotification);
 	reverbSizeSlider->setValue(ourProcessor->m_fReverbSize, dontSendNotification);
 	dryOnBtn->setToggleState(ourProcessor->dryOn==1.0f, dontSendNotification);
-	
+
 	//do not read weton value, this makes the fx pointless
 	/*wetOnBtn->setToggleState(ourProcessor->wetOn==1.0f,dontSendNotification);
 	gainSlider->setEnabled(ourProcessor->wetOn==1.0f);*/

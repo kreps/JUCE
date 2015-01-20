@@ -48,7 +48,7 @@ JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
 	m_filterR.setCoefficients( m_ic );*/
 
 	// "1024" is the number of samples over which to fade parameter changes
-	f = new Dsp::SmoothedFilterDesign<Dsp::RBJ::Design::BandStop, 2> (1024);
+	f = new Dsp::SmoothedFilterDesign<Dsp::RBJ::Design::BandStop, 2,Dsp::DirectFormI> (1024);
 	params[0] = 44100; // sample rate
 	params[1] = 1000; // cutoff frequency
 	params[2] = 1; // Q
