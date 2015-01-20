@@ -110,9 +110,6 @@
       <FILE id="nJki3L" name="Types.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Types.h"/>
       <FILE id="noGHaG" name="Utilities.h" compile="0" resource="0" file="../../../../DSPFilters/shared/DSPFilters/include/DspFilters/Utilities.h"/>
     </GROUP>
-    <FILE id="PYYDf0" name="OnePoleFilter.cpp" compile="1" resource="0"
-          file="Source/OnePoleFilter.cpp"/>
-    <FILE id="vWhZQ2" name="OnePoleFilter.h" compile="0" resource="0" file="Source/OnePoleFilter.h"/>
     <FILE id="U28GG0" name="Clipper.cpp" compile="1" resource="0" file="Source/Clipper.cpp"/>
     <FILE id="hvCOcw" name="Clipper.h" compile="0" resource="0" file="Source/Clipper.h"/>
     <FILE id="KjBlsQ" name="GuiLookAndFeel2.cpp" compile="1" resource="0"

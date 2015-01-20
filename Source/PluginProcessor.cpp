@@ -20,7 +20,7 @@ const float kfDefaultDelay = 0.0f;
 const float kfDefaultDelayTime = 0.01f;
 const float kfDefaultPan = 0.5f;
 const float kfDefaultMidSide = 0.5f;
-const int knMaxDelayBufferLength = 1200;
+const int knMaxDelayBufferLength = 4800;
 
 
 //==============================================================================
@@ -307,7 +307,7 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
         leftData[i] = clipper.clip(leftData[i], -1.0f, 1.0f);
         rightData[i] = clipper.clip(rightData[i], -1.0f, 1.0f);
 
-        if (++dp >= static_cast<int>(opf.Process(delayTime) * knMaxDelayBufferLength))
+        if (++dp >= static_cast<int>(delayTime * knMaxDelayBufferLength))
             dp = 0;
     }
     delayPosition = dp;
@@ -345,6 +345,7 @@ void JuceDemoPluginAudioProcessor::getStateInformation(MemoryBlock& destData)
     xml.setAttribute("midSide", midSideAmount);
     xml.setAttribute("roomSize", roomSize);
     xml.setAttribute("hpfFreq", hpfFrequency);
+	xml.setAttribute("saturation", saturationAmount);
 
     // then use this helper function to stuff it into the binary blob and return it..
     copyXmlToBinary(xml, destData);
@@ -368,7 +369,7 @@ void JuceDemoPluginAudioProcessor::setStateInformation(const void* data, int siz
             lastUIHeight = xmlState->getIntAttribute("uiHeight", lastUIHeight);
             wetGain = (float)xmlState->getDoubleAttribute("wetGain", wetGain);
             delayAmount = (float)xmlState->getDoubleAttribute("delayAmount", delayAmount);
-            delayTime = (float)xmlState->getDoubleAttribute("delayTime", delayAmount);
+            delayTime = (float)xmlState->getDoubleAttribute("delayTime", delayTime);
             pan = (float)xmlState->getDoubleAttribute("pan", pan);
             dryOn = (float)xmlState->getDoubleAttribute("dryOn", dryOn);
             midSideAmount = (float)xmlState->getDoubleAttribute("midSide", midSideAmount);

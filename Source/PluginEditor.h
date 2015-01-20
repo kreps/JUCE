@@ -57,8 +57,6 @@ public:
     void resized();
     void sliderValueChanged (Slider* sliderThatWasMoved);
     void buttonClicked (Button* buttonThatWasClicked);
-    void mouseEnter (const MouseEvent& e);
-    bool keyPressed (const KeyPress& key);
 
     // Binary resources:
     static const char* chickknob_png;
@@ -81,8 +79,8 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    ScopedPointer<ResizableCornerComponent> resizer;
-    ComponentBoundsConstrainer resizeLimits;
+    //ScopedPointer<ResizableCornerComponent> resizer;
+    //ComponentBoundsConstrainer resizeLimits;
     AudioPlayHead::CurrentPositionInfo lastDisplayedPosition;
 
     JuceDemoPluginAudioProcessor* getProcessor() const

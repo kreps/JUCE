@@ -12,7 +12,6 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Clipper.h"
-#include "OnePoleFilter.h"
 #include "DspFilters\Common.h"
 #include "DspFilters\Filter.h"
 #include "DspFilters\RBJ.h"
@@ -104,17 +103,15 @@ public:
 		reverbSizeParam,
         totalNumParams
 	};
-	
-    float wetOn, dryOn, wetGain, delayAmount, pan,delayTime,midSideAmount,saturationAmount,hpfFrequency,roomSize;
+
+	float wetOn, dryOn, wetGain, delayAmount, pan,delayTime,midSideAmount,saturationAmount,hpfFrequency,roomSize;
 	IIRFilter m_filterL,m_filterR;
 	IIRCoefficients m_ic;
 	juce::Reverb reverb;
-    juce::Reverb::Parameters reverbParams;
+	juce::Reverb::Parameters reverbParams;
 	Clipper clipper;
-	OnePoleFilter opf;	
-	
-	 Dsp::Filter* dspFilter;
-	 Dsp::Params dspFilterParams;
+	Dsp::Filter* dspFilter;
+	Dsp::Params dspFilterParams;
 private:
     //==============================================================================
     AudioSampleBuffer delayBuffer;

@@ -100,7 +100,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     addAndMakeVisible (delayTimeSlider = new Slider ("delayTimeSlider"));
     delayTimeSlider->setRange (0, 1, 0);
     delayTimeSlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    delayTimeSlider->setTextBoxStyle (Slider::TextBoxBelow, true, 80, 20);
+    delayTimeSlider->setTextBoxStyle (Slider::NoTextBox, true, 80, 20);
     delayTimeSlider->addListener (this);
 
     addAndMakeVisible (delayTimeValueLabel = new Label ("new label",
@@ -108,7 +108,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     delayTimeValueLabel->setFont (Font ("Aharoni", 10.00f, Font::plain));
     delayTimeValueLabel->setJustificationType (Justification::centred);
     delayTimeValueLabel->setEditable (false, false, false);
-    delayTimeValueLabel->setColour (Label::textColourId, Colour (0xff282828));
+    delayTimeValueLabel->setColour (Label::textColourId, Colour (0xffababab));
     delayTimeValueLabel->setColour (TextEditor::textColourId, Colours::black);
     delayTimeValueLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
@@ -175,10 +175,11 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     reverbSizeHeader->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (delayAmountHeader = new Label ("new label",
-                                                      TRANS("amount")));
+                                                      TRANS("delay")));
     delayAmountHeader->setFont (Font ("Aharoni", 10.00f, Font::plain));
     delayAmountHeader->setJustificationType (Justification::centred);
     delayAmountHeader->setEditable (false, false, false);
+    delayAmountHeader->setColour (Label::textColourId, Colour (0xffababab));
     delayAmountHeader->setColour (TextEditor::textColourId, Colours::black);
     delayAmountHeader->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
@@ -240,8 +241,8 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     cachedImage_uibg_png = ImageCache::getFromMemory (uibg_png, uibg_pngSize);
 
     //[UserPreSize]
-	addAndMakeVisible(resizer = new ResizableCornerComponent(this, &resizeLimits));
-	resizeLimits.setSizeLimits(150, 150, 800, 300);
+	//addAndMakeVisible(resizer = new ResizableCornerComponent(this, &resizeLimits));
+	//resizeLimits.setSizeLimits(150, 150, 800, 300);
     //[/UserPreSize]
 
     setSize (450, 120);
@@ -249,7 +250,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 
     //[Constructor] You can add your own custom stuff here..
 	// set our component's initial size to be the last one that was stored in the filter's settings
-	setSize(ownerFilter->lastUIWidth, ownerFilter->lastUIHeight);
+	//setSize(ownerFilter->lastUIWidth, ownerFilter->lastUIHeight);
 	startTimer(50);
 	gainSlider->setDoubleClickReturnValue(true,0.0f);
 	panSlider->setDoubleClickReturnValue(true,0.5f);
@@ -316,7 +317,7 @@ void JuceDemoPluginAudioProcessorEditor::paint (Graphics& g)
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
-    g.fillAll (Colour (0xff777777));
+    g.fillAll (Colours::black);
 
     g.setColour (Colours::black);
     g.drawImageWithin (cachedImage_uibg_png,
@@ -324,8 +325,8 @@ void JuceDemoPluginAudioProcessorEditor::paint (Graphics& g)
                        RectanglePlacement::centred | RectanglePlacement::onlyReduceInSize,
                        false);
 
-    g.setColour (Colour (0xff373737));
-    g.fillRoundedRectangle (0.0f, 0.0f, 450.0f, 120.0f, 10.000f);
+    g.setColour (Colour (0xff313131));
+    g.fillRoundedRectangle (0.0f, 0.0f, 450.0f, 120.0f, 35.500f);
 
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]
@@ -337,28 +338,28 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     //[/UserPreResize]
 
     panSlider->setBounds (180, 40, 60, 50);
-    delaySlider->setBounds (112, 152, 80, 50);
-    delayTimeSlider->setBounds (192, 152, 80, 80);
-    delayTimeValueLabel->setBounds (192, 132, 80, 20);
+    delaySlider->setBounds (344, 80, 60, 30);
+    delayTimeSlider->setBounds (392, 80, 30, 30);
+    delayTimeValueLabel->setBounds (392, 72, 30, 10);
     panHeader->setBounds (180, 30, 60, 10);
     midSideSlider->setBounds (120, 40, 60, 50);
     midsideHeader->setBounds (120, 30, 60, 10);
-    saturationSlider->setBounds (360, 40, 60, 50);
+    saturationSlider->setBounds (360, 21, 60, 30);
     hpfHeader->setBounds (240, 30, 60, 10);
     hpfSlider->setBounds (240, 40, 60, 50);
     reverbSizeSlider->setBounds (300, 40, 60, 50);
     reverbSizeHeader->setBounds (300, 30, 60, 10);
-    delayAmountHeader->setBounds (152, 129, 80, 24);
+    delayAmountHeader->setBounds (360, 72, 30, 10);
     lnf3Btn->setBounds (216, 385, 88, 24);
     guilafBtn->setBounds (320, 385, 88, 24);
     guilaf2Btn->setBounds (432, 385, 88, 24);
     dryOnBtn->setBounds (17, 33, 35, 13);
     wetOnBtn->setBounds (26, 57, 30, 20);
     gainSlider->setBounds (60, 40, 60, 50);
-    label->setBounds (360, 30, 60, 10);
+    label->setBounds (360, 11, 60, 10);
     wetLabel->setBounds (60, 30, 60, 10);
     //[UserResized] Add your own custom resize handling here..
-	resizer->setBounds(getWidth() - 16, getHeight() - 16, 16, 16);
+	//resizer->setBounds(getWidth() - 16, getHeight() - 16, 16, 16);
 
 	getProcessor()->lastUIWidth = getWidth();
 	getProcessor()->lastUIHeight = getHeight();
@@ -471,19 +472,6 @@ void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasCli
     //[/UserbuttonClicked_Post]
 }
 
-void JuceDemoPluginAudioProcessorEditor::mouseEnter (const MouseEvent& e)
-{
-    //[UserCode_mouseEnter] -- Add your code here...
-    //[/UserCode_mouseEnter]
-}
-
-bool JuceDemoPluginAudioProcessorEditor::keyPressed (const KeyPress& key)
-{
-    //[UserCode_keyPressed] -- Add your code here...
-    return false;  // Return true if your handler uses this key event, or false to allow it to be passed-on.
-    //[/UserCode_keyPressed]
-}
-
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
@@ -495,6 +483,7 @@ void JuceDemoPluginAudioProcessorEditor::timerCallback()
 	JuceDemoPluginAudioProcessor* ourProcessor = getProcessor();
 	gainSlider->setValue(ourProcessor->wetGain,dontSendNotification);
 	delaySlider->setValue(ourProcessor->delayAmount, dontSendNotification);
+	delayTimeSlider->setValue(ourProcessor->delayTime, dontSendNotification);
 	panSlider->setValue(ourProcessor->pan, dontSendNotification);
 	midSideSlider->setValue(ourProcessor->midSideAmount, dontSendNotification);
 	reverbSizeSlider->setValue(ourProcessor->roomSize, dontSendNotification);
@@ -520,29 +509,25 @@ BEGIN_JUCER_METADATA
                  variableInitialisers="AudioProcessorEditor (ownerFilter)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="1"
                  initialWidth="450" initialHeight="120">
-  <METHODS>
-    <METHOD name="mouseEnter (const MouseEvent&amp; e)"/>
-    <METHOD name="keyPressed (const KeyPress&amp; key)"/>
-  </METHODS>
-  <BACKGROUND backgroundColour="ff777777">
+  <BACKGROUND backgroundColour="ff000000">
     <IMAGE pos="580 412 400 230" resource="uibg_png" opacity="1" mode="2"/>
-    <ROUNDRECT pos="0 0 450 120" cornerSize="10" fill="solid: ff373737" hasStroke="0"/>
+    <ROUNDRECT pos="0 0 450 120" cornerSize="35.5" fill="solid: ff313131" hasStroke="0"/>
   </BACKGROUND>
   <SLIDER name="panSlider" id="324eec4d274919f3" memberName="panSlider"
           virtualName="" explicitFocusOrder="0" pos="180 40 60 50" min="0"
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <SLIDER name="delaySlider" id="37878e5e9fd60a08" memberName="delaySlider"
-          virtualName="" explicitFocusOrder="0" pos="112 152 80 50" tooltip="delay gain&#10;"
+          virtualName="" explicitFocusOrder="0" pos="344 80 60 30" tooltip="delay gain&#10;"
           trackcol="ffffffff" textboxhighlight="ff1111ee" textboxoutline="ff808080"
           min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <SLIDER name="delayTimeSlider" id="ead45d255e5f5831" memberName="delayTimeSlider"
-          virtualName="" explicitFocusOrder="0" pos="192 152 80 80" min="0"
-          max="1" int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
+          virtualName="" explicitFocusOrder="0" pos="392 80 30 30" min="0"
+          max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="0" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="3b34631ac55e0fe6" memberName="delayTimeValueLabel"
-         virtualName="" explicitFocusOrder="0" pos="192 132 80 20" textCol="ff282828"
+         virtualName="" explicitFocusOrder="0" pos="392 72 30 10" textCol="ffababab"
          edTextCol="ff000000" edBkgCol="0" labelText="time" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
@@ -562,7 +547,7 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="mid/side slider" id="2a577f0fc0372cc6" memberName="saturationSlider"
-          virtualName="" explicitFocusOrder="0" pos="360 40 60 50" min="0.001"
+          virtualName="" explicitFocusOrder="0" pos="360 21 60 30" min="0.001"
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="f53c45ed3e69f449" memberName="hpfHeader"
@@ -584,10 +569,10 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="17713b10facdb0a1" memberName="delayAmountHeader"
-         virtualName="" explicitFocusOrder="0" pos="152 129 80 24" edTextCol="ff000000"
-         edBkgCol="0" labelText="amount" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Aharoni" fontsize="10" bold="0"
-         italic="0" justification="36"/>
+         virtualName="" explicitFocusOrder="0" pos="360 72 30 10" textCol="ffababab"
+         edTextCol="ff000000" edBkgCol="0" labelText="delay" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
+         fontsize="10" bold="0" italic="0" justification="36"/>
   <TEXTBUTTON name="new button" id="877f25c71c1bc232" memberName="lnf3Btn"
               virtualName="" explicitFocusOrder="0" pos="216 385 88 24" buttonText="lfv3"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
@@ -615,7 +600,7 @@ BEGIN_JUCER_METADATA
           min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.29999999999999999"/>
   <LABEL name="new label" id="dce9f23eacc8bf8e" memberName="label" virtualName=""
-         explicitFocusOrder="0" pos="360 30 60 10" textCol="ffb2b2b2"
+         explicitFocusOrder="0" pos="360 11 60 10" textCol="ffb2b2b2"
          edTextCol="ff000000" edBkgCol="0" labelText="saturation" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="33"/>

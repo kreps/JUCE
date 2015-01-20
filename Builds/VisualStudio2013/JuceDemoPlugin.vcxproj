@@ -148,7 +148,6 @@
     <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\RBJ.cpp"/>
     <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\RootFinder.cpp"/>
     <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\State.cpp"/>
-    <ClCompile Include="..\..\Source\OnePoleFilter.cpp"/>
     <ClCompile Include="..\..\Source\Clipper.cpp"/>
     <ClCompile Include="..\..\Source\GuiLookAndFeel2.cpp"/>
     <ClCompile Include="..\..\Source\GuiLookAndFeel.cpp"/>
@@ -1256,7 +1255,6 @@
     <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\State.h"/>
     <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Types.h"/>
     <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Utilities.h"/>
-    <ClInclude Include="..\..\Source\OnePoleFilter.h"/>
     <ClInclude Include="..\..\Source\Clipper.h"/>
     <ClInclude Include="..\..\Source\GuiLookAndFeel2.h"/>
     <ClInclude Include="..\..\Source\GuiLookAndFeel.h"/>

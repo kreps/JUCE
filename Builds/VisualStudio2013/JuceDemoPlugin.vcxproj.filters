@@ -346,9 +346,6 @@
     <ClCompile Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\source\State.cpp">
       <Filter>JuceDemoPlugin\DspFilters</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\OnePoleFilter.cpp">
-      <Filter>JuceDemoPlugin</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Clipper.cpp">
       <Filter>JuceDemoPlugin</Filter>
     </ClCompile>
@@ -1625,9 +1622,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\DSPFilters\shared\DSPFilters\include\DspFilters\Utilities.h">
       <Filter>JuceDemoPlugin\DspFilters</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\OnePoleFilter.h">
-      <Filter>JuceDemoPlugin</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Clipper.h">
       <Filter>JuceDemoPlugin</Filter>
