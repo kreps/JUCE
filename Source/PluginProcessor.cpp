@@ -251,12 +251,9 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 
     const int numSamples = buffer.getNumSamples();
     int dp = 0;
-    // Note we use the raw filter instead of the one
-    // from the Design namespace.
-    dspFilterParams[1] = hpfFrequency; // cutoff frequency
-    dspFilter->setParams(dspFilterParams);
-    dspFilter->process(numSamples, buffer.getArrayOfWritePointers());
-    //return;
+    //dspFilterParams[1] = hpfFrequency; // cutoff frequency
+    //dspFilter->setParams(dspFilterParams);
+    //dspFilter->process(numSamples, buffer.getArrayOfWritePointers());
     //calculate left and right gain according to pan param
     float lGain = (pan > 0.5f) ? 1.0f - (pan - 0.5f) * 2.0f : 1.0f;
     float rGain = (pan < 0.5f) ? 1.0f - (0.5f - pan) * 2.0f : 1.0f;
@@ -273,11 +270,11 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
     float* leftDelayData = delayBuffer.getWritePointer(0);
     float* rightDelayData = delayBuffer.getWritePointer(1);
     dp = delayPosition;
-    /*m_ic = juce::IIRCoefficients::makeHighPass (getSampleRate(), m_dFreq);
+	m_ic = juce::IIRCoefficients::makeHighPass (getSampleRate(), hpfFrequency);
     m_filterL.setCoefficients( m_ic );
     m_filterR.setCoefficients( m_ic );
     m_filterL.processSamples(leftData,numSamples);
-    m_filterR.processSamples(rightData,numSamples);*/
+    m_filterR.processSamples(rightData,numSamples);
 
     reverbParams.roomSize = roomSize;
     reverbParams.wetLevel = 1.0f; //this depends on general wet gain control
@@ -377,6 +374,7 @@ void JuceDemoPluginAudioProcessor::setStateInformation(const void* data, int siz
             midSideAmount = (float)xmlState->getDoubleAttribute("midSide", midSideAmount);
             roomSize = (float)xmlState->getDoubleAttribute("roomSize", roomSize);
             hpfFrequency = (float)xmlState->getDoubleAttribute("hpfFreq", hpfFrequency);
+			saturationAmount = (float)xmlState->getDoubleAttribute("saturation",saturationAmount);
         }
     }
 }
