@@ -99,6 +99,7 @@ private:
     //[/UserVariables]
 
     //==============================================================================
+    ScopedPointer<Label> wetLabel;
     ScopedPointer<Slider> panSlider;
     ScopedPointer<Slider> delaySlider;
     ScopedPointer<Slider> delayTimeSlider;
@@ -119,7 +120,9 @@ private:
     ScopedPointer<ImageButton> wetOnBtn;
     ScopedPointer<Slider> gainSlider;
     ScopedPointer<Label> label;
-    ScopedPointer<Label> wetLabel;
+    ScopedPointer<Label> dryLabel;
+    ScopedPointer<Slider> hpfQSlider;
+    ScopedPointer<Label> hpfHeader2;
     Image cachedImage_uibg_png;
 
 

@@ -20,7 +20,9 @@ const float kfDefaultDelay = 0.0f;
 const float kfDefaultDelayTime = 0.01f;
 const float kfDefaultPan = 0.5f;
 const float kfDefaultMidSide = 0.5f;
-const int knMaxDelayBufferLength = 4800;
+const float hpfQDefaultValue = 1.0f;
+const float hpfFreqDefaultValue = 10.0f;
+const int knMaxDelayBufferLength = 1024;
 
 
 //==============================================================================
@@ -34,23 +36,25 @@ JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
     pan = kfDefaultPan;
     wetOn = defaultWet;
     dryOn = defaultDry;
-    midSideAmount = kfDefaultMidSide;
+    midSide = kfDefaultMidSide;
     saturationAmount = 1.0f;
     roomSize = 0.5f;
-    lastUIWidth = 400;
+    hpfFreq = hpfFreqDefaultValue;
+    hpfQ = hpfQDefaultValue;
+    
+    /*lastUIWidth = 400;
     lastUIHeight = 200;
-
+*/
     lastPosInfo.resetToDefault();
     delayPosition = 0;
-    hpfFrequency = 0;
-    /*m_ic = IIRCoefficients::makeHighPass (getSampleRate(), m_dFreq);
-    m_filterL.setCoefficients( m_ic );
-    m_filterR.setCoefficients( m_ic );*/
+    
+    //m_ic = IIRCoefficients::makeHighPass(44100, hpfFrequency);
+    //m_ic = IIRCoefficients::makeHighPass(44100, hpfFrequency);
+    //m_filterL.setCoefficients( m_ic );
+    //m_filterR.setCoefficients( m_ic );
 
     // "1024" is the number of samples over which to fade parameter changes
     dspFilter = new Dsp::SmoothedFilterDesign<Dsp::RBJ::Design::HighPass, 2>(1024);
-    dspFilterParams[0] = 44100; // sample rate
-    dspFilterParams[1] = 20; // cutoff frequency
     dspFilterParams[2] = 1.25; // Q
     dspFilter->setParams(dspFilterParams);
 
@@ -87,11 +91,11 @@ float JuceDemoPluginAudioProcessor::getParameter(int index)
         case panParam:
             return pan;
         case midSideParam:
-            return midSideAmount;
+            return midSide;
         case saturationAmountParam:
             return saturationAmount;
-        case hpfParam:
-            return hpfFrequency;
+        case hpfFreqParam:
+            return hpfFreq;
         case reverbSizeParam:
             return roomSize;
         default:
@@ -125,13 +129,16 @@ void JuceDemoPluginAudioProcessor::setParameter(int index, float newValue)
             pan = newValue;
             break;
         case midSideParam:
-            midSideAmount = newValue;
+            midSide = newValue;
             break;
         case saturationAmountParam:
             saturationAmount = newValue;
             break;
-        case hpfParam:
-            hpfFrequency = newValue;
+        case hpfFreqParam:
+            hpfFreq = newValue;
+            break;
+        case hpfQParam:
+            hpfQ = newValue;
             break;
         case reverbSizeParam:
             roomSize = newValue;
@@ -153,7 +160,8 @@ float JuceDemoPluginAudioProcessor::getParameterDefaultValue(int index)
         case panParam:    return kfDefaultPan;
         case midSideParam:    return kfDefaultMidSide;
         case saturationAmountParam: return 1.0f;
-        case hpfParam: return 0.0f;
+        case hpfFreqParam: return hpfFreqDefaultValue;
+        case hpfQParam: return hpfQDefaultValue;
         case reverbSizeParam: return 0.0f;
         default:            break;
     }
@@ -173,7 +181,7 @@ const String JuceDemoPluginAudioProcessor::getParameterName(int index)
         case panParam:			return "pan";
         case midSideParam:		return "mid/side";
         case saturationAmountParam:	return "threshold";
-        case hpfParam:			return "hpf";
+        case hpfFreqParam:			return "hpf freq";
         case reverbSizeParam: return "reverb size";
         default:				break;
     }
@@ -251,6 +259,7 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 
     const int numSamples = buffer.getNumSamples();
     int dp = 0;
+    //dspFilterParams[0] = getSampleRate(); // sample rate
     //dspFilterParams[1] = hpfFrequency; // cutoff frequency
     //dspFilter->setParams(dspFilterParams);
     //dspFilter->process(numSamples, buffer.getArrayOfWritePointers());
@@ -258,8 +267,8 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
     float lGain = (pan > 0.5f) ? 1.0f - (pan - 0.5f) * 2.0f : 1.0f;
     float rGain = (pan < 0.5f) ? 1.0f - (0.5f - pan) * 2.0f : 1.0f;
 
-    float fMidGain = (midSideAmount > 0.5f) ? 1.0f - (midSideAmount - 0.5f) * 2.0f : 1.0f;
-    float fSideGain = (midSideAmount < 0.5f) ? 1.0f - (0.5f - midSideAmount) * 2.0f:1.0f;
+    float fMidGain = (midSide > 0.5f) ? 1.0f - (midSide - 0.5f) * 2.0f : 1.0f;
+    float fSideGain = (midSide < 0.5f) ? 1.0f - (0.5f - midSide) * 2.0f:1.0f;
 
     float* leftData = buffer.getWritePointer(0);
     float* leftInData = inputBuffer.getWritePointer(0);
@@ -270,7 +279,9 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
     float* leftDelayData = delayBuffer.getWritePointer(0);
     float* rightDelayData = delayBuffer.getWritePointer(1);
     dp = delayPosition;
-	m_ic = juce::IIRCoefficients::makeHighPass (getSampleRate(), hpfFrequency);
+	
+    //m_ic = juce::IIRCoefficients::makeHighPass (getSampleRate(), hpfFrequency);
+    m_ic = juce::IIRCoefficients::makeLowShelf(getSampleRate(), hpfFreq,hpfQ,0.001f);
     m_filterL.setCoefficients( m_ic );
     m_filterR.setCoefficients( m_ic );
     m_filterL.processSamples(leftData,numSamples);
@@ -342,9 +353,10 @@ void JuceDemoPluginAudioProcessor::getStateInformation(MemoryBlock& destData)
     xml.setAttribute("delayTime", delayTime);
     xml.setAttribute("pan", pan);
     xml.setAttribute("dryOn", dryOn);
-    xml.setAttribute("midSide", midSideAmount);
+    xml.setAttribute("midSide", midSide);
     xml.setAttribute("roomSize", roomSize);
-    xml.setAttribute("hpfFreq", hpfFrequency);
+    xml.setAttribute("hpfFreq", hpfFreq);
+    xml.setAttribute("hpfQ", hpfQ);
 	xml.setAttribute("saturation", saturationAmount);
 
     // then use this helper function to stuff it into the binary blob and return it..
@@ -372,9 +384,10 @@ void JuceDemoPluginAudioProcessor::setStateInformation(const void* data, int siz
             delayTime = (float)xmlState->getDoubleAttribute("delayTime", delayTime);
             pan = (float)xmlState->getDoubleAttribute("pan", pan);
             dryOn = (float)xmlState->getDoubleAttribute("dryOn", dryOn);
-            midSideAmount = (float)xmlState->getDoubleAttribute("midSide", midSideAmount);
+            midSide = (float)xmlState->getDoubleAttribute("midSide", midSide);
             roomSize = (float)xmlState->getDoubleAttribute("roomSize", roomSize);
-            hpfFrequency = (float)xmlState->getDoubleAttribute("hpfFreq", hpfFrequency);
+            hpfFreq = (float)xmlState->getDoubleAttribute("hpfFreq", hpfFreq);
+            hpfQ = (float)xmlState->getDoubleAttribute("hpfQ", hpfQ);
 			saturationAmount = (float)xmlState->getDoubleAttribute("saturation",saturationAmount);
         }
     }

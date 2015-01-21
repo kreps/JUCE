@@ -99,14 +99,15 @@ public:
 		panParam,
         midSideParam,
 		saturationAmountParam,
-		hpfParam,
+		hpfFreqParam,
+        hpfQParam,
 		reverbSizeParam,
         totalNumParams
 	};
 
-	float wetOn, dryOn, wetGain, delayAmount, pan,delayTime,midSideAmount,saturationAmount,hpfFrequency,roomSize;
-	IIRFilter m_filterL,m_filterR;
-	IIRCoefficients m_ic;
+	float wetOn, dryOn, wetGain, delayAmount, pan,delayTime,midSide,saturationAmount,hpfFreq,hpfQ,roomSize;
+	juce::IIRFilter m_filterL,m_filterR;
+	juce::IIRCoefficients m_ic;
 	juce::Reverb reverb;
 	juce::Reverb::Parameters reverbParams;
 	Clipper clipper;
