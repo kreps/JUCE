@@ -99,6 +99,7 @@ private:
     //[/UserVariables]
 
     //==============================================================================
+    ScopedPointer<Label> labelReverb2;
     ScopedPointer<Label> wetLabel;
     ScopedPointer<Slider> panSlider;
     ScopedPointer<Slider> delaySlider;
@@ -111,7 +112,7 @@ private:
     ScopedPointer<Label> hpfHeader;
     ScopedPointer<Slider> hpfSlider;
     ScopedPointer<Slider> reverbSizeSlider;
-    ScopedPointer<Label> reverbSizeHeader;
+    ScopedPointer<Label> labelReverb;
     ScopedPointer<Label> delayAmountHeader;
     ScopedPointer<TextButton> lnf3Btn;
     ScopedPointer<TextButton> guilafBtn;
@@ -123,6 +124,7 @@ private:
     ScopedPointer<Label> dryLabel;
     ScopedPointer<Slider> hpfQSlider;
     ScopedPointer<Label> hpfHeader2;
+    ScopedPointer<Slider> reverbDampSlider;
     Image cachedImage_uibg_png;
 
 

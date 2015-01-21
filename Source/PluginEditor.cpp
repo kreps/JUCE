@@ -81,6 +81,15 @@ private:
 JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemoPluginAudioProcessor* ownerFilter)
     : AudioProcessorEditor (ownerFilter)
 {
+    addAndMakeVisible (labelReverb2 = new Label ("new label",
+                                                 TRANS("damp")));
+    labelReverb2->setFont (Font ("Aharoni", 8.00f, Font::plain));
+    labelReverb2->setJustificationType (Justification::centred);
+    labelReverb2->setEditable (false, false, false);
+    labelReverb2->setColour (Label::textColourId, Colour (0xffa8a8a8));
+    labelReverb2->setColour (TextEditor::textColourId, Colours::black);
+    labelReverb2->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
     addAndMakeVisible (wetLabel = new Label ("new label",
                                              TRANS("wet")));
     wetLabel->setFont (Font ("Aharoni", 10.00f, Font::plain));
@@ -153,7 +162,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 
     addAndMakeVisible (hpfHeader = new Label ("new label",
                                               TRANS("hpf")));
-    hpfHeader->setFont (Font ("Britannic", 12.00f, Font::plain));
+    hpfHeader->setFont (Font ("Aharoni", 12.00f, Font::plain));
     hpfHeader->setJustificationType (Justification::centred);
     hpfHeader->setEditable (false, false, false);
     hpfHeader->setColour (Label::textColourId, Colour (0xffababab));
@@ -174,14 +183,14 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     reverbSizeSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
     reverbSizeSlider->addListener (this);
 
-    addAndMakeVisible (reverbSizeHeader = new Label ("new label",
-                                                     TRANS("room size")));
-    reverbSizeHeader->setFont (Font ("Aharoni", 10.00f, Font::plain));
-    reverbSizeHeader->setJustificationType (Justification::centred);
-    reverbSizeHeader->setEditable (false, false, false);
-    reverbSizeHeader->setColour (Label::textColourId, Colour (0xffa8a8a8));
-    reverbSizeHeader->setColour (TextEditor::textColourId, Colours::black);
-    reverbSizeHeader->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    addAndMakeVisible (labelReverb = new Label ("new label",
+                                                TRANS("reverb")));
+    labelReverb->setFont (Font ("Aharoni", 10.00f, Font::plain));
+    labelReverb->setJustificationType (Justification::centred);
+    labelReverb->setEditable (false, false, false);
+    labelReverb->setColour (Label::textColourId, Colour (0xffa8a8a8));
+    labelReverb->setColour (TextEditor::textColourId, Colours::black);
+    labelReverb->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (delayAmountHeader = new Label ("new label",
                                                       TRANS("delay")));
@@ -255,12 +264,18 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 
     addAndMakeVisible (hpfHeader2 = new Label ("new label",
                                                TRANS("q")));
-    hpfHeader2->setFont (Font ("Estrangelo Edessa", 12.00f, Font::plain));
+    hpfHeader2->setFont (Font ("Aharoni", 10.00f, Font::plain));
     hpfHeader2->setJustificationType (Justification::centred);
     hpfHeader2->setEditable (false, false, false);
     hpfHeader2->setColour (Label::textColourId, Colour (0xffababab));
     hpfHeader2->setColour (TextEditor::textColourId, Colours::black);
     hpfHeader2->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (reverbDampSlider = new Slider ("new slider"));
+    reverbDampSlider->setRange (0, 10, 0);
+    reverbDampSlider->setSliderStyle (Slider::RotaryVerticalDrag);
+    reverbDampSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    reverbDampSlider->addListener (this);
 
     cachedImage_uibg_png = ImageCache::getFromMemory (uibg_png, uibg_pngSize);
 
@@ -307,6 +322,7 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
 	//deleteAllChildren ();
     //[/Destructor_pre]
 
+    labelReverb2 = nullptr;
     wetLabel = nullptr;
     panSlider = nullptr;
     delaySlider = nullptr;
@@ -319,7 +335,7 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
     hpfHeader = nullptr;
     hpfSlider = nullptr;
     reverbSizeSlider = nullptr;
-    reverbSizeHeader = nullptr;
+    labelReverb = nullptr;
     delayAmountHeader = nullptr;
     lnf3Btn = nullptr;
     guilafBtn = nullptr;
@@ -331,6 +347,7 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
     dryLabel = nullptr;
     hpfQSlider = nullptr;
     hpfHeader2 = nullptr;
+    reverbDampSlider = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -364,6 +381,7 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
+    labelReverb2->setBounds (260, 77, 45, 10);
     wetLabel->setBounds (20, 35, 60, 10);
     panSlider->setBounds (140, 45, 60, 50);
     delaySlider->setBounds (304, 80, 60, 30);
@@ -375,8 +393,8 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     saturationSlider->setBounds (320, 21, 60, 30);
     hpfHeader->setBounds (200, 15, 60, 10);
     hpfSlider->setBounds (200, 25, 60, 50);
-    reverbSizeSlider->setBounds (260, 45, 60, 50);
-    reverbSizeHeader->setBounds (260, 35, 60, 10);
+    reverbSizeSlider->setBounds (260, 25, 60, 50);
+    labelReverb->setBounds (260, 15, 60, 10);
     delayAmountHeader->setBounds (320, 72, 30, 10);
     lnf3Btn->setBounds (216, 385, 88, 24);
     guilafBtn->setBounds (320, 385, 88, 24);
@@ -388,6 +406,7 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     dryLabel->setBounds (35, 15, 60, 10);
     hpfQSlider->setBounds (228, 75, 20, 20);
     hpfHeader2->setBounds (209, 75, 20, 20);
+    reverbDampSlider->setBounds (296, 72, 20, 20);
     //[UserResized] Add your own custom resize handling here..
 	//resizer->setBounds(getWidth() - 16, getHeight() - 16, 16, 16);
 
@@ -404,46 +423,46 @@ void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatW
     if (sliderThatWasMoved == panSlider)
     {
         //[UserSliderCode_panSlider] -- add your slider handling code here..
-		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::panParam,                                                  (float)panSlider->getValue());
+		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::PAN,                                                  (float)panSlider->getValue());
         //[/UserSliderCode_panSlider]
     }
     else if (sliderThatWasMoved == delaySlider)
     {
         //[UserSliderCode_delaySlider] -- add your slider handling code here..
-		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::delayParam,                                                  (float)delaySlider->getValue());
+		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::DELAYAMOUNT,                                                  (float)delaySlider->getValue());
         //[/UserSliderCode_delaySlider]
     }
     else if (sliderThatWasMoved == delayTimeSlider)
     {
         //[UserSliderCode_delayTimeSlider] -- add your slider handling code here..
 		CParamSmooth paramSmooth(100.0f,44100.0f);
-		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::delayTimeParam,			paramSmooth.process((float)delayTimeSlider->getValue()));
+		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::DELAYTIME,			paramSmooth.process((float)delayTimeSlider->getValue()));
 		//CParamSmooth paramSmooth(100.0f,44100.0f);
-		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::delayTimeParam, (float)delayTimeSlider->getValue());
+		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::DELAYTIME, (float)delayTimeSlider->getValue());
         //[/UserSliderCode_delayTimeSlider]
     }
     else if (sliderThatWasMoved == midSideSlider)
     {
         //[UserSliderCode_midSideSlider] -- add your slider handling code here..
-		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::midSideParam,                                                  (float)midSideSlider->getValue());
+		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::WIDTH,                                                  (float)midSideSlider->getValue());
         //[/UserSliderCode_midSideSlider]
     }
     else if (sliderThatWasMoved == saturationSlider)
     {
         //[UserSliderCode_saturationSlider] -- add your slider handling code here..
-		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::saturationAmountParam,                                                  (float)saturationSlider->getValue());
+		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::SATURATION,                                                  (float)saturationSlider->getValue());
         //[/UserSliderCode_saturationSlider]
     }
     else if (sliderThatWasMoved == hpfSlider)
     {
         //[UserSliderCode_hpfSlider] -- add your slider handling code here..
-		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::hpfFreqParam,			(float)hpfSlider->getValue());
+		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::HPFFREQ,			(float)hpfSlider->getValue());
         //[/UserSliderCode_hpfSlider]
     }
     else if (sliderThatWasMoved == reverbSizeSlider)
     {
         //[UserSliderCode_reverbSizeSlider] -- add your slider handling code here..
-		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::reverbSizeParam,			(float)reverbSizeSlider->getValue());
+		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::ROOMSIZE,			(float)reverbSizeSlider->getValue());
         //[/UserSliderCode_reverbSizeSlider]
     }
     else if (sliderThatWasMoved == gainSlider)
@@ -452,14 +471,19 @@ void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatW
 		// It's vital to use setParameterNotifyingHost to change any parameters that are automatable
 		// by the host, rather than just modifying them directly, otherwise the host won't know
 		// that they've changed.
-		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::gainParam,                                                  (float)gainSlider->getValue());
+		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::WETAMOUNT,                                                  (float)gainSlider->getValue());
         //[/UserSliderCode_gainSlider]
     }
     else if (sliderThatWasMoved == hpfQSlider)
     {
         //[UserSliderCode_hpfQSlider] -- add your slider handling code here..
-        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::hpfQParam, (float)hpfQSlider->getValue());
+        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::HPFQ, (float)hpfQSlider->getValue());
         //[/UserSliderCode_hpfQSlider]
+    }
+    else if (sliderThatWasMoved == reverbDampSlider)
+    {
+        //[UserSliderCode_reverbDampSlider] -- add your slider handling code here..
+        //[/UserSliderCode_reverbDampSlider]
     }
 
     //[UsersliderValueChanged_Post]
@@ -492,14 +516,14 @@ void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasCli
     else if (buttonThatWasClicked == dryOnBtn)
     {
         //[UserButtonCode_dryOnBtn] -- add your button handler code here..
-		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::dryOnParam, (dryOnBtn->getToggleState() == true) ? 1.0f : 0.0f);
+		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::DRYON, (dryOnBtn->getToggleState() == true) ? 1.0f : 0.0f);
 
         //[/UserButtonCode_dryOnBtn]
     }
     else if (buttonThatWasClicked == wetOnBtn)
     {
         //[UserButtonCode_wetOnBtn] -- add your button handler code here..
-        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::wetOnParam, (wetOnBtn->getToggleState() == true) ? 1.0f : 0.0f);
+        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::WETON, (wetOnBtn->getToggleState() == true) ? 1.0f : 0.0f);
         gainSlider->setEnabled(wetOnBtn->getToggleState());
         //[/UserButtonCode_wetOnBtn]
     }
@@ -551,6 +575,11 @@ BEGIN_JUCER_METADATA
     <IMAGE pos="580 412 400 230" resource="uibg_png" opacity="1" mode="2"/>
     <ROUNDRECT pos="0 0 450 120" cornerSize="35.5" fill="solid: ff313131" hasStroke="0"/>
   </BACKGROUND>
+  <LABEL name="new label" id="3c6e767fb7f8dbd7" memberName="labelReverb2"
+         virtualName="" explicitFocusOrder="0" pos="260 77 45 10" textCol="ffa8a8a8"
+         edTextCol="ff000000" edBkgCol="0" labelText="damp" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
+         fontsize="8" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="4cc590f60a8a610f" memberName="wetLabel"
          virtualName="" explicitFocusOrder="0" pos="20 35 60 10" textCol="ffababab"
          edTextCol="ff000000" edBkgCol="0" labelText="wet" editableSingleClick="0"
@@ -596,19 +625,19 @@ BEGIN_JUCER_METADATA
   <LABEL name="new label" id="f53c45ed3e69f449" memberName="hpfHeader"
          virtualName="" explicitFocusOrder="0" pos="200 15 60 10" textCol="ffababab"
          edTextCol="ff000000" edBkgCol="0" labelText="hpf" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Britannic"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="12" bold="0" italic="0" justification="36"/>
   <SLIDER name="hpfSlider" id="253b421224cbac37" memberName="hpfSlider"
           virtualName="" explicitFocusOrder="0" pos="200 25 60 50" tooltip="hi pass filter (hz)"
           min="20" max="10000" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.10000000000000001"/>
   <SLIDER name="new slider" id="81b8a5f3e2f90d2e" memberName="reverbSizeSlider"
-          virtualName="" explicitFocusOrder="0" pos="260 45 60 50" min="0.01"
+          virtualName="" explicitFocusOrder="0" pos="260 25 60 50" min="0.01"
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <LABEL name="new label" id="9e5a6f98ed1157ee" memberName="reverbSizeHeader"
-         virtualName="" explicitFocusOrder="0" pos="260 35 60 10" textCol="ffa8a8a8"
-         edTextCol="ff000000" edBkgCol="0" labelText="room size" editableSingleClick="0"
+  <LABEL name="new label" id="9e5a6f98ed1157ee" memberName="labelReverb"
+         virtualName="" explicitFocusOrder="0" pos="260 15 60 10" textCol="ffa8a8a8"
+         edTextCol="ff000000" edBkgCol="0" labelText="reverb" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="17713b10facdb0a1" memberName="delayAmountHeader"
@@ -659,8 +688,12 @@ BEGIN_JUCER_METADATA
   <LABEL name="new label" id="cc37da8092f3b6df" memberName="hpfHeader2"
          virtualName="" explicitFocusOrder="0" pos="209 75 20 20" textCol="ffababab"
          edTextCol="ff000000" edBkgCol="0" labelText="q" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Estrangelo Edessa"
-         fontsize="12" bold="0" italic="0" justification="36"/>
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
+         fontsize="10" bold="0" italic="0" justification="36"/>
+  <SLIDER name="new slider" id="c7507ca4c1878f93" memberName="reverbDampSlider"
+          virtualName="" explicitFocusOrder="0" pos="296 72 20 20" min="0"
+          max="10" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

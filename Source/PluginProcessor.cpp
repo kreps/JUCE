@@ -68,7 +68,7 @@ JuceDemoPluginAudioProcessor::~JuceDemoPluginAudioProcessor()
 //==============================================================================
 int JuceDemoPluginAudioProcessor::getNumParameters()
 {
-    return totalNumParams;
+    return TOTALPARAMCOUNT;
 }
 
 float JuceDemoPluginAudioProcessor::getParameter(int index)
@@ -78,25 +78,25 @@ float JuceDemoPluginAudioProcessor::getParameter(int index)
     // UI-related, or anything at all that may block in any way!
     switch (index)
     {
-        case wetOnParam:
+        case WETON:
             return wetOn;
-        case dryOnParam:
+        case DRYON:
             return dryOn;
-        case gainParam:
+        case WETAMOUNT:
             return wetGain;
-        case delayParam:
+        case DELAYAMOUNT:
             return delayAmount;
-        case delayTimeParam:
+        case DELAYTIME:
             return delayTime;
-        case panParam:
+        case PAN:
             return pan;
-        case midSideParam:
+        case WIDTH:
             return midSide;
-        case saturationAmountParam:
+        case SATURATION:
             return saturationAmount;
-        case hpfFreqParam:
+        case HPFFREQ:
             return hpfFreq;
-        case reverbSizeParam:
+        case ROOMSIZE:
             return roomSize;
         default:
             return 0.0f;
@@ -110,37 +110,37 @@ void JuceDemoPluginAudioProcessor::setParameter(int index, float newValue)
     // UI-related, or anything at all that may block in any way!
     switch (index)
     {
-        case wetOnParam:
+        case WETON:
             wetOn = newValue;
             break;
-        case dryOnParam:
+        case DRYON:
             dryOn = newValue;
             break;
-        case gainParam:
+        case WETAMOUNT:
             wetGain = newValue;
             break;
-        case delayParam:
+        case DELAYAMOUNT:
             delayAmount = newValue;
             break;
-        case delayTimeParam:
+        case DELAYTIME:
             delayTime = newValue;
             break;
-        case panParam:
+        case PAN:
             pan = newValue;
             break;
-        case midSideParam:
+        case WIDTH:
             midSide = newValue;
             break;
-        case saturationAmountParam:
+        case SATURATION:
             saturationAmount = newValue;
             break;
-        case hpfFreqParam:
+        case HPFFREQ:
             hpfFreq = newValue;
             break;
-        case hpfQParam:
+        case HPFQ:
             hpfQ = newValue;
             break;
-        case reverbSizeParam:
+        case ROOMSIZE:
             roomSize = newValue;
             break;
         default:
@@ -152,17 +152,17 @@ float JuceDemoPluginAudioProcessor::getParameterDefaultValue(int index)
 {
     switch (index)
     {
-        case wetOnParam: return defaultWet;
-        case dryOnParam: return defaultDry;
-        case gainParam:     return kfDefaultGain;
-        case delayParam:    return kfDefaultDelay;
-        case delayTimeParam:    return kfDefaultDelayTime;
-        case panParam:    return kfDefaultPan;
-        case midSideParam:    return kfDefaultMidSide;
-        case saturationAmountParam: return 1.0f;
-        case hpfFreqParam: return hpfFreqDefaultValue;
-        case hpfQParam: return hpfQDefaultValue;
-        case reverbSizeParam: return 0.0f;
+        case WETON: return defaultWet;
+        case DRYON: return defaultDry;
+        case WETAMOUNT:     return kfDefaultGain;
+        case DELAYAMOUNT:    return kfDefaultDelay;
+        case DELAYTIME:    return kfDefaultDelayTime;
+        case PAN:    return kfDefaultPan;
+        case WIDTH:    return kfDefaultMidSide;
+        case SATURATION: return 1.0f;
+        case HPFFREQ: return hpfFreqDefaultValue;
+        case HPFQ: return hpfQDefaultValue;
+        case ROOMSIZE: return 0.0f;
         default:            break;
     }
 
@@ -173,16 +173,16 @@ const String JuceDemoPluginAudioProcessor::getParameterName(int index)
 {
     switch (index)
     {
-        case wetOnParam:		return "bypass";
-        case dryOnParam:		return "dry on";
-        case gainParam:			return "gain";
-        case delayParam:		return "delay";
-        case delayTimeParam:    return "delay time";
-        case panParam:			return "pan";
-        case midSideParam:		return "mid/side";
-        case saturationAmountParam:	return "threshold";
-        case hpfFreqParam:			return "hpf freq";
-        case reverbSizeParam: return "reverb size";
+        case WETON:		return "bypass";
+        case DRYON:		return "dry on";
+        case WETAMOUNT:			return "gain";
+        case DELAYAMOUNT:		return "delay";
+        case DELAYTIME:    return "delay time";
+        case PAN:			return "pan";
+        case WIDTH:		return "mid/side";
+        case SATURATION:	return "threshold";
+        case HPFFREQ:			return "hpf freq";
+        case ROOMSIZE: return "reverb size";
         default:				break;
     }
 

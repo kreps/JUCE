@@ -62,11 +62,37 @@ public:
     double getTailLengthSeconds() const override;
 
     //==============================================================================
-    int getNumPrograms() override                                               { return 1; }
-    int getCurrentProgram() override                                            { return 0; }
-    void setCurrentProgram (int /*index*/) override                             {}
-    const String getProgramName (int /*index*/) override                        { return "Default"; }
-    void changeProgramName (int /*index*/, const String& /*newName*/) override  {}
+    int getNumPrograms() override                                               { return TOTALPRESETCOUNT-1; }
+    int getCurrentProgram() override                                            
+    { 
+        return 0; 
+    }
+    void setCurrentProgram (int index) override                             {
+        switch (index)
+        {
+            case DEFAULT:
+                setParameter(WETAMOUNT, 0.5f);
+                break;
+            case SECOND:
+                setParameter(WETAMOUNT, 0.1f);
+                break;
+        }
+        
+    }
+    const String getProgramName(int index) override
+    {
+        switch (index)
+        {
+            case SECOND:
+                return "Second";
+                break;
+            default:
+                return "Default";
+                break;
+        }
+    }
+    void changeProgramName(int /*index*/, const String& /*newName*/) override
+    {}
 
     //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
@@ -91,19 +117,27 @@ public:
     //==============================================================================
     enum Parameters
     {
-        wetOnParam = 0,
-		dryOnParam,
-        gainParam,
-        delayParam,
-		delayTimeParam,
-		panParam,
-        midSideParam,
-		saturationAmountParam,
-		hpfFreqParam,
-        hpfQParam,
-		reverbSizeParam,
-        totalNumParams
+        WETON = 0,
+		DRYON,
+        WETAMOUNT,
+        DELAYAMOUNT,
+		DELAYTIME,
+		PAN,
+        WIDTH,
+		SATURATION,
+		HPFFREQ,
+        HPFQ,
+		ROOMSIZE,
+        TOTALPARAMCOUNT
 	};
+
+    enum Presets
+    {
+        DEFAULT =0,
+        SECOND,
+        THIRD,
+        TOTALPRESETCOUNT
+    };
 
 	float wetOn, dryOn, wetGain, delayAmount, pan,delayTime,midSide,saturationAmount,hpfFreq,hpfQ,roomSize;
 	juce::IIRFilter m_filterL,m_filterR;
