@@ -19,11 +19,14 @@ const float kfDefaultGain = 1.0f;
 const float kfDefaultDelay = 0.0f;
 const float kfDefaultDelayTime = 0.01f;
 const float kfDefaultPan = 0.5f;
-const float kfDefaultMidSide = 0.5f;
+const float kfDefaultMidSide = 1.0f;
 const float hpfQDefaultValue = 1.0f;
 const float hpfFreqDefaultValue = 10.0f;
 const int knMaxDelayBufferLength = 1024;
-
+const float midOnDefault = 1.0f;
+const float roomsizeDefault = 0.1f;
+const float roomDampDefault = 0.5f;
+const float saturationDefault = 0.01f;
 
 //==============================================================================
 JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
@@ -37,29 +40,27 @@ JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
     wetOn = defaultWet;
     dryOn = defaultDry;
     midSide = kfDefaultMidSide;
-    saturationAmount = 1.0f;
-    roomSize = 0.5f;
-    hpfFreq = hpfFreqDefaultValue;
+	saturationAmount = saturationDefault;
+    roomSize = roomsizeDefault;
+	roomDamp = roomDampDefault;
+	hpfFreq = hpfFreqDefaultValue;
     hpfQ = hpfQDefaultValue;
-    
+    midOn = midOnDefault;
     /*lastUIWidth = 400;
     lastUIHeight = 200;
 */
     lastPosInfo.resetToDefault();
     delayPosition = 0;
-    
-    //m_ic = IIRCoefficients::makeHighPass(44100, hpfFrequency);
-    //m_ic = IIRCoefficients::makeHighPass(44100, hpfFrequency);
-    //m_filterL.setCoefficients( m_ic );
-    //m_filterR.setCoefficients( m_ic );
-
     // "1024" is the number of samples over which to fade parameter changes
-    dspFilter = new Dsp::SmoothedFilterDesign<Dsp::RBJ::Design::HighPass, 2>(1024);
-    dspFilterParams[2] = 1.25; // Q
-    dspFilter->setParams(dspFilterParams);
+    //dspFilter = new Dsp::SmoothedFilterDesign<Dsp::RBJ::Design::HighPass, 2>(1024);
+    //dspFilterParams[2] = 1.25; // Q
+    //dspFilter->setParams(dspFilterParams);
 
     reverbParams = reverb.getParameters();
     reverbParams.dryLevel = 0.0f;
+	reverbParams.wetLevel = 1.0f; 
+	reverbParams.width = 1.0f;
+	reverbParams.damping = roomDampDefault;
 }
 
 JuceDemoPluginAudioProcessor::~JuceDemoPluginAudioProcessor()
@@ -98,6 +99,10 @@ float JuceDemoPluginAudioProcessor::getParameter(int index)
             return hpfFreq;
         case ROOMSIZE:
             return roomSize;
+		case ROOMDAMP:
+			return roomDamp;
+		case MIDON:
+			return midOn;
         default:
             return 0.0f;
     }
@@ -131,6 +136,9 @@ void JuceDemoPluginAudioProcessor::setParameter(int index, float newValue)
         case WIDTH:
             midSide = newValue;
             break;
+		case MIDON:
+			midOn = newValue;
+			break;
         case SATURATION:
             saturationAmount = newValue;
             break;
@@ -142,6 +150,9 @@ void JuceDemoPluginAudioProcessor::setParameter(int index, float newValue)
             break;
         case ROOMSIZE:
             roomSize = newValue;
+            break;
+		case ROOMDAMP:
+			roomDamp = newValue;
             break;
         default:
             break;
@@ -159,10 +170,12 @@ float JuceDemoPluginAudioProcessor::getParameterDefaultValue(int index)
         case DELAYTIME:    return kfDefaultDelayTime;
         case PAN:    return kfDefaultPan;
         case WIDTH:    return kfDefaultMidSide;
-        case SATURATION: return 1.0f;
+		case MIDON: return midOnDefault;
+        case SATURATION: return saturationDefault;
         case HPFFREQ: return hpfFreqDefaultValue;
         case HPFQ: return hpfQDefaultValue;
-        case ROOMSIZE: return 0.0f;
+		case ROOMSIZE: return roomsizeDefault;
+		case ROOMDAMP: return roomDampDefault;
         default:            break;
     }
 
@@ -180,9 +193,11 @@ const String JuceDemoPluginAudioProcessor::getParameterName(int index)
         case DELAYTIME:    return "delay time";
         case PAN:			return "pan";
         case WIDTH:		return "mid/side";
+		case MIDON: return "mid on";
         case SATURATION:	return "threshold";
         case HPFFREQ:			return "hpf freq";
-        case ROOMSIZE: return "reverb size";
+        case ROOMSIZE: return "room size";
+		case ROOMDAMP: return "room damp";
         default:				break;
     }
 
@@ -267,8 +282,8 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
     float lGain = (pan > 0.5f) ? 1.0f - (pan - 0.5f) * 2.0f : 1.0f;
     float rGain = (pan < 0.5f) ? 1.0f - (0.5f - pan) * 2.0f : 1.0f;
 
-    float fMidGain = (midSide > 0.5f) ? 1.0f - (midSide - 0.5f) * 2.0f : 1.0f;
-    float fSideGain = (midSide < 0.5f) ? 1.0f - (0.5f - midSide) * 2.0f:1.0f;
+    //float fMidGain = (midSide > 0.5f) ? 1.0f - (midSide - 0.5f) * 2.0f : 1.0f;
+    //float fSideGain = midSide < 0.5f) ? 1.0f - (0.5f - midSide) * 2.0f:1.0f;
 
     float* leftData = buffer.getWritePointer(0);
     float* leftInData = inputBuffer.getWritePointer(0);
@@ -288,15 +303,15 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
     m_filterR.processSamples(rightData,numSamples);
 
     reverbParams.roomSize = roomSize;
-    reverbParams.wetLevel = 1.0f; //this depends on general wet gain control
-    reverb.setParameters(reverbParams);
+	reverbParams.damping = roomDamp;
+	reverb.setParameters(reverbParams);
     reverb.processStereo(leftData, rightData, numSamples);
-
+	
     for (int i = 0; i < numSamples; ++i)
     {
 
-        float m = fMidGain*(leftData[i] + rightData[i]) / 2;
-        float s = fSideGain*((rightData[i] - leftData[i]) / 2);
+		float m = midOn*(leftData[i] + rightData[i]) / 2;
+		float s = midSide*((rightData[i] - leftData[i]) / 2);
 
         leftData[i] = distortion((m - s)*lGain*wetGain, saturationAmount);
         rightData[i] = distortion((m + s)*rGain*wetGain, saturationAmount);
@@ -355,9 +370,11 @@ void JuceDemoPluginAudioProcessor::getStateInformation(MemoryBlock& destData)
     xml.setAttribute("dryOn", dryOn);
     xml.setAttribute("midSide", midSide);
     xml.setAttribute("roomSize", roomSize);
+	xml.setAttribute("roomDamp", roomDamp);
     xml.setAttribute("hpfFreq", hpfFreq);
     xml.setAttribute("hpfQ", hpfQ);
 	xml.setAttribute("saturation", saturationAmount);
+	xml.setAttribute("midOn", midOn);
 
     // then use this helper function to stuff it into the binary blob and return it..
     copyXmlToBinary(xml, destData);
@@ -386,9 +403,11 @@ void JuceDemoPluginAudioProcessor::setStateInformation(const void* data, int siz
             dryOn = (float)xmlState->getDoubleAttribute("dryOn", dryOn);
             midSide = (float)xmlState->getDoubleAttribute("midSide", midSide);
             roomSize = (float)xmlState->getDoubleAttribute("roomSize", roomSize);
+			roomDamp = (float)xmlState->getDoubleAttribute("roomDamp", roomDamp);
             hpfFreq = (float)xmlState->getDoubleAttribute("hpfFreq", hpfFreq);
             hpfQ = (float)xmlState->getDoubleAttribute("hpfQ", hpfQ);
 			saturationAmount = (float)xmlState->getDoubleAttribute("saturation",saturationAmount);
+			midOn = (float)xmlState->getDoubleAttribute("midOn",midOn);
         }
     }
 }

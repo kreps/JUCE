@@ -99,6 +99,7 @@ private:
     //[/UserVariables]
 
     //==============================================================================
+    ScopedPointer<Label> midsideHeader2;
     ScopedPointer<Label> labelReverb2;
     ScopedPointer<Label> wetLabel;
     ScopedPointer<Slider> panSlider;
@@ -124,7 +125,12 @@ private:
     ScopedPointer<Label> dryLabel;
     ScopedPointer<Slider> hpfQSlider;
     ScopedPointer<Label> hpfHeader2;
-    ScopedPointer<Slider> reverbDampSlider;
+    ScopedPointer<Slider> roomDampSlider;
+    ScopedPointer<ImageButton> midOnBtn;
+    ScopedPointer<ImageButton> dryOnBtn2;
+    ScopedPointer<ImageButton> dryOnBtn3;
+    ScopedPointer<ImageButton> dryOnBtn4;
+    ScopedPointer<ImageButton> dryOnBtn5;
     Image cachedImage_uibg_png;
 
 
