@@ -14,32 +14,6 @@
               includeBinaryInAppConfig="1" buildVST3="0" pluginManufacturerEmail="support@yourcompany.com"
               companyWebsite="www.moya.com" companyEmail="info@moya.com">
   <EXPORTFORMATS>
-    <VS2012 targetFolder="Builds/VisualStudio2012" vstFolder="c:\SDKs\VST3 SDK"
-            vst3Folder="c:\SDKs\VST3 SDK" externalLibraries="" extraDefs=""
-            extraCompilerFlags="" extraLinkerFlags="">
-      <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="1" optimisation="3" targetName="JuceDemoPlugin" headerPath="C:\DSPFilters\shared\DSPFilters\include"
-                       libraryPath=""/>
-        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="0" optimisation="3" targetName="JuceDemoPlugin" headerPath="C:\DSPFilters\shared\DSPFilters\include"
-                       libraryPath=""/>
-      </CONFIGURATIONS>
-      <MODULEPATHS>
-        <MODULEPATH id="juce_gui_extra" path="c:/juce/modules"/>
-        <MODULEPATH id="juce_gui_basics" path="c:/juce/modules"/>
-        <MODULEPATH id="juce_graphics" path="c:/juce/modules"/>
-        <MODULEPATH id="juce_events" path="c:/juce/modules"/>
-        <MODULEPATH id="juce_data_structures" path="c:/juce/modules"/>
-        <MODULEPATH id="juce_core" path="c:/juce/modules"/>
-        <MODULEPATH id="juce_audio_utils" path="c:/juce/modules"/>
-        <MODULEPATH id="juce_audio_processors" path="c:/juce/modules"/>
-        <MODULEPATH id="juce_audio_plugin_client" path="c:/juce/modules"/>
-        <MODULEPATH id="juce_audio_formats" path="c:/juce/modules"/>
-        <MODULEPATH id="juce_audio_devices" path="c:/juce/modules"/>
-        <MODULEPATH id="juce_audio_basics" path="c:/juce/modules"/>
-      </MODULEPATHS>
-    </VS2012>
     <VS2013 targetFolder="Builds/VisualStudio2013" vstFolder="c:\SDKs\VST3 SDK"
             aaxFolder="c:\SDKs\AAX">
       <CONFIGURATIONS>
