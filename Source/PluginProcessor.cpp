@@ -22,7 +22,7 @@ const float panDefault = 0.5f;
 const float widthDefault = 1.0f;
 const float hpfQDefaultValue = 1.0f;
 const float hpfFreqDefaultValue = 10.0f;
-const int knMaxDelayBufferLength = 1024;
+const int delayBufferMaxLength = 1024;
 const float midOnDefault = 1.0f;
 const float roomsizeDefault = 0.1f;
 const float roomDampDefault = 0.5f;
@@ -30,7 +30,7 @@ const float saturationDefault = 0.01f;
 
 //==============================================================================
 JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
-    : delayBuffer(2, knMaxDelayBufferLength)
+    : delayBuffer(2, delayBufferMaxLength)
 {
     // Set up some default values..
     wetGain = wetGainDefault;
@@ -333,7 +333,7 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
         leftData[i] = clipper.clip(leftData[i], -1.0f, 1.0f);
         rightData[i] = clipper.clip(rightData[i], -1.0f, 1.0f);
 
-        if (++dp >= static_cast<int>(delayTime * knMaxDelayBufferLength))
+        if (++dp >= static_cast<int>(delayTime * delayBufferMaxLength))
             dp = 0;
     }
     delayPosition = dp;
