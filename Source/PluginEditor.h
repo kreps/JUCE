@@ -131,6 +131,11 @@ private:
     ScopedPointer<ImageButton> dryOnBtn3;
     ScopedPointer<ImageButton> dryOnBtn4;
     ScopedPointer<ImageButton> dryOnBtn5;
+    ScopedPointer<Slider> lpfSlider;
+    ScopedPointer<Label> hpfHeader3;
+    ScopedPointer<ImageButton> dryOnBtn6;
+    ScopedPointer<Slider> lpfQSlider;
+    ScopedPointer<Label> hpfHeader4;
     Image cachedImage_uibg_png;
 
 

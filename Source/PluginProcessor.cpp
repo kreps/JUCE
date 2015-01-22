@@ -15,11 +15,11 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
 const float defaultWet = 1.0f;
 const float defaultDry = 1.0f;
-const float kfDefaultGain = 1.0f;
-const float kfDefaultDelay = 0.0f;
-const float kfDefaultDelayTime = 0.01f;
-const float kfDefaultPan = 0.5f;
-const float kfDefaultMidSide = 1.0f;
+const float wetGainDefault = 1.0f;
+const float delayDefault = 0.0f;
+const float delayTimeDefault = 0.01f;
+const float panDefault = 0.5f;
+const float widthDefault = 1.0f;
 const float hpfQDefaultValue = 1.0f;
 const float hpfFreqDefaultValue = 10.0f;
 const int knMaxDelayBufferLength = 1024;
@@ -33,13 +33,13 @@ JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
     : delayBuffer(2, knMaxDelayBufferLength)
 {
     // Set up some default values..
-    wetGain = kfDefaultGain;
-    delayAmount = kfDefaultDelay;
-    delayTime = kfDefaultDelayTime;
-    pan = kfDefaultPan;
+    wetGain = wetGainDefault;
+    delayAmount = delayDefault;
+    delayTime = delayTimeDefault;
+    pan = panDefault;
     wetOn = defaultWet;
     dryOn = defaultDry;
-    midSide = kfDefaultMidSide;
+    midSide = widthDefault;
 	saturationAmount = saturationDefault;
     roomSize = roomsizeDefault;
 	roomDamp = roomDampDefault;
@@ -165,11 +165,11 @@ float JuceDemoPluginAudioProcessor::getParameterDefaultValue(int index)
     {
         case WETON: return defaultWet;
         case DRYON: return defaultDry;
-        case WETAMOUNT:     return kfDefaultGain;
-        case DELAYAMOUNT:    return kfDefaultDelay;
-        case DELAYTIME:    return kfDefaultDelayTime;
-        case PAN:    return kfDefaultPan;
-        case WIDTH:    return kfDefaultMidSide;
+        case WETAMOUNT:     return wetGainDefault;
+        case DELAYAMOUNT:    return delayDefault;
+        case DELAYTIME:    return delayTimeDefault;
+        case PAN:    return panDefault;
+        case WIDTH:    return widthDefault;
 		case MIDON: return midOnDefault;
         case SATURATION: return saturationDefault;
         case HPFFREQ: return hpfFreqDefaultValue;

@@ -321,6 +321,45 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
                           ImageCache::getFromMemory (off_png, off_pngSize), 1.000f, Colour (0x00000000),
                           Image(), 1.000f, Colour (0x00000000),
                           ImageCache::getFromMemory (on_red_png, on_red_pngSize), 1.000f, Colour (0x00000000));
+    addAndMakeVisible (lpfSlider = new Slider (String::empty));
+    lpfSlider->setTooltip (TRANS("low pass filter"));
+    lpfSlider->setRange (20, 10000, 0);
+    lpfSlider->setSliderStyle (Slider::RotaryVerticalDrag);
+    lpfSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    lpfSlider->addListener (this);
+    lpfSlider->setSkewFactor (0.1);
+
+    addAndMakeVisible (hpfHeader3 = new Label ("new label",
+                                               TRANS("lpf")));
+    hpfHeader3->setFont (Font ("Aharoni", 12.00f, Font::plain));
+    hpfHeader3->setJustificationType (Justification::centred);
+    hpfHeader3->setEditable (false, false, false);
+    hpfHeader3->setColour (Label::textColourId, Colour (0xffababab));
+    hpfHeader3->setColour (TextEditor::textColourId, Colours::black);
+    hpfHeader3->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (dryOnBtn6 = new ImageButton ("new button"));
+    dryOnBtn6->addListener (this);
+
+    dryOnBtn6->setImages (false, true, true,
+                          ImageCache::getFromMemory (off_png, off_pngSize), 1.000f, Colour (0x00000000),
+                          Image(), 1.000f, Colour (0x00000000),
+                          ImageCache::getFromMemory (on_red_png, on_red_pngSize), 1.000f, Colour (0x00000000));
+    addAndMakeVisible (lpfQSlider = new Slider ("lpfQSlider"));
+    lpfQSlider->setRange (0.01, 4, 0);
+    lpfQSlider->setSliderStyle (Slider::RotaryVerticalDrag);
+    lpfQSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    lpfQSlider->addListener (this);
+
+    addAndMakeVisible (hpfHeader4 = new Label ("new label",
+                                               TRANS("q")));
+    hpfHeader4->setFont (Font ("Aharoni", 10.00f, Font::plain));
+    hpfHeader4->setJustificationType (Justification::centred);
+    hpfHeader4->setEditable (false, false, false);
+    hpfHeader4->setColour (Label::textColourId, Colour (0xffababab));
+    hpfHeader4->setColour (TextEditor::textColourId, Colours::black);
+    hpfHeader4->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
     cachedImage_uibg_png = ImageCache::getFromMemory (uibg_png, uibg_pngSize);
 
     //[UserPreSize]
@@ -328,7 +367,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 	//resizeLimits.setSizeLimits(150, 150, 800, 300);
     //[/UserPreSize]
 
-    setSize (450, 200);
+    setSize (550, 200);
 
 
     //[Constructor] You can add your own custom stuff here..
@@ -399,6 +438,11 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
     dryOnBtn3 = nullptr;
     dryOnBtn4 = nullptr;
     dryOnBtn5 = nullptr;
+    lpfSlider = nullptr;
+    hpfHeader3 = nullptr;
+    dryOnBtn6 = nullptr;
+    lpfQSlider = nullptr;
+    hpfHeader4 = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -421,7 +465,7 @@ void JuceDemoPluginAudioProcessorEditor::paint (Graphics& g)
                        false);
 
     g.setColour (Colour (0xff313131));
-    g.fillRoundedRectangle (0.0f, 0.0f, 450.0f, 200.0f, 20.000f);
+    g.fillRoundedRectangle (0.0f, 0.0f, 550.0f, 200.0f, 20.000f);
 
     g.setColour (Colour (0xff575757));
     g.fillRect (10, 29, 430, 1);
@@ -436,37 +480,42 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     //[/UserPreResize]
 
     midsideHeader2->setBounds (100, 100, 40, 10);
-    labelReverb2->setBounds (256, 95, 45, 30);
+    labelReverb2->setBounds (316, 95, 45, 30);
     wetLabel->setBounds (20, 35, 60, 10);
     panSlider->setBounds (140, 45, 60, 50);
-    delaySlider->setBounds (380, 48, 60, 50);
-    delayTimeSlider->setBounds (408, 96, 30, 30);
-    delayTimeValueLabel->setBounds (376, 104, 30, 10);
+    delaySlider->setBounds (440, 48, 60, 50);
+    delayTimeSlider->setBounds (468, 96, 30, 30);
+    delayTimeValueLabel->setBounds (436, 104, 30, 10);
     panHeader->setBounds (140, 35, 60, 10);
     midSideSlider->setBounds (80, 45, 60, 50);
     midsideHeader->setBounds (80, 35, 60, 10);
-    saturationSlider->setBounds (320, 46, 60, 50);
+    saturationSlider->setBounds (380, 46, 60, 50);
     hpfHeader->setBounds (200, 35, 60, 10);
     hpfSlider->setBounds (200, 45, 60, 50);
-    reverbSizeSlider->setBounds (260, 45, 60, 50);
-    labelReverb->setBounds (260, 35, 60, 10);
-    delayAmountHeader->setBounds (380, 35, 60, 10);
+    reverbSizeSlider->setBounds (320, 45, 60, 50);
+    labelReverb->setBounds (320, 35, 60, 10);
+    delayAmountHeader->setBounds (440, 35, 60, 10);
     lnf3Btn->setBounds (216, 385, 88, 24);
     guilafBtn->setBounds (320, 385, 88, 24);
     guilaf2Btn->setBounds (432, 385, 88, 24);
     dryOnBtn->setBounds (25, 15, 11, 10);
     wetOnBtn->setBounds (25, 35, 11, 10);
     gainSlider->setBounds (20, 45, 60, 50);
-    label->setBounds (320, 35, 60, 10);
+    label->setBounds (380, 35, 60, 10);
     dryLabel->setBounds (35, 15, 60, 10);
     hpfQSlider->setBounds (230, 95, 30, 30);
     hpfHeader2->setBounds (216, 95, 20, 30);
-    roomDampSlider->setBounds (290, 95, 30, 30);
+    roomDampSlider->setBounds (350, 95, 30, 30);
     midOnBtn->setBounds (96, 100, 11, 10);
     dryOnBtn2->setBounds (104, 16, 11, 10);
     dryOnBtn3->setBounds (164, 16, 11, 10);
     dryOnBtn4->setBounds (224, 16, 11, 10);
-    dryOnBtn5->setBounds (344, 16, 11, 10);
+    dryOnBtn5->setBounds (404, 16, 11, 10);
+    lpfSlider->setBounds (260, 45, 60, 50);
+    hpfHeader3->setBounds (260, 35, 60, 10);
+    dryOnBtn6->setBounds (285, 16, 11, 10);
+    lpfQSlider->setBounds (284, 95, 30, 30);
+    hpfHeader4->setBounds (270, 95, 20, 30);
     //[UserResized] Add your own custom resize handling here..
 	//resizer->setBounds(getWidth() - 16, getHeight() - 16, 16, 16);
 
@@ -546,6 +595,16 @@ void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatW
 		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::ROOMDAMP, (float)roomDampSlider->getValue());
         //[/UserSliderCode_roomDampSlider]
     }
+    else if (sliderThatWasMoved == lpfSlider)
+    {
+        //[UserSliderCode_lpfSlider] -- add your slider handling code here..
+        //[/UserSliderCode_lpfSlider]
+    }
+    else if (sliderThatWasMoved == lpfQSlider)
+    {
+        //[UserSliderCode_lpfQSlider] -- add your slider handling code here..
+        //[/UserSliderCode_lpfQSlider]
+    }
 
     //[UsersliderValueChanged_Post]
     //[/UsersliderValueChanged_Post]
@@ -614,6 +673,11 @@ void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasCli
         //[UserButtonCode_dryOnBtn5] -- add your button handler code here..
         //[/UserButtonCode_dryOnBtn5]
     }
+    else if (buttonThatWasClicked == dryOnBtn6)
+    {
+        //[UserButtonCode_dryOnBtn6] -- add your button handler code here..
+        //[/UserButtonCode_dryOnBtn6]
+    }
 
     //[UserbuttonClicked_Post]
     //[/UserbuttonClicked_Post]
@@ -659,10 +723,10 @@ BEGIN_JUCER_METADATA
                  constructorParams="JuceDemoPluginAudioProcessor* ownerFilter"
                  variableInitialisers="AudioProcessorEditor (ownerFilter)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="1"
-                 initialWidth="450" initialHeight="200">
+                 initialWidth="550" initialHeight="200">
   <BACKGROUND backgroundColour="ff000000">
     <IMAGE pos="580 412 400 230" resource="uibg_png" opacity="1" mode="2"/>
-    <ROUNDRECT pos="0 0 450 200" cornerSize="20" fill="solid: ff313131" hasStroke="0"/>
+    <ROUNDRECT pos="0 0 550 200" cornerSize="20" fill="solid: ff313131" hasStroke="0"/>
     <RECT pos="10 29 430 1" fill="solid: ff575757" hasStroke="0"/>
   </BACKGROUND>
   <LABEL name="new label" id="79ee26a2b3f472be" memberName="midsideHeader2"
@@ -671,7 +735,7 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="3c6e767fb7f8dbd7" memberName="labelReverb2"
-         virtualName="" explicitFocusOrder="0" pos="256 95 45 30" textCol="ffa8a8a8"
+         virtualName="" explicitFocusOrder="0" pos="316 95 45 30" textCol="ffa8a8a8"
          edTextCol="ff000000" edBkgCol="0" labelText="damp" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="8" bold="0" italic="0" justification="36"/>
@@ -685,16 +749,16 @@ BEGIN_JUCER_METADATA
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <SLIDER name="delaySlider" id="37878e5e9fd60a08" memberName="delaySlider"
-          virtualName="" explicitFocusOrder="0" pos="380 48 60 50" tooltip="delay gain&#10;"
+          virtualName="" explicitFocusOrder="0" pos="440 48 60 50" tooltip="delay gain&#10;"
           trackcol="ffffffff" textboxhighlight="ff1111ee" textboxoutline="ff808080"
           min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <SLIDER name="delayTimeSlider" id="ead45d255e5f5831" memberName="delayTimeSlider"
-          virtualName="" explicitFocusOrder="0" pos="408 96 30 30" min="0"
+          virtualName="" explicitFocusOrder="0" pos="468 96 30 30" min="0"
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="0" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="3b34631ac55e0fe6" memberName="delayTimeValueLabel"
-         virtualName="" explicitFocusOrder="0" pos="376 104 30 10" textCol="ffababab"
+         virtualName="" explicitFocusOrder="0" pos="436 104 30 10" textCol="ffababab"
          edTextCol="ff000000" edBkgCol="0" labelText="time" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
@@ -714,7 +778,7 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="mid/side slider" id="2a577f0fc0372cc6" memberName="saturationSlider"
-          virtualName="" explicitFocusOrder="0" pos="320 46 60 50" min="0.001"
+          virtualName="" explicitFocusOrder="0" pos="380 46 60 50" min="0.001"
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="f53c45ed3e69f449" memberName="hpfHeader"
@@ -727,16 +791,16 @@ BEGIN_JUCER_METADATA
           min="20" max="10000" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.10000000000000001"/>
   <SLIDER name="new slider" id="81b8a5f3e2f90d2e" memberName="reverbSizeSlider"
-          virtualName="" explicitFocusOrder="0" pos="260 45 60 50" min="0.01"
+          virtualName="" explicitFocusOrder="0" pos="320 45 60 50" min="0.01"
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="9e5a6f98ed1157ee" memberName="labelReverb"
-         virtualName="" explicitFocusOrder="0" pos="260 35 60 10" textCol="ffa8a8a8"
+         virtualName="" explicitFocusOrder="0" pos="320 35 60 10" textCol="ffa8a8a8"
          edTextCol="ff000000" edBkgCol="0" labelText="reverb" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="17713b10facdb0a1" memberName="delayAmountHeader"
-         virtualName="" explicitFocusOrder="0" pos="380 35 60 10" textCol="ffababab"
+         virtualName="" explicitFocusOrder="0" pos="440 35 60 10" textCol="ffababab"
          edTextCol="ff000000" edBkgCol="0" labelText="delay" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
@@ -767,7 +831,7 @@ BEGIN_JUCER_METADATA
           min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.29999999999999999"/>
   <LABEL name="new label" id="dce9f23eacc8bf8e" memberName="label" virtualName=""
-         explicitFocusOrder="0" pos="320 35 60 10" textCol="ffb2b2b2"
+         explicitFocusOrder="0" pos="380 35 60 10" textCol="ffb2b2b2"
          edTextCol="ff000000" edBkgCol="0" labelText="saturation" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="33"/>
@@ -786,7 +850,7 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="new slider" id="c7507ca4c1878f93" memberName="roomDampSlider"
-          virtualName="" explicitFocusOrder="0" pos="290 95 30 30" min="0"
+          virtualName="" explicitFocusOrder="0" pos="350 95 30 30" min="0"
           max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <IMAGEBUTTON name="new button" id="4d8af3397b08f3d5" memberName="midOnBtn"
@@ -814,11 +878,35 @@ BEGIN_JUCER_METADATA
                opacityOver="1" colourOver="0" resourceDown="on_red_png" opacityDown="1"
                colourDown="0"/>
   <IMAGEBUTTON name="new button" id="da80d56c6522c10e" memberName="dryOnBtn5"
-               virtualName="" explicitFocusOrder="0" pos="344 16 11 10" buttonText="new button"
+               virtualName="" explicitFocusOrder="0" pos="404 16 11 10" buttonText="new button"
                connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
                resourceNormal="off_png" opacityNormal="1" colourNormal="0" resourceOver=""
                opacityOver="1" colourOver="0" resourceDown="on_red_png" opacityDown="1"
                colourDown="0"/>
+  <SLIDER name="" id="7a4da3da58b2809f" memberName="lpfSlider" virtualName="Slider"
+          explicitFocusOrder="0" pos="260 45 60 50" tooltip="low pass filter"
+          min="20" max="10000" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.10000000000000001"/>
+  <LABEL name="new label" id="d2867cf399201cc0" memberName="hpfHeader3"
+         virtualName="" explicitFocusOrder="0" pos="260 35 60 10" textCol="ffababab"
+         edTextCol="ff000000" edBkgCol="0" labelText="lpf" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
+         fontsize="12" bold="0" italic="0" justification="36"/>
+  <IMAGEBUTTON name="new button" id="66ef4e17fe613e9" memberName="dryOnBtn6"
+               virtualName="" explicitFocusOrder="0" pos="285 16 11 10" buttonText="new button"
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="off_png" opacityNormal="1" colourNormal="0" resourceOver=""
+               opacityOver="1" colourOver="0" resourceDown="on_red_png" opacityDown="1"
+               colourDown="0"/>
+  <SLIDER name="lpfQSlider" id="f9a15bac8da37767" memberName="lpfQSlider"
+          virtualName="" explicitFocusOrder="0" pos="284 95 30 30" min="0.01"
+          max="4" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+  <LABEL name="new label" id="2176d3b7459e753f" memberName="hpfHeader4"
+         virtualName="" explicitFocusOrder="0" pos="270 95 20 30" textCol="ffababab"
+         edTextCol="ff000000" edBkgCol="0" labelText="q" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
+         fontsize="10" bold="0" italic="0" justification="36"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
