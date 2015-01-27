@@ -40,6 +40,10 @@
     </VS2013>
   </EXPORTFORMATS>
   <MAINGROUP id="dYAMo6Ykd" name="Kreps-vst">
+    <FILE id="o53y9s" name="VectorLookAndFeel.cpp" compile="1" resource="0"
+          file="Source/VectorLookAndFeel.cpp"/>
+    <FILE id="bWnZYy" name="VectorLookAndFeel.h" compile="0" resource="0"
+          file="Source/VectorLookAndFeel.h"/>
     <GROUP id="{F24D9D2D-DD72-0AED-C805-398D1BD63820}" name="DspFilters">
       <FILE id="DtuUzD" name="Bessel.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Bessel.cpp"/>
       <FILE id="noWw36" name="Biquad.cpp" compile="1" resource="0" file="../../../../DSPFilters/shared/DSPFilters/source/Biquad.cpp"/>
@@ -87,10 +91,6 @@
     </GROUP>
     <FILE id="U28GG0" name="Clipper.cpp" compile="1" resource="0" file="Source/Clipper.cpp"/>
     <FILE id="hvCOcw" name="Clipper.h" compile="0" resource="0" file="Source/Clipper.h"/>
-    <FILE id="KjBlsQ" name="GuiLookAndFeel2.cpp" compile="1" resource="0"
-          file="Source/GuiLookAndFeel2.cpp"/>
-    <FILE id="TOKixi" name="GuiLookAndFeel2.h" compile="0" resource="0"
-          file="Source/GuiLookAndFeel2.h"/>
     <FILE id="HpQahg" name="GuiLookAndFeel.cpp" compile="1" resource="0"
           file="Source/GuiLookAndFeel.cpp"/>
     <FILE id="PKXIm2" name="GuiLookAndFeel.h" compile="0" resource="0"
