@@ -71,21 +71,7 @@ void GuiLookAndFeel::drawRotarySlider(Graphics& g, int x, int y, int width, int 
 	if (isMouseOver )
 		slider.setMouseCursor(MouseCursor::PointingHandCursor);
 
-	if(name == "gainSlider")
-		g.setColour((Colours::yellow).withAlpha(isMouseOver? 1.0f: 0.5f));
-	else if ( name == "panSlider")
-		g.setColour((Colours::coral).withAlpha(isMouseOver? 1.0f: 0.5f));
-	else if (name == "delaySlider")
-		g.setColour((Colours::yellowgreen).withAlpha(isMouseOver? 1.0f: 0.5f));
-	else if (name == "delayTimeSlider")
-		g.setColour((Colours::limegreen).withAlpha(isMouseOver? 1.0f: 0.5f));
-	else if (name == "hpfSlider")
-		g.setColour((Colours::white).withAlpha(isMouseOver? 1.0f: 0.5f));
-	else if (name == "dfs_violet")
-		g.setColour((Colours::violet).withAlpha(isMouseOver? 1.0f: 0.5f));
-	else 
-		g.setColour(slider.findColour(Slider::rotarySliderFillColourId).withAlpha(isMouseOver? 1.0f: 0.5f));
-
+	g.setColour(slider.findColour(Slider::rotarySliderOutlineColourId).withAlpha(isMouseOver ? 1.0f : 0.5f));
 	if(!slider.isEnabled())
 		g.setColour((Colours::black).withAlpha(0.3f));
 

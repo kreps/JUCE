@@ -33,18 +33,21 @@ This inherits from CustomLookAndFeel above for the linear bar and slider backgro
 
 void setupCustomLookAndFeelColours (LookAndFeel& laf)
 {
-	laf.setColour (Slider::thumbColourId, Colour::greyLevel (0.95f));
+	//laf.setColour (Slider::thumbColourId, Colour::greyLevel (0.95f));
 	laf.setColour (Slider::textBoxOutlineColourId, Colours::black);
 	laf.setColour(Slider::textBoxBackgroundColourId,Colour((0x00ffb5f6)));
-	laf.setColour (Slider::rotarySliderFillColourId, Colour (0xffdddddd));
-	laf.setColour (Slider::rotarySliderOutlineColourId, Colours::white);
+	laf.setColour (Slider::rotarySliderFillColourId, Colours::darkorange);
+	//laf.setColour (Slider::rotarySliderOutlineColourId, Colours::white);
+    laf.setColour(Slider::thumbColourId, Colours::brown);
 
 	laf.setColour (TextButton::buttonColourId, Colours::white);
-	laf.setColour (TextButton::textColourOffId, Colour (0xff00b5f6));
+    laf.setColour(TextButton::buttonOnColourId, laf.findColour(TextButton::textColourOffId));
+    //laf.setColour (TextButton::textColourOnId, laf.findColour (TextButton::buttonColourId));
+	//laf.setColour (TextButton::textColourOffId, Colour (0xff00b5f6));
+
     laf.setColour(GroupComponent::textColourId, Colour(0xff000000));
-	laf.setColour (TextButton::buttonOnColourId, laf.findColour (TextButton::textColourOffId));
-	laf.setColour (TextButton::textColourOnId, laf.findColour (TextButton::buttonColourId));
-	//laf.setColour(Label::backgroundColourId, Colour(0x33ffffff));
+
+    //laf.setColour(Label::backgroundColourId, Colour(0x33ffffff));
 };
 
 class CParamSmooth
@@ -81,37 +84,27 @@ private:
 JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemoPluginAudioProcessor* ownerFilter)
     : AudioProcessorEditor (ownerFilter)
 {
-    addAndMakeVisible (midsideHeader2 = new Label ("new label",
-                                                   TRANS("mid")));
-    midsideHeader2->setFont (Font ("Aharoni", 10.00f, Font::plain));
-    midsideHeader2->setJustificationType (Justification::centred);
-    midsideHeader2->setEditable (false, false, false);
-    midsideHeader2->setColour (Label::textColourId, Colour (0xffababab));
-    midsideHeader2->setColour (TextEditor::textColourId, Colours::black);
-    midsideHeader2->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    addAndMakeVisible (dryOnOffBtn = new ToggleButton ("new toggle button"));
+    dryOnOffBtn->setButtonText (TRANS("dry"));
+    dryOnOffBtn->addListener (this);
+    dryOnOffBtn->setToggleState (true, dontSendNotification);
+    dryOnOffBtn->setColour (ToggleButton::textColourId, Colour (0xffababab));
 
     addAndMakeVisible (labelReverb2 = new Label ("new label",
                                                  TRANS("damp")));
-    labelReverb2->setFont (Font ("Aharoni", 8.00f, Font::plain));
+    labelReverb2->setFont (Font ("Candara", 15.00f, Font::plain));
     labelReverb2->setJustificationType (Justification::centred);
     labelReverb2->setEditable (false, false, false);
     labelReverb2->setColour (Label::textColourId, Colour (0xffa8a8a8));
     labelReverb2->setColour (TextEditor::textColourId, Colours::black);
     labelReverb2->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (wetLabel = new Label ("new label",
-                                             TRANS("wet")));
-    wetLabel->setFont (Font ("Aharoni", 10.00f, Font::plain));
-    wetLabel->setJustificationType (Justification::centred);
-    wetLabel->setEditable (false, false, false);
-    wetLabel->setColour (Label::textColourId, Colour (0xffababab));
-    wetLabel->setColour (TextEditor::textColourId, Colours::black);
-    wetLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
     addAndMakeVisible (panSlider = new Slider ("panSlider"));
     panSlider->setRange (0, 1, 0);
     panSlider->setSliderStyle (Slider::RotaryVerticalDrag);
     panSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    panSlider->setColour (Slider::rotarySliderFillColourId, Colours::bisque);
+    panSlider->setColour (Slider::rotarySliderOutlineColourId, Colour (0xffffff48));
     panSlider->addListener (this);
 
     addAndMakeVisible (delaySlider = new Slider ("delaySlider"));
@@ -120,6 +113,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     delaySlider->setSliderStyle (Slider::RotaryVerticalDrag);
     delaySlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
     delaySlider->setColour (Slider::trackColourId, Colours::white);
+    delaySlider->setColour (Slider::rotarySliderOutlineColourId, Colours::chartreuse);
     delaySlider->setColour (Slider::textBoxHighlightColourId, Colour (0xff1111ee));
     delaySlider->setColour (Slider::textBoxOutlineColourId, Colours::grey);
     delaySlider->addListener (this);
@@ -128,6 +122,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     delayTimeSlider->setRange (0, 1, 0);
     delayTimeSlider->setSliderStyle (Slider::RotaryVerticalDrag);
     delayTimeSlider->setTextBoxStyle (Slider::NoTextBox, true, 80, 20);
+    delayTimeSlider->setColour (Slider::rotarySliderOutlineColourId, Colours::chartreuse);
     delayTimeSlider->addListener (this);
 
     addAndMakeVisible (delayTimeValueLabel = new Label ("new label",
@@ -152,6 +147,8 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     midSideSlider->setRange (0, 1, 0.005);
     midSideSlider->setSliderStyle (Slider::RotaryVerticalDrag);
     midSideSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    midSideSlider->setColour (Slider::rotarySliderFillColourId, Colours::blanchedalmond);
+    midSideSlider->setColour (Slider::rotarySliderOutlineColourId, Colour (0xffffff48));
     midSideSlider->addListener (this);
 
     addAndMakeVisible (midsideHeader = new Label ("new label",
@@ -167,6 +164,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     saturationSlider->setRange (0.001, 1, 0);
     saturationSlider->setSliderStyle (Slider::RotaryVerticalDrag);
     saturationSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    saturationSlider->setColour (Slider::rotarySliderOutlineColourId, Colour (0xff9bb0ff));
     saturationSlider->addListener (this);
 
     addAndMakeVisible (hpfHeader = new Label ("new label",
@@ -178,18 +176,24 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     hpfHeader->setColour (TextEditor::textColourId, Colours::black);
     hpfHeader->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (hpfSlider = new Slider ("hpfSlider"));
+    addAndMakeVisible (hpfSlider = new Slider ("hpfSlider_violet"));
     hpfSlider->setTooltip (TRANS("hi pass filter (hz)"));
-    hpfSlider->setRange (20, 10000, 0);
+    hpfSlider->setRange (1e-005, 1, 0);
     hpfSlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    hpfSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    hpfSlider->setTextBoxStyle (Slider::TextBoxBelow, true, 80, 20);
+    hpfSlider->setColour (Slider::rotarySliderOutlineColourId, Colour (0xffff8af4));
+    hpfSlider->setColour (Slider::textBoxTextColourId, Colour (0xffababab));
+    hpfSlider->setColour (Slider::textBoxBackgroundColourId, Colour (0x00ffffff));
+    hpfSlider->setColour (Slider::textBoxOutlineColourId, Colour (0x00808080));
     hpfSlider->addListener (this);
-    hpfSlider->setSkewFactor (0.1);
+    hpfSlider->setSkewFactor (0.5);
 
     addAndMakeVisible (reverbSizeSlider = new Slider ("new slider"));
-    reverbSizeSlider->setRange (0.01, 1, 0);
+    reverbSizeSlider->setRange (0, 1, 0);
     reverbSizeSlider->setSliderStyle (Slider::RotaryVerticalDrag);
     reverbSizeSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    reverbSizeSlider->setColour (Slider::rotarySliderOutlineColourId, Colours::aqua);
+    reverbSizeSlider->setColour (Slider::textBoxTextColourId, Colour (0xffababab));
     reverbSizeSlider->addListener (this);
 
     addAndMakeVisible (labelReverb = new Label ("new label",
@@ -213,39 +217,31 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     addAndMakeVisible (lnf3Btn = new TextButton ("new button"));
     lnf3Btn->setButtonText (TRANS("lfv3"));
     lnf3Btn->addListener (this);
+    lnf3Btn->setColour (TextButton::buttonColourId, Colours::red);
 
     addAndMakeVisible (guilafBtn = new TextButton ("new button"));
     guilafBtn->setButtonText (TRANS("guilaf"));
     guilafBtn->addListener (this);
+    guilafBtn->setColour (TextButton::buttonColourId, Colours::blue);
 
     addAndMakeVisible (guilaf2Btn = new TextButton ("new button"));
     guilaf2Btn->setButtonText (TRANS("guilaf2"));
     guilaf2Btn->addListener (this);
+    guilaf2Btn->setColour (TextButton::buttonColourId, Colour (0xffffff48));
+    guilaf2Btn->setColour (TextButton::buttonOnColourId, Colour (0x6cffff48));
 
-    addAndMakeVisible (dryOnBtn = new ImageButton ("new button"));
-    dryOnBtn->addListener (this);
-
-    dryOnBtn->setImages (false, true, true,
-                         ImageCache::getFromMemory (off_png, off_pngSize), 1.000f, Colour (0x00000000),
-                         Image(), 1.000f, Colour (0x00000000),
-                         ImageCache::getFromMemory (on_red_png, on_red_pngSize), 1.000f, Colour (0x00000000));
-    addAndMakeVisible (wetOnBtn = new ImageButton ("new button"));
-    wetOnBtn->addListener (this);
-
-    wetOnBtn->setImages (false, true, true,
-                         ImageCache::getFromMemory (off_png, off_pngSize), 1.000f, Colour (0x00000000),
-                         Image(), 1.000f, Colour (0x00000000),
-                         ImageCache::getFromMemory (on_red_png, on_red_pngSize), 1.000f, Colour (0x00000000));
-    addAndMakeVisible (gainSlider = new Slider ("gainSlider"));
-    gainSlider->setTooltip (TRANS("gain"));
-    gainSlider->setRange (0, 1, 0);
-    gainSlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    gainSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
-    gainSlider->setColour (Slider::textBoxBackgroundColourId, Colour (0x00ffffff));
-    gainSlider->setColour (Slider::textBoxHighlightColourId, Colour (0x881111ee));
-    gainSlider->setColour (Slider::textBoxOutlineColourId, Colour (0x00000000));
-    gainSlider->addListener (this);
-    gainSlider->setSkewFactor (0.3);
+    addAndMakeVisible (wetGainSlider = new Slider ("gainSlider"));
+    wetGainSlider->setTooltip (TRANS("gain"));
+    wetGainSlider->setRange (0, 1, 0);
+    wetGainSlider->setSliderStyle (Slider::RotaryVerticalDrag);
+    wetGainSlider->setTextBoxStyle (Slider::TextBoxBelow, true, 80, 20);
+    wetGainSlider->setColour (Slider::rotarySliderOutlineColourId, Colours::coral);
+    wetGainSlider->setColour (Slider::textBoxTextColourId, Colour (0xffababab));
+    wetGainSlider->setColour (Slider::textBoxBackgroundColourId, Colour (0x00ffffff));
+    wetGainSlider->setColour (Slider::textBoxHighlightColourId, Colour (0x881111ee));
+    wetGainSlider->setColour (Slider::textBoxOutlineColourId, Colour (0x00000000));
+    wetGainSlider->addListener (this);
+    wetGainSlider->setSkewFactor (0.3);
 
     addAndMakeVisible (label = new Label ("new label",
                                           TRANS("saturation")));
@@ -256,78 +252,24 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     label->setColour (TextEditor::textColourId, Colours::black);
     label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (dryLabel = new Label ("new label",
-                                             TRANS("dry")));
-    dryLabel->setFont (Font ("Aharoni", 10.00f, Font::plain));
-    dryLabel->setJustificationType (Justification::centredLeft);
-    dryLabel->setEditable (false, false, false);
-    dryLabel->setColour (Label::textColourId, Colour (0xffababab));
-    dryLabel->setColour (TextEditor::textColourId, Colours::black);
-    dryLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
-    addAndMakeVisible (hpfQSlider = new Slider ("new slider"));
-    hpfQSlider->setRange (0.01, 4, 0);
-    hpfQSlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    hpfQSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
-    hpfQSlider->addListener (this);
-
-    addAndMakeVisible (hpfHeader2 = new Label ("new label",
-                                               TRANS("q")));
-    hpfHeader2->setFont (Font ("Aharoni", 10.00f, Font::plain));
-    hpfHeader2->setJustificationType (Justification::centred);
-    hpfHeader2->setEditable (false, false, false);
-    hpfHeader2->setColour (Label::textColourId, Colour (0xffababab));
-    hpfHeader2->setColour (TextEditor::textColourId, Colours::black);
-    hpfHeader2->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
     addAndMakeVisible (roomDampSlider = new Slider ("new slider"));
     roomDampSlider->setRange (0, 1, 0);
     roomDampSlider->setSliderStyle (Slider::RotaryVerticalDrag);
     roomDampSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    roomDampSlider->setColour (Slider::rotarySliderOutlineColourId, Colours::aqua);
     roomDampSlider->addListener (this);
 
-    addAndMakeVisible (midOnBtn = new ImageButton ("new button"));
-    midOnBtn->addListener (this);
-
-    midOnBtn->setImages (false, true, true,
-                         ImageCache::getFromMemory (off_png, off_pngSize), 1.000f, Colour (0x00000000),
-                         Image(), 1.000f, Colour (0x00000000),
-                         ImageCache::getFromMemory (on_red_png, on_red_pngSize), 1.000f, Colour (0x00000000));
-    addAndMakeVisible (dryOnBtn2 = new ImageButton ("new button"));
-    dryOnBtn2->addListener (this);
-
-    dryOnBtn2->setImages (false, true, true,
-                          ImageCache::getFromMemory (off_png, off_pngSize), 1.000f, Colour (0x00000000),
-                          Image(), 1.000f, Colour (0x00000000),
-                          ImageCache::getFromMemory (on_red_png, on_red_pngSize), 1.000f, Colour (0x00000000));
-    addAndMakeVisible (dryOnBtn3 = new ImageButton ("new button"));
-    dryOnBtn3->addListener (this);
-
-    dryOnBtn3->setImages (false, true, true,
-                          ImageCache::getFromMemory (off_png, off_pngSize), 1.000f, Colour (0x00000000),
-                          Image(), 1.000f, Colour (0x00000000),
-                          ImageCache::getFromMemory (on_red_png, on_red_pngSize), 1.000f, Colour (0x00000000));
-    addAndMakeVisible (dryOnBtn4 = new ImageButton ("new button"));
-    dryOnBtn4->addListener (this);
-
-    dryOnBtn4->setImages (false, true, true,
-                          ImageCache::getFromMemory (off_png, off_pngSize), 1.000f, Colour (0x00000000),
-                          Image(), 1.000f, Colour (0x00000000),
-                          ImageCache::getFromMemory (on_red_png, on_red_pngSize), 1.000f, Colour (0x00000000));
-    addAndMakeVisible (dryOnBtn5 = new ImageButton ("new button"));
-    dryOnBtn5->addListener (this);
-
-    dryOnBtn5->setImages (false, true, true,
-                          ImageCache::getFromMemory (off_png, off_pngSize), 1.000f, Colour (0x00000000),
-                          Image(), 1.000f, Colour (0x00000000),
-                          ImageCache::getFromMemory (on_red_png, on_red_pngSize), 1.000f, Colour (0x00000000));
-    addAndMakeVisible (lpfSlider = new Slider (String::empty));
+    addAndMakeVisible (lpfSlider = new Slider ("violet"));
     lpfSlider->setTooltip (TRANS("low pass filter"));
-    lpfSlider->setRange (20, 10000, 0);
+    lpfSlider->setRange (1e-005, 1, 0);
     lpfSlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    lpfSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    lpfSlider->setTextBoxStyle (Slider::TextBoxBelow, true, 80, 20);
+    lpfSlider->setColour (Slider::rotarySliderOutlineColourId, Colour (0xffff8af4));
+    lpfSlider->setColour (Slider::textBoxTextColourId, Colour (0xffababab));
+    lpfSlider->setColour (Slider::textBoxBackgroundColourId, Colour (0x00ffffff));
+    lpfSlider->setColour (Slider::textBoxOutlineColourId, Colour (0x00808080));
     lpfSlider->addListener (this);
-    lpfSlider->setSkewFactor (0.1);
+    lpfSlider->setSkewFactor (0.5);
 
     addAndMakeVisible (hpfHeader3 = new Label ("new label",
                                                TRANS("lpf")));
@@ -338,33 +280,51 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     hpfHeader3->setColour (TextEditor::textColourId, Colours::black);
     hpfHeader3->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (dryOnBtn6 = new ImageButton ("new button"));
-    dryOnBtn6->addListener (this);
+    addAndMakeVisible (wetOnOffBtn = new ToggleButton ("new toggle button"));
+    wetOnOffBtn->setButtonText (TRANS("wet"));
+    wetOnOffBtn->addListener (this);
+    wetOnOffBtn->setToggleState (true, dontSendNotification);
+    wetOnOffBtn->setColour (ToggleButton::textColourId, Colour (0xffababab));
 
-    dryOnBtn6->setImages (false, true, true,
-                          ImageCache::getFromMemory (off_png, off_pngSize), 1.000f, Colour (0x00000000),
-                          Image(), 1.000f, Colour (0x00000000),
-                          ImageCache::getFromMemory (on_red_png, on_red_pngSize), 1.000f, Colour (0x00000000));
-    addAndMakeVisible (lpfQSlider = new Slider ("lpfQSlider"));
-    lpfQSlider->setRange (0.01, 4, 0);
-    lpfQSlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    lpfQSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
-    lpfQSlider->addListener (this);
+    addAndMakeVisible (midOnOffBtn = new ToggleButton ("new toggle button"));
+    midOnOffBtn->setButtonText (TRANS("mid"));
+    midOnOffBtn->addListener (this);
+    midOnOffBtn->setToggleState (true, dontSendNotification);
+    midOnOffBtn->setColour (ToggleButton::textColourId, Colour (0xffababab));
 
-    addAndMakeVisible (hpfHeader4 = new Label ("new label",
-                                               TRANS("q")));
-    hpfHeader4->setFont (Font ("Aharoni", 10.00f, Font::plain));
-    hpfHeader4->setJustificationType (Justification::centred);
-    hpfHeader4->setEditable (false, false, false);
-    hpfHeader4->setColour (Label::textColourId, Colour (0xffababab));
-    hpfHeader4->setColour (TextEditor::textColourId, Colours::black);
-    hpfHeader4->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    addAndMakeVisible (textButton = new TextButton ("new button"));
+    textButton->setButtonText (TRANS("mid"));
+    textButton->addListener (this);
+    textButton->setColour (TextButton::buttonColourId, Colour (0x7dffff48));
+    textButton->setColour (TextButton::buttonOnColourId, Colours::crimson);
+    textButton->setColour (TextButton::textColourOnId, Colour (0xffa8a8a8));
+    textButton->setColour (TextButton::textColourOffId, Colour (0xff313131));
 
-    cachedImage_uibg_png = ImageCache::getFromMemory (uibg_png, uibg_pngSize);
+    addAndMakeVisible (textButton3 = new TextButton ("new button"));
+    textButton3->setButtonText (TRANS("dry"));
+    textButton3->addListener (this);
+    textButton3->setColour (TextButton::buttonColourId, Colours::aquamarine);
+    textButton3->setColour (TextButton::buttonOnColourId, Colours::crimson);
+    textButton3->setColour (TextButton::textColourOnId, Colour (0xffa8a8a8));
+    textButton3->setColour (TextButton::textColourOffId, Colour (0xff313131));
+
+    addAndMakeVisible (textButton2 = new TextButton ("new button"));
+    textButton2->setButtonText (TRANS("wet"));
+    textButton2->addListener (this);
+    textButton2->setColour (TextButton::buttonColourId, Colours::coral);
+    textButton2->setColour (TextButton::buttonOnColourId, Colours::crimson);
+    textButton2->setColour (TextButton::textColourOnId, Colour (0xffa8a8a8));
+    textButton2->setColour (TextButton::textColourOffId, Colour (0xff313131));
+
+    addAndMakeVisible (textButton4 = new TextButton ("new button"));
+    textButton4->addListener (this);
+    textButton4->setColour (TextButton::buttonColourId, Colours::azure);
+    textButton4->setColour (TextButton::textColourOnId, Colour (0xffa8a8a8));
+    textButton4->setColour (TextButton::textColourOffId, Colour (0xffa8a8a8));
+
 
     //[UserPreSize]
-	//addAndMakeVisible(resizer = new ResizableCornerComponent(this, &resizeLimits));
-	//resizeLimits.setSizeLimits(150, 150, 800, 300);
+
     //[/UserPreSize]
 
     setSize (550, 200);
@@ -374,29 +334,21 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 	// set our component's initial size to be the last one that was stored in the filter's settings
 	//setSize(ownerFilter->lastUIWidth, ownerFilter->lastUIHeight);
 	startTimer(50);
-	gainSlider->setDoubleClickReturnValue(true,0.0f);
+	wetGainSlider->setDoubleClickReturnValue(true,0.2f);
 	panSlider->setDoubleClickReturnValue(true,0.5f);
 	midSideSlider->setDoubleClickReturnValue(true,0.5f);
 	LookAndFeel::setDefaultLookAndFeel(&guilaf2);
 	setupCustomLookAndFeelColours(guilaf);
 	setupCustomLookAndFeelColours(guilaf2);
-    guilaf.setDefaultSansSerifTypefaceName("Aharoni");
+    guilaf2.setDefaultSansSerifTypefaceName("Aharoni");
     guilaf.setImages(
 		ImageCache::getFromMemory(chickknob_png,chickknob_pngSize),
 		ImageCache::getFromMemory(off_png,off_pngSize),
 		ImageCache::getFromMemory(on_red_png,on_red_pngSize)
 		);
-	 guilaf2.setImages(
-		ImageCache::getFromMemory(chickknob_png,chickknob_pngSize),
-		ImageCache::getFromMemory(off_png,off_pngSize),
-		ImageCache::getFromMemory(on_red_png,on_red_pngSize)
-		);
-	 //gainSlider->setScrollWheelEnabled(false);
-     dryOnBtn->setClickingTogglesState(true);
-     wetOnBtn->setClickingTogglesState(true);
-     wetOnBtn->setToggleState(true,dontSendNotification);
-     dryOnBtn->setToggleState(true, dontSendNotification);
-	 midOnBtn->setClickingTogglesState(true);
+    textButton->setClickingTogglesState(true);
+    textButton2->setClickingTogglesState(true);
+    textButton3->setClickingTogglesState(true);
     //[/Constructor]
 }
 
@@ -406,9 +358,8 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
 	//deleteAllChildren ();
     //[/Destructor_pre]
 
-    midsideHeader2 = nullptr;
+    dryOnOffBtn = nullptr;
     labelReverb2 = nullptr;
-    wetLabel = nullptr;
     panSlider = nullptr;
     delaySlider = nullptr;
     delayTimeSlider = nullptr;
@@ -425,24 +376,17 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
     lnf3Btn = nullptr;
     guilafBtn = nullptr;
     guilaf2Btn = nullptr;
-    dryOnBtn = nullptr;
-    wetOnBtn = nullptr;
-    gainSlider = nullptr;
+    wetGainSlider = nullptr;
     label = nullptr;
-    dryLabel = nullptr;
-    hpfQSlider = nullptr;
-    hpfHeader2 = nullptr;
     roomDampSlider = nullptr;
-    midOnBtn = nullptr;
-    dryOnBtn2 = nullptr;
-    dryOnBtn3 = nullptr;
-    dryOnBtn4 = nullptr;
-    dryOnBtn5 = nullptr;
     lpfSlider = nullptr;
     hpfHeader3 = nullptr;
-    dryOnBtn6 = nullptr;
-    lpfQSlider = nullptr;
-    hpfHeader4 = nullptr;
+    wetOnOffBtn = nullptr;
+    midOnOffBtn = nullptr;
+    textButton = nullptr;
+    textButton3 = nullptr;
+    textButton2 = nullptr;
+    textButton4 = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -456,19 +400,10 @@ void JuceDemoPluginAudioProcessorEditor::paint (Graphics& g)
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
-    g.fillAll (Colours::black);
-
-    g.setColour (Colours::black);
-    g.drawImageWithin (cachedImage_uibg_png,
-                       580, 412, 400, 230,
-                       RectanglePlacement::centred | RectanglePlacement::onlyReduceInSize,
-                       false);
-
-    g.setColour (Colour (0xff313131));
-    g.fillRoundedRectangle (0.0f, 0.0f, 550.0f, 200.0f, 20.000f);
+    g.fillAll (Colour (0xff313131));
 
     g.setColour (Colour (0xff575757));
-    g.fillRect (10, 29, 430, 1);
+    g.fillRect (10, 29, 530, 1);
 
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]
@@ -479,49 +414,108 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    midsideHeader2->setBounds (100, 100, 40, 10);
-    labelReverb2->setBounds (316, 95, 45, 30);
-    wetLabel->setBounds (20, 35, 60, 10);
+    dryOnOffBtn->setBounds (24, 14, 56, 12);
+    labelReverb2->setBounds (320, 145, 60, 15);
     panSlider->setBounds (140, 45, 60, 50);
-    delaySlider->setBounds (440, 48, 60, 50);
-    delayTimeSlider->setBounds (468, 96, 30, 30);
-    delayTimeValueLabel->setBounds (436, 104, 30, 10);
+    delaySlider->setBounds (440, 45, 60, 50);
+    delayTimeSlider->setBounds (440, 96, 60, 50);
+    delayTimeValueLabel->setBounds (440, 145, 60, 10);
     panHeader->setBounds (140, 35, 60, 10);
     midSideSlider->setBounds (80, 45, 60, 50);
     midsideHeader->setBounds (80, 35, 60, 10);
-    saturationSlider->setBounds (380, 46, 60, 50);
+    saturationSlider->setBounds (380, 45, 60, 50);
     hpfHeader->setBounds (200, 35, 60, 10);
-    hpfSlider->setBounds (200, 45, 60, 50);
+    hpfSlider->setBounds (200, 45, 60, 70);
     reverbSizeSlider->setBounds (320, 45, 60, 50);
     labelReverb->setBounds (320, 35, 60, 10);
     delayAmountHeader->setBounds (440, 35, 60, 10);
-    lnf3Btn->setBounds (216, 385, 88, 24);
-    guilafBtn->setBounds (320, 385, 88, 24);
-    guilaf2Btn->setBounds (432, 385, 88, 24);
-    dryOnBtn->setBounds (25, 15, 11, 10);
-    wetOnBtn->setBounds (25, 35, 11, 10);
-    gainSlider->setBounds (20, 45, 60, 50);
+    lnf3Btn->setBounds (24, 153, 56, 24);
+    guilafBtn->setBounds (88, 152, 56, 24);
+    guilaf2Btn->setBounds (160, 152, 60, 12);
+    wetGainSlider->setBounds (20, 45, 60, 70);
     label->setBounds (380, 35, 60, 10);
-    dryLabel->setBounds (35, 15, 60, 10);
-    hpfQSlider->setBounds (230, 95, 30, 30);
-    hpfHeader2->setBounds (216, 95, 20, 30);
-    roomDampSlider->setBounds (350, 95, 30, 30);
-    midOnBtn->setBounds (96, 100, 11, 10);
-    dryOnBtn2->setBounds (104, 16, 11, 10);
-    dryOnBtn3->setBounds (164, 16, 11, 10);
-    dryOnBtn4->setBounds (224, 16, 11, 10);
-    dryOnBtn5->setBounds (404, 16, 11, 10);
-    lpfSlider->setBounds (260, 45, 60, 50);
+    roomDampSlider->setBounds (320, 95, 60, 50);
+    lpfSlider->setBounds (260, 45, 60, 70);
     hpfHeader3->setBounds (260, 35, 60, 10);
-    dryOnBtn6->setBounds (285, 16, 11, 10);
-    lpfQSlider->setBounds (284, 95, 30, 30);
-    hpfHeader4->setBounds (270, 95, 20, 30);
+    wetOnOffBtn->setBounds (24, 33, 56, 12);
+    midOnOffBtn->setBounds (120, 128, 40, 12);
+    textButton->setBounds (100, 100, 20, 12);
+    textButton3->setBounds (160, 112, 20, 12);
+    textButton2->setBounds (128, 104, 20, 12);
+    textButton4->setBounds (240, 160, 64, 24);
     //[UserResized] Add your own custom resize handling here..
 	//resizer->setBounds(getWidth() - 16, getHeight() - 16, 16, 16);
 
 	getProcessor()->lastUIWidth = getWidth();
 	getProcessor()->lastUIHeight = getHeight();
     //[/UserResized]
+}
+
+void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
+{
+    //[UserbuttonClicked_Pre]
+    //[/UserbuttonClicked_Pre]
+
+    if (buttonThatWasClicked == dryOnOffBtn)
+    {
+        //[UserButtonCode_dryOnOffBtn] -- add your button handler code here..
+        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::DRYON, (dryOnOffBtn->getToggleState() == true) ? 1.0f : 0.0f);
+
+        //[/UserButtonCode_dryOnOffBtn]
+    }
+    else if (buttonThatWasClicked == lnf3Btn)
+    {
+        //[UserButtonCode_lnf3Btn] -- add your button handler code here..
+		LookAndFeel::setDefaultLookAndFeel(&lookAndFeelV3);
+        //[/UserButtonCode_lnf3Btn]
+    }
+    else if (buttonThatWasClicked == guilafBtn)
+    {
+        //[UserButtonCode_guilafBtn] -- add your button handler code here..
+		LookAndFeel::setDefaultLookAndFeel(&guilaf);
+        //[/UserButtonCode_guilafBtn]
+    }
+    else if (buttonThatWasClicked == guilaf2Btn)
+    {
+        //[UserButtonCode_guilaf2Btn] -- add your button handler code here..
+		LookAndFeel::setDefaultLookAndFeel(&guilaf2);
+        //[/UserButtonCode_guilaf2Btn]
+    }
+    else if (buttonThatWasClicked == wetOnOffBtn)
+    {
+        //[UserButtonCode_wetOnOffBtn] -- add your button handler code here..
+        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::WETON, (wetOnOffBtn->getToggleState() == true) ? 1.0f : 0.0f);
+        //[/UserButtonCode_wetOnOffBtn]
+    }
+    else if (buttonThatWasClicked == midOnOffBtn)
+    {
+        //[UserButtonCode_midOnOffBtn] -- add your button handler code here..
+        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::MIDON, (midOnOffBtn->getToggleState() == true) ? 1.0f : 0.0f);
+        //[/UserButtonCode_midOnOffBtn]
+    }
+    else if (buttonThatWasClicked == textButton)
+    {
+        //[UserButtonCode_textButton] -- add your button handler code here..
+        //[/UserButtonCode_textButton]
+    }
+    else if (buttonThatWasClicked == textButton3)
+    {
+        //[UserButtonCode_textButton3] -- add your button handler code here..
+        //[/UserButtonCode_textButton3]
+    }
+    else if (buttonThatWasClicked == textButton2)
+    {
+        //[UserButtonCode_textButton2] -- add your button handler code here..
+        //[/UserButtonCode_textButton2]
+    }
+    else if (buttonThatWasClicked == textButton4)
+    {
+        //[UserButtonCode_textButton4] -- add your button handler code here..
+        //[/UserButtonCode_textButton4]
+    }
+
+    //[UserbuttonClicked_Post]
+    //[/UserbuttonClicked_Post]
 }
 
 void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatWasMoved)
@@ -565,6 +559,13 @@ void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatW
     else if (sliderThatWasMoved == hpfSlider)
     {
         //[UserSliderCode_hpfSlider] -- add your slider handling code here..
+        double lpfFreq = lpfSlider->getValue();
+        double hpfFreq = hpfSlider->getValue();
+        if (hpfFreq > lpfFreq)
+        {
+            lpfSlider->setValue(hpfFreq);
+            getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::LPFFREQ, (float)lpfFreq);
+        }
 		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::HPFFREQ,			(float)hpfSlider->getValue());
         //[/UserSliderCode_hpfSlider]
     }
@@ -574,20 +575,11 @@ void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatW
 		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::ROOMSIZE,			(float)reverbSizeSlider->getValue());
         //[/UserSliderCode_reverbSizeSlider]
     }
-    else if (sliderThatWasMoved == gainSlider)
+    else if (sliderThatWasMoved == wetGainSlider)
     {
-        //[UserSliderCode_gainSlider] -- add your slider handling code here..
-		// It's vital to use setParameterNotifyingHost to change any parameters that are automatable
-		// by the host, rather than just modifying them directly, otherwise the host won't know
-		// that they've changed.
-		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::WETAMOUNT,                                                  (float)gainSlider->getValue());
-        //[/UserSliderCode_gainSlider]
-    }
-    else if (sliderThatWasMoved == hpfQSlider)
-    {
-        //[UserSliderCode_hpfQSlider] -- add your slider handling code here..
-        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::HPFQ, (float)hpfQSlider->getValue());
-        //[/UserSliderCode_hpfQSlider]
+        //[UserSliderCode_wetGainSlider] -- add your slider handling code here..
+        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::WETAMOUNT, (float)wetGainSlider->getValue());
+        //[/UserSliderCode_wetGainSlider]
     }
     else if (sliderThatWasMoved == roomDampSlider)
     {
@@ -598,89 +590,20 @@ void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatW
     else if (sliderThatWasMoved == lpfSlider)
     {
         //[UserSliderCode_lpfSlider] -- add your slider handling code here..
+        double lpfFreq = lpfSlider->getValue();
+        double hpfFreq = hpfSlider->getValue();
+        if (lpfFreq < hpfFreq)
+        {
+            hpfSlider->setValue(lpfFreq);
+            getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::HPFFREQ, (float)hpfFreq);
+        }
+        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::LPFFREQ, (float)lpfFreq);
+
         //[/UserSliderCode_lpfSlider]
-    }
-    else if (sliderThatWasMoved == lpfQSlider)
-    {
-        //[UserSliderCode_lpfQSlider] -- add your slider handling code here..
-        //[/UserSliderCode_lpfQSlider]
     }
 
     //[UsersliderValueChanged_Post]
     //[/UsersliderValueChanged_Post]
-}
-
-void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
-{
-    //[UserbuttonClicked_Pre]
-    //[/UserbuttonClicked_Pre]
-
-    if (buttonThatWasClicked == lnf3Btn)
-    {
-        //[UserButtonCode_lnf3Btn] -- add your button handler code here..
-		LookAndFeel::setDefaultLookAndFeel(&lookAndFeelV3);
-        //[/UserButtonCode_lnf3Btn]
-    }
-    else if (buttonThatWasClicked == guilafBtn)
-    {
-        //[UserButtonCode_guilafBtn] -- add your button handler code here..
-		LookAndFeel::setDefaultLookAndFeel(&guilaf);
-        //[/UserButtonCode_guilafBtn]
-    }
-    else if (buttonThatWasClicked == guilaf2Btn)
-    {
-        //[UserButtonCode_guilaf2Btn] -- add your button handler code here..
-		LookAndFeel::setDefaultLookAndFeel(&guilaf2);
-        //[/UserButtonCode_guilaf2Btn]
-    }
-    else if (buttonThatWasClicked == dryOnBtn)
-    {
-        //[UserButtonCode_dryOnBtn] -- add your button handler code here..
-		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::DRYON, (dryOnBtn->getToggleState() == true) ? 1.0f : 0.0f);
-
-        //[/UserButtonCode_dryOnBtn]
-    }
-    else if (buttonThatWasClicked == wetOnBtn)
-    {
-        //[UserButtonCode_wetOnBtn] -- add your button handler code here..
-        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::WETON, (wetOnBtn->getToggleState() == true) ? 1.0f : 0.0f);
-        gainSlider->setEnabled(wetOnBtn->getToggleState());
-        //[/UserButtonCode_wetOnBtn]
-    }
-    else if (buttonThatWasClicked == midOnBtn)
-    {
-        //[UserButtonCode_midOnBtn] -- add your button handler code here..
-		getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::MIDON, (midOnBtn->getToggleState() == true) ? 1.0f : 0.0f);
-        //[/UserButtonCode_midOnBtn]
-    }
-    else if (buttonThatWasClicked == dryOnBtn2)
-    {
-        //[UserButtonCode_dryOnBtn2] -- add your button handler code here..
-        //[/UserButtonCode_dryOnBtn2]
-    }
-    else if (buttonThatWasClicked == dryOnBtn3)
-    {
-        //[UserButtonCode_dryOnBtn3] -- add your button handler code here..
-        //[/UserButtonCode_dryOnBtn3]
-    }
-    else if (buttonThatWasClicked == dryOnBtn4)
-    {
-        //[UserButtonCode_dryOnBtn4] -- add your button handler code here..
-        //[/UserButtonCode_dryOnBtn4]
-    }
-    else if (buttonThatWasClicked == dryOnBtn5)
-    {
-        //[UserButtonCode_dryOnBtn5] -- add your button handler code here..
-        //[/UserButtonCode_dryOnBtn5]
-    }
-    else if (buttonThatWasClicked == dryOnBtn6)
-    {
-        //[UserButtonCode_dryOnBtn6] -- add your button handler code here..
-        //[/UserButtonCode_dryOnBtn6]
-    }
-
-    //[UserbuttonClicked_Post]
-    //[/UserbuttonClicked_Post]
 }
 
 
@@ -692,19 +615,19 @@ void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasCli
 void JuceDemoPluginAudioProcessorEditor::timerCallback()
 {
 	JuceDemoPluginAudioProcessor* ourProcessor = getProcessor();
-	gainSlider->setValue(ourProcessor->wetGain,dontSendNotification);
+	wetGainSlider->setValue(ourProcessor->wetGain,dontSendNotification);
+    wetOnOffBtn->setToggleState(ourProcessor->wetOn == 1.0f, dontSendNotification);
 	delaySlider->setValue(ourProcessor->delayAmount, dontSendNotification);
 	delayTimeSlider->setValue(ourProcessor->delayTime, dontSendNotification);
 	panSlider->setValue(ourProcessor->pan, dontSendNotification);
 	midSideSlider->setValue(ourProcessor->midSide, dontSendNotification);
-	midOnBtn->setToggleState(ourProcessor->midOn==1.0f, dontSendNotification);
+	midOnOffBtn->setToggleState(ourProcessor->midOn==1.0f, dontSendNotification);
 	reverbSizeSlider->setValue(ourProcessor->roomSize, dontSendNotification);
 	roomDampSlider->setValue(ourProcessor->roomDamp, dontSendNotification);
-	dryOnBtn->setToggleState(ourProcessor->dryOn==1.0f, dontSendNotification);
+	dryOnOffBtn->setToggleState(ourProcessor->dryOn==1.0f, dontSendNotification);
     hpfSlider->setValue(ourProcessor->hpfFreq,dontSendNotification);
-    hpfQSlider->setValue(ourProcessor->hpfQ,dontSendNotification);
     saturationSlider->setValue(ourProcessor->saturationAmount,dontSendNotification);
-
+    lpfSlider->setValue(ourProcessor->lpfFreqValue,dontSendNotification);
 }
 //[/MiscUserCode]
 
@@ -724,41 +647,35 @@ BEGIN_JUCER_METADATA
                  variableInitialisers="AudioProcessorEditor (ownerFilter)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="1"
                  initialWidth="550" initialHeight="200">
-  <BACKGROUND backgroundColour="ff000000">
-    <IMAGE pos="580 412 400 230" resource="uibg_png" opacity="1" mode="2"/>
-    <ROUNDRECT pos="0 0 550 200" cornerSize="20" fill="solid: ff313131" hasStroke="0"/>
-    <RECT pos="10 29 430 1" fill="solid: ff575757" hasStroke="0"/>
+  <BACKGROUND backgroundColour="ff313131">
+    <RECT pos="10 29 530 1" fill="solid: ff575757" hasStroke="0"/>
   </BACKGROUND>
-  <LABEL name="new label" id="79ee26a2b3f472be" memberName="midsideHeader2"
-         virtualName="" explicitFocusOrder="0" pos="100 100 40 10" textCol="ffababab"
-         edTextCol="ff000000" edBkgCol="0" labelText="mid" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
-         fontsize="10" bold="0" italic="0" justification="36"/>
+  <TOGGLEBUTTON name="new toggle button" id="6efaa6a011701a9d" memberName="dryOnOffBtn"
+                virtualName="" explicitFocusOrder="0" pos="24 14 56 12" txtcol="ffababab"
+                buttonText="dry" connectedEdges="0" needsCallback="1" radioGroupId="0"
+                state="1"/>
   <LABEL name="new label" id="3c6e767fb7f8dbd7" memberName="labelReverb2"
-         virtualName="" explicitFocusOrder="0" pos="316 95 45 30" textCol="ffa8a8a8"
+         virtualName="" explicitFocusOrder="0" pos="320 145 60 15" textCol="ffa8a8a8"
          edTextCol="ff000000" edBkgCol="0" labelText="damp" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
-         fontsize="8" bold="0" italic="0" justification="36"/>
-  <LABEL name="new label" id="4cc590f60a8a610f" memberName="wetLabel"
-         virtualName="" explicitFocusOrder="0" pos="20 35 60 10" textCol="ffababab"
-         edTextCol="ff000000" edBkgCol="0" labelText="wet" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
-         fontsize="10" bold="0" italic="0" justification="36"/>
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Candara"
+         fontsize="15" bold="0" italic="0" justification="36"/>
   <SLIDER name="panSlider" id="324eec4d274919f3" memberName="panSlider"
-          virtualName="" explicitFocusOrder="0" pos="140 45 60 50" min="0"
-          max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+          virtualName="" explicitFocusOrder="0" pos="140 45 60 50" rotarysliderfill="ffffe4c4"
+          rotaryslideroutline="ffffff48" min="0" max="1" int="0" style="RotaryVerticalDrag"
+          textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="80"
+          textBoxHeight="20" skewFactor="1"/>
   <SLIDER name="delaySlider" id="37878e5e9fd60a08" memberName="delaySlider"
-          virtualName="" explicitFocusOrder="0" pos="440 48 60 50" tooltip="delay gain&#10;"
-          trackcol="ffffffff" textboxhighlight="ff1111ee" textboxoutline="ff808080"
-          min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+          virtualName="" explicitFocusOrder="0" pos="440 45 60 50" tooltip="delay gain&#10;"
+          trackcol="ffffffff" rotaryslideroutline="ff7fff00" textboxhighlight="ff1111ee"
+          textboxoutline="ff808080" min="0" max="1" int="0" style="RotaryVerticalDrag"
+          textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="80"
+          textBoxHeight="20" skewFactor="1"/>
   <SLIDER name="delayTimeSlider" id="ead45d255e5f5831" memberName="delayTimeSlider"
-          virtualName="" explicitFocusOrder="0" pos="468 96 30 30" min="0"
-          max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
+          virtualName="" explicitFocusOrder="0" pos="440 96 60 50" rotaryslideroutline="ff7fff00"
+          min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="0" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="3b34631ac55e0fe6" memberName="delayTimeValueLabel"
-         virtualName="" explicitFocusOrder="0" pos="436 104 30 10" textCol="ffababab"
+         virtualName="" explicitFocusOrder="0" pos="440 145 60 10" textCol="ffababab"
          edTextCol="ff000000" edBkgCol="0" labelText="time" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
@@ -768,32 +685,35 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="mid/side slider" id="84706171dc5b90dd" memberName="midSideSlider"
-          virtualName="" explicitFocusOrder="0" pos="80 45 60 50" min="0"
-          max="1" int="0.0050000000000000001" style="RotaryVerticalDrag"
-          textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="1"/>
+          virtualName="" explicitFocusOrder="0" pos="80 45 60 50" rotarysliderfill="ffffebcd"
+          rotaryslideroutline="ffffff48" min="0" max="1" int="0.0050000000000000001"
+          style="RotaryVerticalDrag" textBoxPos="NoTextBox" textBoxEditable="1"
+          textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="fcf994bed06bf6ab" memberName="midsideHeader"
          virtualName="" explicitFocusOrder="0" pos="80 35 60 10" textCol="ffababab"
          edTextCol="ff000000" edBkgCol="0" labelText="width" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="mid/side slider" id="2a577f0fc0372cc6" memberName="saturationSlider"
-          virtualName="" explicitFocusOrder="0" pos="380 46 60 50" min="0.001"
-          max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
+          virtualName="" explicitFocusOrder="0" pos="380 45 60 50" rotaryslideroutline="ff9bb0ff"
+          min="0.001" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="f53c45ed3e69f449" memberName="hpfHeader"
          virtualName="" explicitFocusOrder="0" pos="200 35 60 10" textCol="ffababab"
          edTextCol="ff000000" edBkgCol="0" labelText="hpf" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="12" bold="0" italic="0" justification="36"/>
-  <SLIDER name="hpfSlider" id="253b421224cbac37" memberName="hpfSlider"
-          virtualName="" explicitFocusOrder="0" pos="200 45 60 50" tooltip="hi pass filter (hz)"
-          min="20" max="10000" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.10000000000000001"/>
+  <SLIDER name="hpfSlider_violet" id="253b421224cbac37" memberName="hpfSlider"
+          virtualName="" explicitFocusOrder="0" pos="200 45 60 70" tooltip="hi pass filter (hz)"
+          rotaryslideroutline="ffff8af4" textboxtext="ffababab" textboxbkgd="ffffff"
+          textboxoutline="808080" min="1.0000000000000004e-005" max="1"
+          int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
+          textBoxEditable="0" textBoxWidth="80" textBoxHeight="20" skewFactor="0.5"/>
   <SLIDER name="new slider" id="81b8a5f3e2f90d2e" memberName="reverbSizeSlider"
-          virtualName="" explicitFocusOrder="0" pos="320 45 60 50" min="0.01"
-          max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+          virtualName="" explicitFocusOrder="0" pos="320 45 60 50" rotaryslideroutline="ff00ffff"
+          textboxtext="ffababab" min="0" max="1" int="0" style="RotaryVerticalDrag"
+          textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="80"
+          textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="9e5a6f98ed1157ee" memberName="labelReverb"
          virtualName="" explicitFocusOrder="0" pos="320 35 60 10" textCol="ffa8a8a8"
          edTextCol="ff000000" edBkgCol="0" labelText="reverb" editableSingleClick="0"
@@ -805,108 +725,65 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <TEXTBUTTON name="new button" id="877f25c71c1bc232" memberName="lnf3Btn"
-              virtualName="" explicitFocusOrder="0" pos="216 385 88 24" buttonText="lfv3"
-              connectedEdges="0" needsCallback="1" radioGroupId="0"/>
+              virtualName="" explicitFocusOrder="0" pos="24 153 56 24" bgColOff="ffff0000"
+              buttonText="lfv3" connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <TEXTBUTTON name="new button" id="bcef889c607949af" memberName="guilafBtn"
-              virtualName="" explicitFocusOrder="0" pos="320 385 88 24" buttonText="guilaf"
-              connectedEdges="0" needsCallback="1" radioGroupId="0"/>
+              virtualName="" explicitFocusOrder="0" pos="88 152 56 24" bgColOff="ff0000ff"
+              buttonText="guilaf" connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <TEXTBUTTON name="new button" id="c18db766ecc28fe6" memberName="guilaf2Btn"
-              virtualName="" explicitFocusOrder="0" pos="432 385 88 24" buttonText="guilaf2"
-              connectedEdges="0" needsCallback="1" radioGroupId="0"/>
-  <IMAGEBUTTON name="new button" id="e6bfce1ed1163934" memberName="dryOnBtn"
-               virtualName="" explicitFocusOrder="0" pos="25 15 11 10" buttonText="new button"
-               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
-               resourceNormal="off_png" opacityNormal="1" colourNormal="0" resourceOver=""
-               opacityOver="1" colourOver="0" resourceDown="on_red_png" opacityDown="1"
-               colourDown="0"/>
-  <IMAGEBUTTON name="new button" id="d1b3d57fbe1550e7" memberName="wetOnBtn"
-               virtualName="" explicitFocusOrder="0" pos="25 35 11 10" buttonText="new button"
-               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
-               resourceNormal="off_png" opacityNormal="1" colourNormal="0" resourceOver=""
-               opacityOver="1" colourOver="0" resourceDown="on_red_png" opacityDown="1"
-               colourDown="0"/>
-  <SLIDER name="gainSlider" id="c31acc4ca22491a9" memberName="gainSlider"
-          virtualName="" explicitFocusOrder="0" pos="20 45 60 50" tooltip="gain"
-          textboxbkgd="ffffff" textboxhighlight="881111ee" textboxoutline="0"
-          min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.29999999999999999"/>
+              virtualName="" explicitFocusOrder="0" pos="160 152 60 12" bgColOff="ffffff48"
+              bgColOn="6cffff48" buttonText="guilaf2" connectedEdges="0" needsCallback="1"
+              radioGroupId="0"/>
+  <SLIDER name="gainSlider" id="c31acc4ca22491a9" memberName="wetGainSlider"
+          virtualName="" explicitFocusOrder="0" pos="20 45 60 70" tooltip="gain"
+          rotaryslideroutline="ffff7f50" textboxtext="ffababab" textboxbkgd="ffffff"
+          textboxhighlight="881111ee" textboxoutline="0" min="0" max="1"
+          int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
+          textBoxEditable="0" textBoxWidth="80" textBoxHeight="20" skewFactor="0.29999999999999999"/>
   <LABEL name="new label" id="dce9f23eacc8bf8e" memberName="label" virtualName=""
          explicitFocusOrder="0" pos="380 35 60 10" textCol="ffb2b2b2"
          edTextCol="ff000000" edBkgCol="0" labelText="saturation" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="33"/>
-  <LABEL name="new label" id="cd75231cecd874a0" memberName="dryLabel"
-         virtualName="" explicitFocusOrder="0" pos="35 15 60 10" textCol="ffababab"
-         edTextCol="ff000000" edBkgCol="0" labelText="dry" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
-         fontsize="10" bold="0" italic="0" justification="33"/>
-  <SLIDER name="new slider" id="cfae188859f70600" memberName="hpfQSlider"
-          virtualName="" explicitFocusOrder="0" pos="230 95 30 30" min="0.01"
-          max="4" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <LABEL name="new label" id="cc37da8092f3b6df" memberName="hpfHeader2"
-         virtualName="" explicitFocusOrder="0" pos="216 95 20 30" textCol="ffababab"
-         edTextCol="ff000000" edBkgCol="0" labelText="q" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
-         fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="new slider" id="c7507ca4c1878f93" memberName="roomDampSlider"
-          virtualName="" explicitFocusOrder="0" pos="350 95 30 30" min="0"
-          max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
+          virtualName="" explicitFocusOrder="0" pos="320 95 60 50" rotaryslideroutline="ff00ffff"
+          min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <IMAGEBUTTON name="new button" id="4d8af3397b08f3d5" memberName="midOnBtn"
-               virtualName="" explicitFocusOrder="0" pos="96 100 11 10" buttonText="new button"
-               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
-               resourceNormal="off_png" opacityNormal="1" colourNormal="0" resourceOver=""
-               opacityOver="1" colourOver="0" resourceDown="on_red_png" opacityDown="1"
-               colourDown="0"/>
-  <IMAGEBUTTON name="new button" id="7a16629aa49e6487" memberName="dryOnBtn2"
-               virtualName="" explicitFocusOrder="0" pos="104 16 11 10" buttonText="new button"
-               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
-               resourceNormal="off_png" opacityNormal="1" colourNormal="0" resourceOver=""
-               opacityOver="1" colourOver="0" resourceDown="on_red_png" opacityDown="1"
-               colourDown="0"/>
-  <IMAGEBUTTON name="new button" id="346372f4ecb250d6" memberName="dryOnBtn3"
-               virtualName="" explicitFocusOrder="0" pos="164 16 11 10" buttonText="new button"
-               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
-               resourceNormal="off_png" opacityNormal="1" colourNormal="0" resourceOver=""
-               opacityOver="1" colourOver="0" resourceDown="on_red_png" opacityDown="1"
-               colourDown="0"/>
-  <IMAGEBUTTON name="new button" id="24594c71bee62a12" memberName="dryOnBtn4"
-               virtualName="" explicitFocusOrder="0" pos="224 16 11 10" buttonText="new button"
-               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
-               resourceNormal="off_png" opacityNormal="1" colourNormal="0" resourceOver=""
-               opacityOver="1" colourOver="0" resourceDown="on_red_png" opacityDown="1"
-               colourDown="0"/>
-  <IMAGEBUTTON name="new button" id="da80d56c6522c10e" memberName="dryOnBtn5"
-               virtualName="" explicitFocusOrder="0" pos="404 16 11 10" buttonText="new button"
-               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
-               resourceNormal="off_png" opacityNormal="1" colourNormal="0" resourceOver=""
-               opacityOver="1" colourOver="0" resourceDown="on_red_png" opacityDown="1"
-               colourDown="0"/>
-  <SLIDER name="" id="7a4da3da58b2809f" memberName="lpfSlider" virtualName="Slider"
-          explicitFocusOrder="0" pos="260 45 60 50" tooltip="low pass filter"
-          min="20" max="10000" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="0.10000000000000001"/>
+  <SLIDER name="violet" id="7a4da3da58b2809f" memberName="lpfSlider" virtualName="Slider"
+          explicitFocusOrder="0" pos="260 45 60 70" tooltip="low pass filter"
+          rotaryslideroutline="ffff8af4" textboxtext="ffababab" textboxbkgd="ffffff"
+          textboxoutline="808080" min="1.0000000000000004e-005" max="1"
+          int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
+          textBoxEditable="0" textBoxWidth="80" textBoxHeight="20" skewFactor="0.5"/>
   <LABEL name="new label" id="d2867cf399201cc0" memberName="hpfHeader3"
          virtualName="" explicitFocusOrder="0" pos="260 35 60 10" textCol="ffababab"
          edTextCol="ff000000" edBkgCol="0" labelText="lpf" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="12" bold="0" italic="0" justification="36"/>
-  <IMAGEBUTTON name="new button" id="66ef4e17fe613e9" memberName="dryOnBtn6"
-               virtualName="" explicitFocusOrder="0" pos="285 16 11 10" buttonText="new button"
-               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
-               resourceNormal="off_png" opacityNormal="1" colourNormal="0" resourceOver=""
-               opacityOver="1" colourOver="0" resourceDown="on_red_png" opacityDown="1"
-               colourDown="0"/>
-  <SLIDER name="lpfQSlider" id="f9a15bac8da37767" memberName="lpfQSlider"
-          virtualName="" explicitFocusOrder="0" pos="284 95 30 30" min="0.01"
-          max="4" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <LABEL name="new label" id="2176d3b7459e753f" memberName="hpfHeader4"
-         virtualName="" explicitFocusOrder="0" pos="270 95 20 30" textCol="ffababab"
-         edTextCol="ff000000" edBkgCol="0" labelText="q" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
-         fontsize="10" bold="0" italic="0" justification="36"/>
+  <TOGGLEBUTTON name="new toggle button" id="977f086178cc7578" memberName="wetOnOffBtn"
+                virtualName="" explicitFocusOrder="0" pos="24 33 56 12" txtcol="ffababab"
+                buttonText="wet" connectedEdges="0" needsCallback="1" radioGroupId="0"
+                state="1"/>
+  <TOGGLEBUTTON name="new toggle button" id="d7b5b3aef09aa1a5" memberName="midOnOffBtn"
+                virtualName="" explicitFocusOrder="0" pos="120 128 40 12" txtcol="ffababab"
+                buttonText="mid" connectedEdges="0" needsCallback="1" radioGroupId="0"
+                state="1"/>
+  <TEXTBUTTON name="new button" id="f6e9c00d6dfb3a37" memberName="textButton"
+              virtualName="" explicitFocusOrder="0" pos="100 100 20 12" bgColOff="7dffff48"
+              bgColOn="ffdc143c" textCol="ffa8a8a8" textColOn="ff313131" buttonText="mid"
+              connectedEdges="0" needsCallback="1" radioGroupId="0"/>
+  <TEXTBUTTON name="new button" id="1e4e33d2149de345" memberName="textButton3"
+              virtualName="" explicitFocusOrder="0" pos="160 112 20 12" bgColOff="ff7fffd4"
+              bgColOn="ffdc143c" textCol="ffa8a8a8" textColOn="ff313131" buttonText="dry"
+              connectedEdges="0" needsCallback="1" radioGroupId="0"/>
+  <TEXTBUTTON name="new button" id="55e598d305767f9a" memberName="textButton2"
+              virtualName="" explicitFocusOrder="0" pos="128 104 20 12" bgColOff="ffff7f50"
+              bgColOn="ffdc143c" textCol="ffa8a8a8" textColOn="ff313131" buttonText="wet"
+              connectedEdges="0" needsCallback="1" radioGroupId="0"/>
+  <TEXTBUTTON name="new button" id="803eac4b33cea359" memberName="textButton4"
+              virtualName="" explicitFocusOrder="0" pos="240 160 64 24" bgColOff="fff0ffff"
+              textCol="ffa8a8a8" textColOn="ffa8a8a8" buttonText="new button"
+              connectedEdges="0" needsCallback="1" radioGroupId="0"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
@@ -916,166 +793,54 @@ END_JUCER_METADATA
 //==============================================================================
 // Binary resources - be careful not to edit any of these sections!
 
-// JUCER_RESOURCE: chickknob_png, 8824, "../../../Desktop/chickknob.png"
-static const unsigned char resource_JuceDemoPluginAudioProcessorEditor_chickknob_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,120,0,0,0,120,8,6,0,0,0,57,100,54,210,0,0,0,9,112,72,89,115,
-0,0,11,19,0,0,11,19,1,0,154,156,24,0,0,0,4,103,65,77,65,0,0,177,142,124,251,81,147,0,0,0,32,99,72,82,77,0,0,122,37,0,0,128,131,0,0,249,255,0,0,128,233,0,0,117,48,0,0,234,96,0,0,58,152,0,0,23,111,146,95,
-197,70,0,0,33,238,73,68,65,84,120,218,236,125,121,140,93,215,125,222,119,150,123,223,50,43,135,195,77,92,68,145,20,105,137,162,72,73,150,184,152,50,36,138,108,2,3,241,31,74,29,52,50,160,0,70,139,194,72,
-155,34,73,91,180,5,10,187,104,145,162,70,81,255,17,160,9,208,58,168,157,34,168,131,218,40,170,216,46,224,45,145,28,145,116,101,114,108,137,187,184,136,203,80,179,191,229,190,187,156,123,150,254,113,239,
-185,115,222,229,12,73,39,172,56,51,122,7,24,112,248,230,206,125,111,206,119,127,219,247,91,14,49,198,160,183,86,238,162,189,45,232,1,220,91,61,128,123,171,7,112,111,245,0,238,173,30,192,189,245,75,46,
-190,18,255,168,201,169,73,252,239,191,248,11,124,255,251,223,199,248,237,219,95,63,122,244,232,127,251,252,107,175,221,90,183,97,61,222,59,115,6,127,252,159,255,232,223,92,60,127,254,55,15,31,60,132,191,
-251,185,207,97,255,254,253,61,128,151,211,50,6,136,147,4,157,48,4,99,236,83,213,106,245,117,198,24,40,99,168,214,170,48,4,178,25,180,191,52,61,55,123,113,110,118,182,167,162,151,219,138,146,24,113,28,
-163,211,233,32,142,227,129,56,142,209,104,54,145,138,20,34,17,208,90,115,101,244,209,153,185,89,220,188,117,19,65,59,232,1,188,156,86,163,209,192,228,212,20,140,49,251,146,36,89,21,134,33,148,209,208,
-70,131,113,14,74,41,168,198,43,65,171,141,201,233,25,52,91,205,30,192,203,105,37,113,130,48,83,207,85,66,136,23,37,49,40,165,96,156,67,74,9,10,2,70,233,110,24,32,8,218,152,107,53,122,0,47,43,9,110,53,
-160,148,130,16,98,91,39,10,161,148,130,82,10,158,231,161,94,173,194,247,60,40,165,182,7,157,160,62,55,55,135,217,153,217,30,192,203,105,181,115,155,170,140,62,148,36,9,226,56,134,54,6,140,16,112,74,161,
-164,68,28,199,60,77,211,151,166,166,166,112,227,198,13,180,218,173,30,192,203,97,77,76,77,161,213,110,131,80,2,74,233,6,165,20,130,32,128,150,10,144,10,90,105,196,113,12,165,20,8,33,47,38,73,130,70,163,
-1,41,101,15,224,229,176,98,145,32,85,41,140,49,80,74,237,74,83,9,33,18,76,220,190,141,48,138,80,171,213,80,171,213,64,8,1,99,236,5,33,4,90,173,22,68,154,246,0,94,14,203,247,43,96,148,195,24,131,36,73,
-214,104,173,0,13,244,85,171,80,74,129,82,10,41,37,164,148,8,195,240,133,137,137,137,250,228,228,36,110,221,186,213,3,120,121,216,223,54,154,205,6,162,40,58,160,181,26,38,198,0,198,160,90,171,161,94,175,
-67,74,137,106,181,10,207,243,144,36,73,63,165,116,245,220,220,28,166,166,166,122,0,47,135,53,219,156,69,28,199,8,163,168,166,164,242,125,206,161,164,196,224,240,48,140,49,240,125,31,140,49,120,158,7,0,
-168,84,42,27,231,230,230,48,57,57,217,3,120,57,172,233,233,41,36,73,2,37,37,148,72,65,41,7,33,4,90,41,164,105,138,190,190,62,84,42,21,40,165,192,24,131,148,242,139,73,146,96,124,124,188,7,240,114,88,173,
-217,38,162,48,2,180,217,71,8,133,16,9,162,40,194,220,220,28,140,49,72,211,20,113,28,99,98,98,2,105,154,66,8,241,28,0,52,155,77,76,207,206,244,0,94,218,210,59,141,36,140,160,68,130,36,142,14,39,137,0,231,
-28,140,49,48,198,96,140,129,148,18,157,78,7,190,239,163,211,233,32,8,130,199,130,32,192,212,212,20,166,38,38,123,0,47,229,37,68,138,118,187,9,173,4,164,136,247,38,73,12,74,25,8,33,144,82,130,115,142,48,
-12,193,57,135,239,251,160,148,130,16,82,79,211,20,183,110,221,194,181,15,174,117,221,175,217,110,247,0,94,82,49,112,28,34,8,219,104,7,109,104,163,215,112,78,33,101,2,206,57,180,214,72,146,4,132,16,212,
-235,117,84,42,21,248,190,15,207,243,32,165,220,217,108,54,49,57,61,221,117,191,161,129,129,30,192,75,105,5,97,11,137,72,32,165,217,169,148,169,82,74,224,121,12,113,28,131,16,2,0,72,211,20,74,41,0,128,
-214,26,74,41,116,58,157,215,218,237,54,198,87,96,44,188,162,0,158,156,154,128,16,18,140,121,27,211,52,245,195,48,68,187,29,64,169,20,105,154,98,116,245,40,40,165,208,90,131,82,90,0,45,165,252,123,141,
-70,3,231,206,157,195,119,190,247,93,156,191,112,30,147,211,43,195,30,175,136,138,142,107,215,175,226,194,197,115,248,233,79,127,138,201,137,73,36,73,252,68,146,36,144,82,128,82,10,207,171,64,74,9,109,
-52,134,134,134,80,171,213,16,134,33,180,214,48,198,192,243,188,71,149,82,56,125,250,52,218,237,54,134,135,135,176,245,177,71,241,244,83,79,99,251,142,29,216,176,254,17,172,25,29,237,1,252,81,174,70,163,
-129,139,23,47,226,242,149,11,56,119,238,28,174,125,112,13,73,146,81,144,198,152,103,56,231,224,220,135,148,10,90,107,0,128,49,26,148,18,40,165,11,218,50,73,18,0,168,102,94,117,136,119,223,253,5,146,36,
-129,231,49,60,242,200,70,172,93,187,14,251,95,216,143,151,143,188,132,109,219,182,97,116,100,77,15,224,255,223,235,194,133,11,56,125,122,12,199,79,190,141,241,241,235,8,195,8,73,34,80,173,214,0,16,164,
-169,56,152,229,127,171,0,4,0,32,12,67,116,194,16,181,106,31,6,7,135,224,251,21,104,45,145,166,89,40,85,169,84,222,247,60,111,135,82,18,156,83,164,169,196,213,171,87,113,230,204,25,156,60,121,28,111,159,
-248,107,236,223,191,31,7,15,30,196,190,167,247,97,213,240,72,15,224,7,189,174,92,185,130,177,177,49,188,243,206,59,184,53,126,11,141,230,28,132,136,160,148,129,49,4,74,41,112,206,222,147,50,221,221,233,
-132,0,12,8,33,136,162,40,171,232,32,28,179,205,57,68,81,140,138,95,129,84,12,113,28,162,90,53,48,6,219,57,167,239,51,198,191,198,88,245,123,156,243,177,52,77,33,165,68,20,71,56,123,246,44,166,38,166,240,
-179,119,222,193,75,47,189,140,67,135,14,97,199,246,29,24,26,28,238,1,252,183,93,183,110,221,194,153,247,206,224,237,227,111,227,250,7,215,49,61,51,5,194,84,110,67,9,140,209,208,90,125,65,74,242,207,61,
-143,239,74,211,66,85,219,188,47,124,223,47,238,87,175,213,80,169,84,97,226,4,74,17,120,158,143,161,161,126,164,169,216,110,12,254,128,49,246,7,156,243,219,149,74,229,127,80,74,191,225,121,222,152,214,
-26,157,78,7,31,124,112,29,223,252,230,55,113,241,226,69,28,125,229,21,28,56,112,16,235,214,174,239,1,252,55,89,237,184,131,235,87,175,225,228,241,147,120,231,157,159,225,246,237,113,0,6,32,26,82,42,40,
-165,71,133,80,127,104,140,254,44,128,186,82,18,74,105,4,65,132,56,78,64,41,69,163,209,128,146,18,21,191,2,207,243,81,175,215,161,181,134,16,41,8,37,168,85,107,200,90,104,9,40,101,72,83,9,198,0,99,204,
-6,99,204,239,106,173,127,87,8,241,109,66,200,191,173,213,106,99,150,48,57,115,230,12,102,102,102,240,225,196,4,94,126,249,8,118,238,216,217,3,248,151,89,51,237,6,206,158,63,139,255,123,226,4,206,157,59,
-135,91,215,199,81,229,21,72,35,160,180,68,146,164,255,82,74,245,207,140,49,171,140,1,40,37,48,198,32,142,19,84,171,21,192,160,8,135,60,175,2,206,43,72,146,140,244,136,162,236,1,48,26,16,105,2,198,1,41,
-21,56,103,72,83,129,56,142,225,121,94,65,115,26,99,94,213,90,191,202,24,59,193,57,255,13,66,200,13,41,37,174,95,191,142,55,222,120,3,173,86,11,127,231,216,175,96,239,211,123,123,0,223,207,186,49,113,19,
-63,255,249,47,48,118,122,12,231,206,159,69,24,119,160,161,144,168,24,169,20,95,144,169,252,119,82,202,13,74,101,222,49,165,12,198,0,90,27,164,105,2,74,9,60,223,131,78,52,42,126,21,3,3,67,32,4,32,132,160,
-82,169,160,94,175,131,128,32,149,2,82,37,72,18,131,40,10,49,48,48,0,198,56,180,206,226,230,52,77,225,121,30,42,149,74,238,133,155,3,198,152,235,198,152,111,120,158,247,251,90,235,233,70,163,129,183,222,
-122,11,237,32,64,146,132,120,225,249,131,61,128,239,182,38,102,39,241,230,155,111,225,212,169,83,184,113,227,6,162,168,147,217,82,45,63,35,37,190,162,181,220,157,57,63,10,198,100,78,20,33,128,82,4,105,
-170,51,41,20,153,253,133,201,36,83,136,4,149,74,5,198,24,68,81,12,238,249,16,169,0,165,58,175,176,212,104,183,3,112,238,229,215,1,74,101,118,60,77,179,242,31,155,172,200,25,177,215,141,49,199,56,231,175,
-86,171,213,19,179,179,179,56,125,250,20,8,128,84,2,159,58,120,176,7,240,130,106,185,57,131,31,255,229,143,113,252,248,241,12,220,56,68,173,94,171,203,88,252,107,163,204,239,41,165,125,165,84,17,219,18,
-66,242,12,145,130,214,153,29,101,204,135,76,83,80,66,32,68,6,206,248,248,56,60,207,131,231,121,104,181,2,80,194,192,88,150,128,240,124,191,112,200,40,165,160,148,66,8,9,99,44,157,105,138,178,91,11,178,
-214,26,140,177,13,132,144,191,102,140,253,211,138,239,127,53,142,98,188,247,222,89,112,175,130,74,197,199,39,159,125,174,7,112,23,113,17,180,240,179,83,167,240,87,111,190,133,153,153,105,68,113,8,238,
-177,157,20,248,163,84,136,35,74,102,155,108,235,169,230,1,33,144,50,179,183,158,199,65,40,129,54,0,167,62,40,229,168,84,42,168,213,234,152,153,153,129,239,251,80,74,67,164,49,64,20,164,82,96,25,88,54,
-179,4,33,4,226,56,2,64,192,121,246,26,165,4,90,155,2,92,7,108,106,140,249,79,156,177,237,148,121,255,40,74,18,156,57,115,6,21,223,199,224,192,32,118,62,254,120,15,96,187,78,157,62,133,31,253,240,135,152,
-153,153,65,20,133,48,208,7,56,245,255,123,28,196,219,101,170,138,144,71,74,9,165,230,217,169,204,102,26,80,154,149,225,24,165,97,12,96,8,1,144,61,4,213,106,5,190,159,169,94,109,20,154,205,89,248,190,143,
-40,138,1,100,182,89,41,85,148,211,198,113,214,9,1,120,200,75,186,64,105,38,205,90,211,162,66,132,100,118,25,0,126,155,104,189,197,72,249,217,185,70,3,167,199,198,48,52,60,140,117,235,215,97,104,96,176,
-151,108,56,253,222,24,222,122,235,77,92,187,126,29,50,21,16,105,188,147,0,223,21,177,216,46,18,1,157,83,139,54,19,100,37,73,107,93,216,73,41,211,92,101,211,92,181,42,235,24,33,12,67,124,112,253,6,26,141,
-38,130,160,137,185,185,25,196,113,98,75,103,139,207,225,62,64,73,18,35,8,66,36,137,128,16,2,214,238,219,247,19,89,241,60,68,42,17,167,18,97,20,253,90,28,199,95,79,146,4,51,179,179,56,113,242,36,222,62,
-254,118,79,130,63,24,191,129,19,39,79,226,226,251,151,16,39,49,164,20,163,156,241,63,151,82,174,74,211,20,218,104,40,157,129,107,65,181,210,11,0,105,42,32,165,66,181,90,7,165,28,30,207,8,141,40,12,33,
-68,2,41,21,102,103,155,56,113,226,56,234,125,21,76,79,77,224,210,165,203,136,162,8,253,253,253,96,140,65,8,81,220,47,115,218,8,164,84,160,212,128,16,32,142,51,14,155,115,6,70,41,12,12,168,148,208,158,
-7,120,26,58,103,188,36,101,175,123,158,55,198,24,251,234,212,212,20,126,252,151,127,133,145,145,213,216,255,201,231,63,158,0,55,195,22,198,126,126,26,239,190,251,30,90,173,22,82,153,128,49,246,6,52,246,
-74,33,161,149,134,204,189,89,43,89,198,24,171,22,97,169,68,198,57,64,12,146,56,132,241,12,170,213,106,94,80,167,65,8,69,16,180,241,163,31,127,31,103,207,253,2,70,27,220,186,117,171,72,248,11,33,208,233,
-116,64,8,1,231,60,183,185,180,40,18,200,156,57,192,24,130,52,149,224,140,194,243,24,140,77,59,74,9,195,24,8,0,105,36,180,214,255,209,243,188,63,85,74,77,95,185,114,5,223,255,225,15,48,208,223,143,39,63,
-241,196,199,15,224,43,87,174,224,212,169,211,152,156,156,128,76,5,164,146,255,197,40,125,64,37,170,176,179,214,131,181,255,183,224,82,74,11,187,12,66,144,196,17,96,52,24,103,144,146,33,8,66,40,101,224,
-251,28,156,19,76,220,254,16,183,110,222,180,137,5,48,198,144,36,73,87,110,88,74,121,71,253,86,182,76,46,221,64,42,83,40,45,225,87,171,128,84,32,68,192,247,188,92,242,41,164,84,84,8,241,19,223,247,63,161,
-164,194,205,155,55,113,106,236,52,54,111,222,140,129,190,254,143,143,13,190,245,225,56,198,126,241,115,124,248,225,4,148,76,97,96,94,35,26,95,176,146,155,217,81,93,128,236,74,174,173,206,32,132,100,180,
-99,14,20,231,28,3,131,253,160,76,231,42,221,64,27,13,99,20,170,181,10,42,149,10,120,222,31,44,132,64,20,69,0,128,90,173,86,216,98,27,235,218,144,201,190,111,33,217,140,131,144,140,88,97,132,64,105,13,
-165,53,12,0,67,0,3,141,68,36,187,226,56,254,86,28,199,152,158,158,198,213,107,215,112,249,234,213,143,151,147,245,222,217,51,56,127,254,60,194,56,0,225,116,148,0,255,193,104,67,137,33,0,193,29,246,214,
-110,178,221,240,56,142,33,132,40,72,8,219,173,128,156,182,244,124,130,74,133,129,115,2,33,83,80,202,80,171,213,192,243,30,97,99,12,56,231,69,124,12,32,43,10,40,212,50,41,222,215,74,55,0,168,252,231,70,
-101,95,52,151,111,59,16,82,35,115,0,195,48,122,53,140,162,47,71,97,132,203,151,46,227,194,133,11,104,135,225,199,3,224,86,171,141,15,46,95,197,204,212,52,96,12,136,193,191,55,202,108,34,154,116,121,200,
-86,45,91,213,156,247,27,33,12,67,132,97,88,80,143,182,12,167,240,112,19,1,101,36,8,51,96,140,130,128,20,106,222,218,115,215,206,10,33,138,7,201,198,195,238,247,246,222,246,1,72,211,20,89,197,136,132,145,
-26,40,204,135,134,209,6,6,128,50,10,137,72,126,63,78,146,250,204,236,12,46,93,186,132,219,19,31,126,60,0,190,122,245,10,46,191,127,25,157,70,128,40,136,62,147,68,201,235,70,153,46,181,92,6,216,117,170,
-172,132,89,181,105,109,166,82,170,232,90,144,105,246,123,54,182,181,42,221,182,173,248,190,127,135,38,176,247,114,107,169,173,74,183,15,158,125,79,99,12,132,16,25,208,169,132,145,42,3,87,107,208,220,97,
-83,90,245,107,163,191,162,181,194,213,171,87,113,233,226,197,143,7,192,151,46,93,66,179,217,4,180,1,209,228,43,90,72,31,133,189,156,103,139,48,79,36,20,113,176,231,121,168,86,171,69,109,179,205,250,104,
-173,115,231,137,162,213,238,32,77,37,160,81,72,190,5,203,247,125,112,206,139,123,187,160,149,67,37,66,72,241,126,110,62,217,50,95,153,90,79,33,132,128,20,2,90,72,40,169,160,140,130,129,177,83,6,94,75,
-165,172,183,90,45,188,127,249,125,76,124,196,197,124,31,57,192,31,126,248,33,46,93,186,4,33,4,184,207,235,70,171,93,132,18,72,173,186,108,160,221,124,11,144,148,178,75,122,236,166,91,175,152,82,138,90,
-173,138,185,185,6,154,173,118,166,250,41,41,164,214,218,111,123,127,75,154,88,103,202,106,15,171,230,173,74,207,139,242,138,135,202,126,30,247,247,100,154,66,36,9,210,84,64,43,5,41,100,241,217,163,40,
-90,21,39,201,63,76,100,138,169,201,41,76,78,77,175,108,128,207,157,59,135,241,241,241,60,110,84,95,81,70,113,233,48,72,229,144,200,170,94,91,153,81,150,72,171,74,125,223,71,146,8,76,79,207,66,43,9,98,
-255,192,92,237,206,39,38,100,17,26,185,146,235,50,99,66,136,66,253,90,251,204,24,43,188,240,178,183,13,0,218,122,249,90,67,167,18,58,157,215,64,82,202,223,22,73,130,243,151,46,224,103,167,126,182,178,
-227,224,155,55,111,66,136,4,169,78,161,100,250,57,91,94,83,166,32,93,41,182,44,150,221,80,107,67,61,207,67,28,199,8,130,44,213,167,117,102,23,149,202,18,9,86,157,90,112,173,147,229,18,26,238,64,116,247,
-161,178,82,154,209,150,89,186,209,243,188,34,196,178,159,215,2,92,132,84,214,243,150,18,212,48,16,70,1,130,237,132,144,3,34,17,39,174,188,127,121,101,75,240,245,235,215,33,82,1,99,204,1,41,213,218,178,
-211,228,46,43,113,110,88,99,25,40,75,84,4,65,27,51,51,51,8,130,14,58,157,176,0,209,221,124,11,158,205,2,89,192,221,152,218,13,137,92,167,204,254,174,117,240,56,231,69,72,230,222,199,125,56,243,23,192,
-9,1,37,4,4,4,220,243,126,35,137,34,164,89,153,238,202,5,120,118,110,6,32,128,82,234,171,46,51,229,74,153,125,221,214,45,103,169,64,15,125,125,125,240,125,31,132,144,28,220,0,237,118,0,198,120,65,92,88,
-233,114,157,37,151,172,176,132,134,235,72,149,191,40,165,133,93,119,63,151,181,205,214,89,179,13,108,238,3,226,106,1,16,2,78,25,140,148,144,34,253,226,112,255,32,218,173,246,202,6,120,110,110,14,82,74,
-36,73,242,180,149,52,87,202,92,41,176,223,83,74,139,198,109,11,110,167,211,65,24,134,185,100,123,197,245,46,11,85,94,94,65,41,146,46,54,204,94,111,189,99,171,33,172,180,187,210,109,181,138,37,72,202,164,
-136,251,55,104,173,161,85,54,217,71,138,164,154,196,241,103,226,56,94,217,0,115,143,129,115,190,83,74,89,119,71,23,185,113,175,149,22,11,160,239,251,168,213,106,69,220,26,134,33,162,40,202,157,159,121,
-123,106,55,218,5,199,37,45,236,53,174,164,150,77,130,251,189,123,95,171,166,227,56,70,154,166,5,201,98,89,48,87,213,219,191,65,136,44,211,5,24,104,37,17,198,225,139,169,20,43,27,96,173,13,164,148,175,
-89,105,180,53,79,174,247,60,159,227,149,168,84,42,232,235,235,3,99,12,97,24,34,8,130,220,179,53,249,199,39,11,2,179,16,184,174,196,150,99,94,215,185,114,237,176,149,234,50,185,209,206,123,135,171,213,
-234,29,30,185,109,141,201,138,2,179,47,66,9,252,154,191,181,221,249,104,85,244,71,238,69,39,73,2,223,247,95,180,182,213,58,69,110,141,149,85,133,181,90,13,253,253,253,168,213,106,8,130,0,179,179,115,144,
-50,45,188,96,11,174,235,236,148,37,177,236,188,149,157,42,87,189,186,94,181,155,181,178,68,138,37,92,236,103,23,66,192,243,60,48,198,144,166,105,151,22,201,170,76,144,151,20,41,80,80,120,204,123,194,37,
-76,86,36,192,140,49,68,81,244,68,16,4,133,83,228,74,157,149,28,206,57,250,250,250,80,171,213,160,181,70,118,125,152,111,184,119,7,168,174,163,102,255,117,165,214,5,205,189,110,177,107,221,251,115,206,
-139,135,142,49,214,101,119,45,229,105,181,79,6,50,0,40,80,58,255,190,82,73,8,33,182,80,70,87,186,138,214,155,149,82,171,109,122,207,218,48,55,36,178,82,99,227,206,249,228,66,54,232,204,142,101,184,219,
-42,219,229,178,52,187,106,183,44,217,101,135,207,122,223,243,154,163,155,230,180,172,90,118,189,234,74,92,88,127,32,207,86,213,68,34,234,43,26,96,74,233,106,41,165,239,146,3,54,180,88,8,0,173,117,33,233,
-156,251,185,199,108,138,66,118,87,50,93,137,46,219,217,197,254,93,40,254,182,203,58,123,46,77,234,198,197,157,78,167,200,41,103,158,55,135,82,89,254,185,76,145,230,142,89,181,90,173,62,189,162,1,246,60,
-127,149,75,32,148,171,52,172,148,216,56,211,198,183,148,178,162,50,210,226,88,142,95,23,115,162,220,127,93,135,232,126,142,245,115,211,137,229,223,205,74,108,51,175,218,74,184,125,248,220,28,179,237,146,
-200,193,126,118,69,3,220,223,223,87,243,60,15,245,122,189,216,40,75,9,186,25,36,27,179,134,97,198,78,89,130,195,24,75,36,220,61,172,185,151,164,222,15,184,174,20,186,73,127,91,191,101,105,203,52,181,102,
-133,22,206,95,217,121,115,239,179,162,1,110,54,27,69,60,233,38,16,92,206,121,94,61,10,132,97,152,171,107,118,7,160,101,111,185,156,172,47,219,214,133,156,173,251,181,229,246,51,150,223,43,75,78,36,0,52,
-40,237,246,37,220,80,203,122,219,0,134,86,180,23,173,82,245,211,52,77,53,33,132,118,135,21,243,234,218,50,73,89,239,175,185,235,115,232,170,247,133,192,185,151,196,150,65,95,236,247,23,211,4,25,136,6,
-198,216,82,94,109,99,253,130,98,181,159,45,215,50,31,172,104,9,94,179,102,221,116,197,175,54,181,234,174,125,114,61,206,204,158,49,36,137,0,165,188,203,123,93,104,179,127,25,32,23,251,89,89,173,47,246,
-59,214,20,88,31,193,247,189,60,140,202,58,42,8,153,255,59,108,103,162,13,165,114,98,228,236,138,150,96,2,2,206,248,117,16,178,74,107,83,216,51,235,196,100,155,168,161,53,238,40,0,88,76,69,223,175,20,186,
-14,221,221,174,187,215,195,112,39,11,166,64,8,7,165,164,0,211,74,174,235,56,74,41,133,117,190,86,172,4,143,172,30,1,99,236,114,214,220,197,139,13,232,14,153,0,41,77,87,113,155,155,33,186,31,27,90,6,179,
-252,128,44,6,222,98,215,45,20,146,101,45,172,128,82,243,132,136,77,66,216,193,227,182,120,32,39,110,46,13,13,13,141,173,104,128,251,250,250,16,199,241,79,140,54,224,212,131,214,128,210,170,136,57,179,
-148,28,96,76,55,97,224,102,120,202,33,206,98,160,100,125,197,26,166,212,238,114,175,117,55,237,224,250,12,118,200,139,201,251,144,141,33,197,231,115,57,117,75,234,8,33,46,172,91,183,110,101,83,149,195,
-195,195,224,156,127,96,116,214,86,2,101,144,230,197,238,153,87,157,121,204,140,117,179,89,174,83,115,175,80,163,11,236,60,164,34,200,10,211,239,21,243,186,247,176,102,163,156,243,45,199,212,22,100,99,
-72,110,131,109,181,116,22,15,215,106,53,155,34,253,206,250,245,235,87,54,192,27,54,108,64,127,127,255,155,205,102,51,100,140,213,25,103,240,180,135,138,95,65,154,55,118,51,70,51,240,75,222,181,155,111,
-117,59,17,22,5,23,0,49,119,126,191,16,208,46,135,237,170,106,27,202,217,210,220,178,202,158,239,45,166,197,191,132,152,226,111,112,138,20,210,190,190,190,63,121,242,201,39,87,182,13,222,180,105,19,182,
-110,221,58,93,175,215,47,73,41,193,189,204,75,102,156,23,167,161,24,163,187,170,26,221,250,44,107,235,238,21,191,254,173,157,193,5,74,121,44,160,229,135,98,62,191,76,138,152,189,82,169,162,86,171,22,69,
-1,81,20,253,159,157,187,118,226,224,254,67,43,27,224,245,235,215,99,251,246,237,232,239,239,255,95,4,153,38,75,243,97,99,118,83,221,204,141,85,211,217,104,66,94,56,100,139,217,204,197,164,247,126,94,95,
-204,75,118,235,185,92,173,226,74,188,59,37,32,51,8,180,40,179,85,90,97,104,104,232,179,187,159,216,253,81,111,247,71,15,240,170,85,171,176,107,215,46,172,91,183,238,107,204,243,230,24,231,48,57,103,107,
-187,251,236,70,185,201,118,183,216,124,49,111,88,107,13,99,59,1,239,193,68,18,147,127,129,220,53,22,46,108,89,30,202,149,251,151,220,248,189,155,210,36,0,88,230,124,1,241,166,205,155,176,123,207,199,0,
-96,0,24,29,29,197,234,213,171,111,48,202,190,229,121,30,134,134,6,139,2,54,75,32,44,212,54,82,206,56,45,148,228,39,26,184,95,229,77,74,95,11,37,39,92,222,185,60,172,197,254,204,153,167,85,20,229,101,215,
-103,96,247,247,13,254,249,227,59,30,199,99,91,30,253,120,0,188,121,243,102,236,122,226,9,172,94,59,250,61,198,231,11,215,203,229,49,174,115,83,6,183,92,106,3,146,73,163,201,216,194,251,138,121,137,229,
-171,187,32,238,6,183,156,36,112,31,60,91,198,107,61,125,155,27,206,38,7,144,188,250,196,195,182,173,143,125,245,153,103,158,195,200,67,152,84,251,208,218,71,247,236,217,141,79,236,218,245,237,90,173,118,
-211,37,244,221,46,64,27,63,186,118,183,12,92,17,170,100,21,231,217,53,48,247,69,77,118,121,197,11,0,61,95,99,165,186,210,133,238,61,220,14,139,74,165,130,129,129,1,84,171,213,194,171,30,26,26,122,107,
-247,83,187,199,246,60,245,212,67,217,231,135,6,240,182,173,219,176,251,169,221,24,30,30,254,82,206,209,22,5,108,229,184,212,110,160,187,193,229,120,148,146,28,232,18,56,11,213,100,45,102,107,11,120,29,
-109,225,214,104,187,15,89,54,189,167,90,164,49,93,117,237,72,179,220,182,109,219,231,247,61,179,15,35,171,70,62,94,0,3,192,222,61,123,177,107,215,174,63,225,156,95,48,198,20,135,101,184,97,144,219,198,
-233,134,40,5,72,0,40,33,160,14,201,127,55,112,23,42,227,233,218,144,124,20,131,205,81,187,108,154,11,174,61,228,210,125,16,221,88,29,0,214,175,91,255,63,15,28,56,112,227,241,29,15,111,94,214,67,5,120,
-227,35,143,224,211,159,254,52,118,239,222,253,123,181,90,173,200,190,88,187,231,146,245,174,221,179,15,0,193,157,29,9,229,18,89,23,232,197,128,117,127,174,75,221,131,229,210,27,203,78,149,11,22,92,109,
-162,148,66,181,90,157,121,254,249,231,255,241,11,47,188,128,225,193,161,135,182,199,15,125,140,210,115,207,60,139,219,183,63,252,110,187,221,254,198,141,27,55,94,119,187,23,144,135,79,182,205,211,2,155,
-197,201,128,193,60,101,105,104,119,53,229,66,117,90,11,165,28,187,60,112,100,67,86,104,46,193,158,231,21,92,178,189,198,247,179,145,196,110,87,131,107,62,108,209,224,206,157,59,127,103,255,129,253,211,
-91,31,130,231,188,164,0,6,128,231,62,249,28,166,103,166,127,171,221,106,125,106,174,209,216,110,55,63,205,207,244,181,206,151,107,159,179,241,73,4,50,85,160,148,101,46,18,153,47,228,115,231,74,222,79,
-121,14,0,40,147,199,209,4,119,140,146,176,132,75,189,94,207,157,168,238,9,3,110,172,188,109,219,182,55,142,29,59,246,103,79,60,249,196,67,223,219,37,49,233,110,195,218,117,56,122,244,40,118,126,226,19,
-255,192,247,253,216,142,98,176,45,162,182,220,101,126,67,41,140,81,136,147,236,48,104,165,85,86,101,9,114,135,138,94,172,132,231,14,219,204,40,40,163,249,224,112,175,171,73,220,178,88,181,90,173,171,17,
-220,181,249,246,254,219,182,109,187,118,228,200,145,191,127,232,208,33,172,90,2,227,254,217,151,191,252,229,165,128,49,6,7,6,64,61,126,173,221,106,157,110,183,219,159,183,116,165,5,181,187,119,183,212,
-114,74,9,24,165,64,1,40,233,42,171,45,59,72,101,144,141,49,160,140,130,81,222,21,135,219,208,200,134,63,182,1,206,190,183,115,60,30,124,223,199,35,143,60,210,58,118,236,216,11,135,95,60,60,190,97,137,
-140,249,95,82,227,132,63,181,255,0,56,101,223,173,213,106,223,62,117,234,212,171,246,48,13,151,243,205,200,3,130,74,37,83,147,113,28,103,69,1,74,22,222,47,213,128,210,40,84,182,245,116,23,2,87,231,205,
-218,74,166,224,148,131,50,218,85,231,101,109,110,189,94,71,127,127,63,226,56,46,230,129,216,48,170,90,173,98,221,186,117,193,145,35,71,126,253,240,225,195,215,183,108,220,188,100,246,116,201,13,4,223,
-255,252,243,224,62,251,117,24,124,253,252,133,243,175,207,206,206,229,32,101,217,26,33,0,74,43,168,213,106,69,215,195,204,204,12,226,36,206,189,112,31,42,85,48,66,194,228,64,26,152,59,138,4,178,89,180,
-40,102,79,166,105,138,212,164,240,136,215,21,103,219,218,42,219,244,109,199,253,215,106,181,226,52,151,53,107,214,196,47,189,244,210,111,30,126,241,240,15,30,221,188,101,73,237,231,146,28,233,255,220,
-222,103,193,192,126,171,82,173,52,198,198,126,254,59,65,16,228,106,81,35,59,215,136,23,97,138,245,90,41,201,230,97,81,66,161,169,6,229,180,168,159,38,25,143,217,229,49,27,99,178,151,40,1,39,188,139,142,
-92,168,21,212,86,103,216,48,206,218,229,141,27,55,138,131,7,15,254,218,177,99,199,126,176,233,145,141,75,110,47,151,236,161,28,251,246,238,5,99,236,159,112,206,59,99,99,99,255,2,80,36,12,85,87,234,208,
-102,119,220,129,104,169,204,218,81,9,39,128,34,128,54,243,99,232,156,40,201,144,140,185,54,14,243,229,114,224,214,6,187,157,9,150,185,10,195,16,158,231,225,209,71,31,13,94,121,229,149,95,121,254,249,231,
-223,94,138,224,46,105,128,1,96,207,83,79,193,175,248,255,106,96,160,239,202,217,179,103,255,240,234,213,171,85,74,67,248,190,143,106,181,138,32,8,138,80,202,78,191,233,170,189,162,57,166,26,133,3,86,12,
-88,33,0,8,5,28,22,170,204,113,151,51,88,22,224,90,173,134,237,219,183,223,60,124,248,240,175,238,63,112,224,204,134,181,235,150,236,30,46,249,131,177,118,61,190,19,171,134,135,255,235,150,205,91,190,115,
-252,196,241,111,159,59,119,238,128,37,28,218,237,118,145,194,115,29,49,87,5,27,146,7,131,78,63,83,89,93,219,215,237,255,221,14,134,242,225,90,107,215,174,197,99,143,61,246,163,67,135,14,253,234,51,123,
-247,165,3,75,252,140,225,101,113,242,217,218,53,107,177,246,165,35,183,25,99,7,59,97,231,205,86,179,245,162,91,177,232,182,114,186,171,0,48,23,99,3,146,215,122,145,249,14,54,96,65,9,118,29,45,183,46,172,
-175,175,239,71,59,118,236,248,204,147,79,62,185,228,193,93,50,68,199,253,174,173,91,183,98,237,154,181,159,174,84,42,111,217,56,121,177,250,172,238,215,114,91,75,178,88,185,139,158,116,120,104,247,53,
-151,161,178,78,86,16,4,147,157,78,231,139,190,239,39,163,35,171,151,197,158,45,43,128,163,40,66,146,36,48,198,252,177,203,77,187,147,121,22,42,94,183,229,172,11,181,152,46,52,37,192,37,58,220,209,135,
-157,78,39,108,181,90,23,131,32,192,92,99,174,7,240,3,7,56,39,25,60,207,43,10,229,147,36,65,20,69,11,246,252,206,51,89,164,40,195,45,75,175,171,138,23,42,7,114,11,1,147,36,65,208,9,242,198,239,176,7,240,
-131,94,157,48,0,99,12,253,253,253,197,73,40,0,138,209,134,214,65,234,230,153,233,162,127,102,57,133,232,178,102,238,107,110,159,145,84,42,27,60,42,100,15,224,7,189,102,166,102,108,95,241,163,198,152,34,
-246,181,203,2,158,205,240,64,238,58,119,215,55,47,164,146,221,66,130,197,28,47,198,24,40,163,35,173,70,115,115,208,14,150,205,158,45,43,128,165,74,225,121,28,113,20,111,180,243,49,44,251,100,67,153,44,
-251,100,107,184,238,254,231,149,115,198,229,158,164,242,24,195,84,164,131,140,210,61,81,62,109,126,57,172,101,117,2,56,101,28,50,75,223,237,176,237,43,182,10,164,123,44,82,118,112,244,221,194,160,50,168,
-229,241,73,221,103,35,202,220,171,230,8,59,97,181,147,79,253,233,1,252,128,87,24,132,48,218,32,149,233,110,183,172,198,157,48,155,113,202,5,65,117,79,213,187,144,83,182,16,216,30,99,160,185,77,182,115,
-67,122,0,63,104,39,43,8,161,82,5,145,166,104,182,154,96,148,21,83,110,230,37,242,14,14,99,81,64,203,204,87,153,170,180,63,231,140,131,243,172,240,192,29,179,216,3,248,1,174,219,183,111,35,73,98,0,4,70,
-26,196,81,156,159,110,38,139,41,60,54,123,180,24,233,177,216,100,188,133,174,41,42,48,1,240,249,65,102,136,162,104,87,179,217,68,16,44,15,71,107,217,56,89,246,68,208,190,190,62,104,169,6,141,50,240,184,
-7,33,4,24,227,249,212,89,118,207,251,44,86,120,183,224,230,20,71,206,38,217,153,196,89,2,98,176,211,233,224,163,30,11,188,226,37,184,217,108,22,53,82,237,32,168,43,169,192,153,7,143,250,0,93,88,114,239,
-87,146,93,105,190,99,6,102,86,22,146,13,247,206,210,148,3,86,77,247,0,126,144,33,82,214,33,143,40,138,94,142,147,152,25,0,97,24,66,170,20,196,204,115,204,247,90,11,141,114,88,76,138,187,234,163,41,65,
-146,77,188,219,241,48,6,154,173,120,128,227,56,182,67,77,30,211,90,19,74,41,140,61,55,208,152,172,187,161,212,181,112,55,239,249,94,234,187,236,93,75,173,144,38,10,105,42,86,43,165,208,104,52,122,54,248,
-65,46,207,243,48,48,48,0,207,243,158,5,242,17,191,90,131,114,86,76,159,189,223,73,58,247,178,189,101,27,92,212,64,19,2,238,121,53,155,244,232,73,240,131,124,18,243,102,47,198,216,0,236,252,12,163,51,112,
-209,157,164,255,101,29,173,197,174,233,106,84,67,86,59,173,148,170,78,205,76,99,98,114,178,39,193,15,114,217,26,100,163,141,31,39,9,18,33,160,156,97,44,11,169,227,251,234,17,38,119,114,213,110,95,146,
-251,125,110,195,215,165,105,138,70,179,129,169,169,169,30,192,15,106,173,89,179,6,27,54,108,64,42,211,153,84,165,243,159,188,52,125,199,173,190,40,143,64,186,31,251,188,16,23,237,74,51,231,217,25,242,
-66,8,36,34,233,1,252,160,22,33,4,3,3,253,208,70,127,43,73,178,99,0,100,206,40,217,234,142,178,36,186,173,164,139,217,224,242,172,76,91,64,224,146,29,174,153,224,156,251,118,24,184,88,6,108,214,178,1,184,
-175,158,181,141,196,34,27,49,44,211,121,202,208,13,89,92,181,235,142,245,117,195,163,50,184,54,105,225,54,111,187,78,150,187,242,92,244,190,137,137,9,180,91,173,30,192,15,106,13,14,13,66,3,136,163,232,
-93,173,245,183,235,245,122,113,78,130,43,109,101,155,233,122,194,101,112,221,4,127,249,20,54,183,37,148,16,130,90,173,134,122,189,110,15,169,126,36,8,2,136,101,224,73,47,171,100,195,224,224,32,194,48,
-156,86,74,161,86,171,161,211,233,20,32,186,95,54,55,188,216,89,136,118,220,130,125,205,230,123,237,234,238,100,204,156,56,219,85,232,121,30,70,70,70,214,3,243,245,244,61,9,126,64,43,73,18,196,113,12,198,
-216,187,182,255,183,108,55,45,104,110,55,162,59,48,197,130,236,14,124,113,237,55,207,39,238,217,226,250,161,161,33,172,89,179,6,163,163,163,238,189,158,141,227,120,89,144,29,203,74,130,221,241,13,22,0,
-219,24,158,36,73,241,186,165,36,231,15,202,64,215,144,238,114,229,134,123,180,143,37,84,108,39,131,237,69,138,162,8,81,20,193,24,131,193,193,193,213,132,16,204,205,205,245,0,126,144,171,226,87,208,223,
-223,223,53,60,220,14,103,177,18,107,59,1,221,243,151,220,217,30,245,122,189,40,131,181,29,131,182,207,201,118,242,15,12,12,20,167,164,216,67,162,131,32,64,16,4,168,84,42,216,188,121,51,70,70,70,176,105,
-211,166,30,192,15,114,173,90,189,10,219,182,109,195,248,248,120,211,109,10,179,77,218,118,248,246,240,240,112,87,184,228,126,185,69,118,182,220,199,62,12,22,228,40,138,48,51,51,83,220,219,30,159,99,127,
-111,116,116,116,213,209,163,71,177,103,207,158,30,192,15,148,236,24,25,197,254,3,251,209,108,54,127,124,230,204,25,112,206,145,36,9,194,48,44,60,234,40,138,192,57,239,26,222,226,118,227,91,48,109,243,
-184,37,45,172,20,219,135,160,217,108,22,13,224,22,232,220,25,107,173,95,191,254,213,67,135,14,97,176,127,160,7,240,131,94,251,158,222,139,70,163,49,54,49,49,241,214,141,27,55,94,116,11,211,237,169,224,
-141,70,163,176,177,214,9,179,101,61,246,236,95,11,152,61,149,12,0,42,149,10,210,52,45,236,118,95,95,95,225,145,219,235,235,245,250,23,119,236,216,17,46,181,70,239,21,225,69,3,192,240,208,48,158,126,234,
-105,244,247,247,191,42,132,184,105,157,164,74,165,82,12,110,41,179,83,246,1,112,15,161,116,199,19,218,33,47,214,126,91,231,202,62,32,190,239,163,191,191,31,235,215,175,23,123,246,236,249,179,29,219,183,
-47,31,199,20,203,112,121,156,99,116,245,234,233,157,59,119,126,233,246,237,219,95,75,146,4,213,106,21,73,146,20,78,147,13,131,250,251,251,11,135,201,170,108,247,28,5,107,131,173,26,166,148,98,112,96,16,
-137,72,64,41,197,218,181,107,49,56,56,136,45,91,182,96,227,198,141,63,89,189,122,53,246,238,221,183,108,246,138,220,239,12,169,165,182,78,156,60,137,75,239,95,58,114,249,242,229,55,102,102,102,234,132,
-16,180,219,109,180,219,109,116,58,157,130,166,244,60,15,65,16,116,157,130,82,173,86,193,61,15,70,107,112,198,225,249,89,181,164,29,79,56,58,58,138,213,163,171,49,178,106,100,102,203,150,45,95,95,179,102,
-205,183,54,110,218,56,54,50,180,42,34,148,152,135,53,119,242,111,178,254,223,0,116,193,116,130,198,25,252,148,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
+// JUCER_RESOURCE: chickknob_png, 2446, "../Graphics/chickknob.png"
+static const unsigned char resource_JuceDemoPluginAudioProcessorEditor_chickknob_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,50,0,0,0,50,8,6,0,0,0,30,63,136,177,0,0,0,4,103,65,77,65,
+0,0,175,200,55,5,138,233,0,0,0,25,116,69,88,116,83,111,102,116,119,97,114,101,0,65,100,111,98,101,32,73,109,97,103,101,82,101,97,100,121,113,201,101,60,0,0,9,32,73,68,65,84,120,218,220,90,77,108,28,103,
+25,254,230,111,255,156,221,141,189,27,219,197,32,37,105,220,162,218,73,26,12,74,36,136,213,86,20,113,34,220,130,148,11,28,160,82,4,23,56,160,8,36,164,194,1,169,18,135,32,66,132,138,2,130,30,72,161,2,33,
+193,1,137,159,11,72,69,150,106,151,244,128,84,169,4,227,24,156,196,94,239,223,252,15,207,243,205,124,155,217,141,29,101,82,239,214,234,58,159,118,119,246,155,153,247,121,127,159,247,157,104,81,20,137,
+247,195,75,23,239,147,151,153,101,243,226,115,207,62,244,94,223,247,69,173,86,251,236,229,203,151,235,215,95,189,238,95,189,122,245,103,197,98,49,200,114,191,183,150,223,28,14,16,77,211,50,237,197,238,
+5,184,238,39,241,117,45,18,209,47,194,40,234,238,11,139,232,250,195,123,162,97,24,162,235,216,31,237,216,221,51,64,229,153,186,49,155,51,205,149,125,1,196,113,221,135,222,27,134,97,193,245,189,25,38,19,
+75,55,44,67,211,63,156,51,173,253,1,164,92,41,63,244,222,32,8,170,235,235,235,51,173,173,6,93,76,120,158,119,22,199,174,223,151,37,35,249,79,112,147,54,42,32,135,14,77,14,4,66,44,200,160,4,140,15,219,
+182,31,187,181,186,58,158,207,231,69,46,151,19,0,240,100,242,30,203,143,119,46,25,75,154,54,90,139,180,154,219,253,202,164,80,212,100,164,1,79,212,19,146,130,57,142,243,88,224,135,26,92,76,30,235,118,
+187,79,227,216,33,236,217,80,0,10,133,188,64,38,19,166,169,139,32,212,176,194,76,113,248,200,64,252,208,233,255,30,120,184,177,33,34,15,194,226,223,88,169,20,11,3,33,59,174,51,23,134,62,93,74,184,136,
+45,184,213,56,64,85,113,218,6,65,148,74,69,97,89,134,144,114,239,65,77,126,151,5,81,147,43,138,131,91,132,81,40,42,149,42,234,71,29,66,90,135,109,187,35,119,225,51,53,109,2,208,51,4,70,75,228,243,116,
+51,33,246,138,88,236,73,101,167,134,89,0,27,141,45,113,235,214,154,184,125,251,127,162,221,110,207,209,171,232,70,133,66,145,174,69,176,103,114,57,19,174,100,136,189,166,70,230,222,92,134,62,79,64,6,93,
+105,178,221,238,124,181,213,106,63,67,89,61,215,19,150,105,97,229,104,149,47,88,150,57,131,19,126,139,245,107,22,202,253,200,181,38,16,7,223,14,195,232,159,176,206,215,29,27,113,225,7,176,70,41,6,232,
+50,232,53,221,48,204,79,195,197,126,128,61,203,176,202,119,96,205,137,125,1,36,206,156,218,231,125,63,88,233,118,237,111,66,200,170,13,16,113,74,214,100,133,151,174,23,56,162,213,106,202,152,112,28,87,
+116,58,157,58,172,247,13,0,90,194,198,103,223,83,32,144,213,140,130,240,170,219,117,174,33,6,102,144,94,165,144,113,86,214,241,174,201,36,224,122,54,14,196,169,21,110,7,64,109,212,25,7,113,211,17,205,
+102,243,176,237,56,191,199,229,46,188,39,92,43,8,3,106,250,123,78,203,121,161,219,233,202,20,203,128,135,101,80,27,74,8,104,75,30,251,249,43,175,136,245,245,85,20,197,188,252,29,133,18,214,104,203,223,
+44,19,129,111,233,194,143,144,196,242,254,143,139,133,226,42,174,249,151,71,73,4,153,128,152,57,171,151,165,188,86,251,162,215,117,191,226,194,2,182,99,199,233,23,203,182,187,168,25,177,107,81,160,107,
+215,94,150,251,89,213,153,122,249,110,89,57,9,138,251,253,208,192,133,29,164,238,40,143,147,174,148,15,148,159,51,76,227,191,89,243,114,38,215,210,80,125,185,68,32,102,161,198,23,3,207,135,219,184,177,
+251,64,195,212,54,173,102,24,188,172,143,208,150,170,150,113,162,20,64,112,252,206,115,144,28,100,86,243,161,12,0,1,80,247,41,207,247,94,226,53,180,140,21,62,211,238,130,145,19,69,51,47,244,64,124,205,
+115,188,154,39,93,233,222,162,182,75,168,238,84,102,19,113,16,4,190,4,198,130,72,161,185,135,223,185,10,133,66,15,152,141,26,227,200,253,1,24,182,115,30,110,251,116,36,134,104,17,157,154,214,181,186,235,
+57,231,112,67,233,42,242,230,8,114,19,254,126,224,192,1,41,92,163,177,45,154,219,77,9,44,97,194,61,0,200,86,44,150,242,24,65,19,164,204,106,94,108,25,215,113,114,96,8,23,114,176,228,240,92,11,55,12,131,
+224,28,50,211,52,53,169,92,138,175,74,165,34,93,107,99,99,67,108,110,110,73,65,229,126,236,225,187,116,151,196,2,252,172,148,48,54,54,22,187,154,2,12,67,96,157,203,107,122,105,104,64,112,67,2,248,4,93,
+68,89,130,64,200,175,168,233,205,205,77,8,171,247,226,128,130,211,82,92,202,34,92,252,46,59,200,110,156,237,10,96,192,90,210,231,243,154,190,235,28,1,33,125,106,104,64,160,221,227,208,228,25,106,158,55,
+165,86,15,30,60,8,193,67,240,171,219,18,68,188,180,36,232,141,158,37,210,125,7,173,196,36,64,183,226,181,10,248,76,112,84,78,210,105,161,51,214,63,48,196,130,168,125,16,0,106,202,173,84,208,54,26,13,89,
+55,84,157,81,253,134,2,161,44,161,192,200,108,149,164,98,126,166,85,242,249,2,206,11,36,161,68,230,66,40,234,143,15,13,136,105,232,150,158,72,75,139,80,227,177,175,135,178,47,1,207,234,13,30,6,45,145,
+238,2,85,172,16,4,247,178,210,171,108,171,98,10,175,250,208,128,128,8,190,19,6,225,93,37,20,221,193,243,130,190,94,55,45,116,58,192,211,227,164,244,30,90,133,29,34,173,161,174,201,99,88,235,67,3,2,205,
+255,7,167,188,109,64,251,148,157,22,80,89,43,45,228,96,95,190,19,200,116,187,44,185,25,98,139,233,88,89,4,239,111,13,13,8,180,244,54,122,139,101,29,180,220,208,76,73,10,149,224,170,55,79,131,128,245,128,
+54,186,79,112,238,77,91,41,246,86,93,198,9,99,14,86,121,231,238,221,187,175,15,13,72,181,90,181,107,181,137,63,152,108,93,101,28,104,125,65,173,64,245,132,84,150,136,238,245,229,233,125,42,38,24,39,113,
+74,54,97,149,49,80,254,224,151,232,253,155,67,35,141,48,128,48,44,243,207,229,74,249,239,205,86,243,99,233,140,164,42,184,220,7,43,232,3,131,42,14,36,162,20,58,158,163,178,155,26,25,241,24,19,199,225,
+15,29,254,29,83,243,240,130,29,197,42,224,228,173,90,125,153,254,156,14,216,116,128,27,240,119,137,99,32,232,53,121,195,126,139,80,96,94,139,96,88,229,15,213,235,191,153,158,158,254,211,196,68,182,198,
+49,147,69,198,199,199,149,123,252,20,160,46,172,173,173,45,178,58,211,175,123,46,197,88,129,203,113,162,34,107,91,162,245,116,31,99,152,102,143,170,144,218,16,76,178,175,61,63,127,252,91,80,84,207,186,
+67,1,66,82,152,0,113,30,63,118,236,203,200,88,127,68,69,175,171,154,224,186,54,24,126,36,44,248,186,30,233,125,65,221,43,146,9,165,231,247,114,185,44,173,192,207,180,234,217,179,103,47,29,61,122,116,57,
+10,179,55,86,217,10,34,52,199,69,141,66,128,55,231,230,230,46,78,77,77,251,12,208,98,177,32,166,166,166,0,22,52,30,172,79,241,41,85,28,99,98,24,245,98,131,90,175,213,106,18,28,45,178,184,184,248,210,137,
+19,39,190,79,235,22,138,241,26,94,176,167,106,2,181,93,44,22,95,93,88,248,72,112,227,198,63,126,178,186,250,239,50,221,68,210,15,127,43,105,174,20,117,138,255,164,203,37,117,66,17,75,10,126,250,244,233,
+239,206,206,206,94,114,51,76,251,247,116,248,192,12,3,48,175,125,234,249,231,23,231,231,231,111,168,118,214,132,107,81,112,148,27,73,61,232,78,90,42,69,243,21,179,230,74,120,254,252,249,139,167,78,157,
+186,164,154,46,101,69,213,85,14,197,34,97,24,244,91,7,139,153,12,109,234,27,72,4,159,187,115,231,206,95,97,145,114,223,240,64,79,210,112,32,250,120,23,1,131,249,254,10,217,234,135,236,97,216,108,145,9,
+63,234,100,62,219,16,219,187,223,244,173,214,182,92,208,230,45,0,104,16,136,114,29,210,14,162,208,6,40,140,34,150,72,20,173,43,87,174,236,122,191,23,190,248,165,225,0,225,196,100,231,129,41,252,93,55,
+234,176,206,4,5,100,175,206,119,223,143,250,98,107,144,143,33,94,142,68,50,179,141,120,246,187,61,240,124,100,96,230,53,1,215,40,201,17,143,79,122,174,237,74,28,37,19,32,16,63,200,119,131,174,182,23,15,
+22,178,205,181,52,235,65,211,120,179,221,108,75,162,40,159,153,68,226,62,54,124,47,91,233,242,121,10,250,255,170,227,186,204,179,221,145,2,169,84,43,187,78,32,91,205,214,49,215,246,226,230,74,6,244,206,
+128,85,135,200,137,140,23,248,227,96,0,165,145,3,209,53,125,247,227,154,152,13,152,154,18,183,25,4,144,118,47,53,152,64,182,27,195,209,220,200,159,33,66,131,59,79,87,240,7,23,185,99,187,78,236,251,73,
+63,175,170,120,58,208,21,199,74,126,43,160,158,88,123,241,208,39,219,195,208,118,107,183,49,145,0,173,95,242,189,120,178,162,40,184,226,90,233,66,152,30,76,160,170,231,182,182,182,166,1,230,230,187,181,
+74,38,32,75,75,75,15,10,246,127,129,142,111,33,5,31,84,253,137,18,88,13,235,8,130,116,157,84,134,132,145,213,29,133,240,8,206,125,125,164,64,212,8,116,167,23,4,132,119,185,158,26,129,146,213,198,143,160,
+11,61,94,165,126,227,119,86,114,46,80,27,211,76,104,253,200,128,44,44,44,236,126,33,211,92,91,89,89,249,219,205,155,55,63,67,192,156,58,170,1,182,210,182,178,140,122,150,130,182,96,121,102,102,230,53,
+130,85,61,255,72,128,112,170,248,160,135,64,39,79,158,124,17,128,62,14,77,231,26,141,70,160,230,95,20,146,68,82,207,107,162,52,54,166,77,78,78,6,79,60,249,196,27,39,230,143,255,8,46,182,39,255,99,232,
+255,2,12,0,111,239,97,142,62,172,120,127,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
 
 const char* JuceDemoPluginAudioProcessorEditor::chickknob_png = (const char*) resource_JuceDemoPluginAudioProcessorEditor_chickknob_png;
-const int JuceDemoPluginAudioProcessorEditor::chickknob_pngSize = 8824;
+const int JuceDemoPluginAudioProcessorEditor::chickknob_pngSize = 2446;
 
 // JUCER_RESOURCE: uibg_png, 63194, "../Graphics/uibg.png"
 static const unsigned char resource_JuceDemoPluginAudioProcessorEditor_uibg_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,1,144,0,0,0,230,8,2,0,0,0,116,209,68,243,0,0,0,4,103,65,77,65,0,

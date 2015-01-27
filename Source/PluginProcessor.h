@@ -71,7 +71,7 @@ public:
 		switch (index)
 		{
 		case DEFAULT:
-			setParameter(WETAMOUNT, 0.5f);
+			setParameter(WETAMOUNT, 0.2f);
 			break;
 		case SECOND:
 			setParameter(WETAMOUNT, 0.1f);
@@ -136,6 +136,8 @@ public:
 		HPFQ,
 		ROOMSIZE,
 		ROOMDAMP,
+        LPFFREQ,
+        LPFQ,
 		TOTALPARAMCOUNT
 	};
 
@@ -147,9 +149,13 @@ public:
 		TOTALPRESETCOUNT
 	};
 
-	float wetOn, dryOn, wetGain, delayAmount, pan,delayTime,midSide,midOn,saturationAmount,hpfFreq,hpfQ,roomSize,roomDamp;
-	juce::IIRFilter m_filterL,m_filterR;
-	juce::IIRCoefficients m_ic;
+	float wetOn, dryOn, wetGain, delayAmount, pan,delayTime,midSide,midOn,saturationAmount,hpfFreq,hpfQ,roomSize,roomDamp,
+        lpfFreqValue,lpfQValue;
+	juce::IIRFilter hpfLeft,hpfRight;
+	juce::IIRCoefficients hpfCoefs;
+    juce::IIRFilter lpfL, lpfR;
+    juce::IIRCoefficients lpfCoefs;
+
 	juce::Reverb reverb;
 	juce::Reverb::Parameters reverbParams;
 	Clipper clipper;

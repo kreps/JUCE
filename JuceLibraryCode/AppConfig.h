@@ -196,25 +196,25 @@
  #define JucePlugin_Build_AAX              0
 #endif
 #ifndef  JucePlugin_Name
- #define JucePlugin_Name                   "Juce Demo Plugin"
+ #define JucePlugin_Name                   "Kreps-vst"
 #endif
 #ifndef  JucePlugin_Desc
- #define JucePlugin_Desc                   "Juce Demo Plugin"
+ #define JucePlugin_Desc                   "Fattening/room fx"
 #endif
 #ifndef  JucePlugin_Manufacturer
- #define JucePlugin_Manufacturer           "Raw Material Software"
+ #define JucePlugin_Manufacturer           "Kreps Sound"
 #endif
 #ifndef  JucePlugin_ManufacturerWebsite
- #define JucePlugin_ManufacturerWebsite    "www.moya.com"
+ #define JucePlugin_ManufacturerWebsite    "ks.com"
 #endif
 #ifndef  JucePlugin_ManufacturerEmail
- #define JucePlugin_ManufacturerEmail      "info@moya.com"
+ #define JucePlugin_ManufacturerEmail      "krepssound@gmail.com"
 #endif
 #ifndef  JucePlugin_ManufacturerCode
- #define JucePlugin_ManufacturerCode       'RawM'
+ #define JucePlugin_ManufacturerCode       'krps'
 #endif
 #ifndef  JucePlugin_PluginCode
- #define JucePlugin_PluginCode             'Jcdm'
+ #define JucePlugin_PluginCode             'krps'
 #endif
 #ifndef  JucePlugin_MaxNumInputChannels
  #define JucePlugin_MaxNumInputChannels    2
@@ -262,16 +262,16 @@
  #define JucePlugin_AUSubType              JucePlugin_PluginCode
 #endif
 #ifndef  JucePlugin_AUExportPrefix
- #define JucePlugin_AUExportPrefix         JuceDemoProjectAU
+ #define JucePlugin_AUExportPrefix         KrepsVstProjectAU
 #endif
 #ifndef  JucePlugin_AUExportPrefixQuoted
- #define JucePlugin_AUExportPrefixQuoted   "JuceDemoProjectAU"
+ #define JucePlugin_AUExportPrefixQuoted   "KrepsVstProjectAU"
 #endif
 #ifndef  JucePlugin_AUManufacturerCode
  #define JucePlugin_AUManufacturerCode     JucePlugin_ManufacturerCode
 #endif
 #ifndef  JucePlugin_CFBundleIdentifier
- #define JucePlugin_CFBundleIdentifier     com.juce.JuceDemoPlugin
+ #define JucePlugin_CFBundleIdentifier     com.juce.Krepssound
 #endif
 #ifndef  JucePlugin_RTASCategory
  #define JucePlugin_RTASCategory           ePlugInCategory_None
@@ -289,7 +289,7 @@
  #define JucePlugin_RTASDisableMultiMono   0
 #endif
 #ifndef  JucePlugin_AAXIdentifier
- #define JucePlugin_AAXIdentifier          com.yourcompany.JuceDemoPlugin
+ #define JucePlugin_AAXIdentifier          com.yourcompany.KrepsVstPlugin
 #endif
 #ifndef  JucePlugin_AAXManufacturerCode
  #define JucePlugin_AAXManufacturerCode    JucePlugin_ManufacturerCode
@@ -298,7 +298,7 @@
  #define JucePlugin_AAXProductId           JucePlugin_PluginCode
 #endif
 #ifndef  JucePlugin_AAXCategory
- #define JucePlugin_AAXCategory            AAX_ePlugInCategory_Dynamics
+ #define JucePlugin_AAXCategory            AAX_ePlugInCategory_Room
 #endif
 #ifndef  JucePlugin_AAXDisableBypass
  #define JucePlugin_AAXDisableBypass       0

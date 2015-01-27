@@ -24,7 +24,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
 #include "GuiLookAndFeel.h"
-#include "GuiLookAndFeel2.h"
+#include "VectorLookAndFeel.h"
 //[/Headers]
 
 
@@ -32,6 +32,7 @@
 //==============================================================================
 /**
                                                                     //[Comments]
+                                                                    test
     An auto-generated component, created by the Jucer.
 
     Describe your class and how it works here!
@@ -39,8 +40,8 @@
 */
 class JuceDemoPluginAudioProcessorEditor  : public AudioProcessorEditor,
                                             public Timer,
-                                            public SliderListener,
-                                            public ButtonListener
+                                            public ButtonListener,
+                                            public SliderListener
 {
 public:
     //==============================================================================
@@ -55,8 +56,8 @@ public:
 
     void paint (Graphics& g);
     void resized();
-    void sliderValueChanged (Slider* sliderThatWasMoved);
     void buttonClicked (Button* buttonThatWasClicked);
+    void sliderValueChanged (Slider* sliderThatWasMoved);
 
     // Binary resources:
     static const char* chickknob_png;
@@ -90,7 +91,7 @@ private:
 
     //CustomLookAndFeel laf;
     GuiLookAndFeel guilaf;
-	GuiLookAndFeel2 guilaf2;
+	VectorLookAndFeel guilaf2;
     LookAndFeel_V1 lookAndFeelV1;
     LookAndFeel_V2 lookAndFeelV2;
     LookAndFeel_V3 lookAndFeelV3;
@@ -99,9 +100,8 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<Label> midsideHeader2;
+    ScopedPointer<ToggleButton> dryOnOffBtn;
     ScopedPointer<Label> labelReverb2;
-    ScopedPointer<Label> wetLabel;
     ScopedPointer<Slider> panSlider;
     ScopedPointer<Slider> delaySlider;
     ScopedPointer<Slider> delayTimeSlider;
@@ -118,25 +118,17 @@ private:
     ScopedPointer<TextButton> lnf3Btn;
     ScopedPointer<TextButton> guilafBtn;
     ScopedPointer<TextButton> guilaf2Btn;
-    ScopedPointer<ImageButton> dryOnBtn;
-    ScopedPointer<ImageButton> wetOnBtn;
-    ScopedPointer<Slider> gainSlider;
+    ScopedPointer<Slider> wetGainSlider;
     ScopedPointer<Label> label;
-    ScopedPointer<Label> dryLabel;
-    ScopedPointer<Slider> hpfQSlider;
-    ScopedPointer<Label> hpfHeader2;
     ScopedPointer<Slider> roomDampSlider;
-    ScopedPointer<ImageButton> midOnBtn;
-    ScopedPointer<ImageButton> dryOnBtn2;
-    ScopedPointer<ImageButton> dryOnBtn3;
-    ScopedPointer<ImageButton> dryOnBtn4;
-    ScopedPointer<ImageButton> dryOnBtn5;
     ScopedPointer<Slider> lpfSlider;
     ScopedPointer<Label> hpfHeader3;
-    ScopedPointer<ImageButton> dryOnBtn6;
-    ScopedPointer<Slider> lpfQSlider;
-    ScopedPointer<Label> hpfHeader4;
-    Image cachedImage_uibg_png;
+    ScopedPointer<ToggleButton> wetOnOffBtn;
+    ScopedPointer<ToggleButton> midOnOffBtn;
+    ScopedPointer<TextButton> textButton;
+    ScopedPointer<TextButton> textButton3;
+    ScopedPointer<TextButton> textButton2;
+    ScopedPointer<TextButton> textButton4;
 
 
     //==============================================================================
