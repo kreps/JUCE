@@ -442,7 +442,7 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     textButton->setBounds (100, 100, 20, 12);
     textButton3->setBounds (160, 112, 20, 12);
     textButton2->setBounds (128, 104, 20, 12);
-    textButton4->setBounds (240, 160, 64, 24);
+    textButton4->setBounds (240, 144, 64, 24);
     //[UserResized] Add your own custom resize handling here..
 	//resizer->setBounds(getWidth() - 16, getHeight() - 16, 16, 16);
 
@@ -781,7 +781,7 @@ BEGIN_JUCER_METADATA
               bgColOn="ffdc143c" textCol="ffa8a8a8" textColOn="ff313131" buttonText="wet"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <TEXTBUTTON name="new button" id="803eac4b33cea359" memberName="textButton4"
-              virtualName="" explicitFocusOrder="0" pos="240 160 64 24" bgColOff="fff0ffff"
+              virtualName="" explicitFocusOrder="0" pos="240 144 64 24" bgColOff="fff0ffff"
               textCol="ffa8a8a8" textColOn="ffa8a8a8" buttonText="new button"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
 </JUCER_COMPONENT>
