@@ -84,12 +84,6 @@ private:
 JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemoPluginAudioProcessor* ownerFilter)
     : AudioProcessorEditor (ownerFilter)
 {
-    addAndMakeVisible (dryOnOffBtn = new ToggleButton ("new toggle button"));
-    dryOnOffBtn->setButtonText (TRANS("dry"));
-    dryOnOffBtn->addListener (this);
-    dryOnOffBtn->setToggleState (true, dontSendNotification);
-    dryOnOffBtn->setColour (ToggleButton::textColourId, Colour (0xffababab));
-
     addAndMakeVisible (labelReverb2 = new Label ("new label",
                                                  TRANS("damp")));
     labelReverb2->setFont (Font ("Candara", 15.00f, Font::plain));
@@ -280,41 +274,29 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     hpfHeader3->setColour (TextEditor::textColourId, Colours::black);
     hpfHeader3->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (wetOnOffBtn = new ToggleButton ("new toggle button"));
-    wetOnOffBtn->setButtonText (TRANS("wet"));
-    wetOnOffBtn->addListener (this);
-    wetOnOffBtn->setToggleState (true, dontSendNotification);
-    wetOnOffBtn->setColour (ToggleButton::textColourId, Colour (0xffababab));
-
-    addAndMakeVisible (midOnOffBtn = new ToggleButton ("new toggle button"));
+    addAndMakeVisible (midOnOffBtn = new TextButton ("new button"));
     midOnOffBtn->setButtonText (TRANS("mid"));
     midOnOffBtn->addListener (this);
-    midOnOffBtn->setToggleState (true, dontSendNotification);
-    midOnOffBtn->setColour (ToggleButton::textColourId, Colour (0xffababab));
+    midOnOffBtn->setColour (TextButton::buttonColourId, Colour (0x7dffff48));
+    midOnOffBtn->setColour (TextButton::buttonOnColourId, Colours::crimson);
+    midOnOffBtn->setColour (TextButton::textColourOnId, Colour (0xffa8a8a8));
+    midOnOffBtn->setColour (TextButton::textColourOffId, Colour (0xff313131));
 
-    addAndMakeVisible (textButton = new TextButton ("new button"));
-    textButton->setButtonText (TRANS("mid"));
-    textButton->addListener (this);
-    textButton->setColour (TextButton::buttonColourId, Colour (0x7dffff48));
-    textButton->setColour (TextButton::buttonOnColourId, Colours::crimson);
-    textButton->setColour (TextButton::textColourOnId, Colour (0xffa8a8a8));
-    textButton->setColour (TextButton::textColourOffId, Colour (0xff313131));
+    addAndMakeVisible (dryOnButton = new TextButton ("new button"));
+    dryOnButton->setButtonText (TRANS("dry"));
+    dryOnButton->addListener (this);
+    dryOnButton->setColour (TextButton::buttonColourId, Colour (0xffffeab8));
+    dryOnButton->setColour (TextButton::buttonOnColourId, Colours::crimson);
+    dryOnButton->setColour (TextButton::textColourOnId, Colour (0xffa8a8a8));
+    dryOnButton->setColour (TextButton::textColourOffId, Colour (0xff313131));
 
-    addAndMakeVisible (textButton3 = new TextButton ("new button"));
-    textButton3->setButtonText (TRANS("dry"));
-    textButton3->addListener (this);
-    textButton3->setColour (TextButton::buttonColourId, Colours::aquamarine);
-    textButton3->setColour (TextButton::buttonOnColourId, Colours::crimson);
-    textButton3->setColour (TextButton::textColourOnId, Colour (0xffa8a8a8));
-    textButton3->setColour (TextButton::textColourOffId, Colour (0xff313131));
-
-    addAndMakeVisible (textButton2 = new TextButton ("new button"));
-    textButton2->setButtonText (TRANS("wet"));
-    textButton2->addListener (this);
-    textButton2->setColour (TextButton::buttonColourId, Colours::coral);
-    textButton2->setColour (TextButton::buttonOnColourId, Colours::crimson);
-    textButton2->setColour (TextButton::textColourOnId, Colour (0xffa8a8a8));
-    textButton2->setColour (TextButton::textColourOffId, Colour (0xff313131));
+    addAndMakeVisible (wetToggleBtn = new TextButton ("new button"));
+    wetToggleBtn->setButtonText (TRANS("wet"));
+    wetToggleBtn->addListener (this);
+    wetToggleBtn->setColour (TextButton::buttonColourId, Colours::coral);
+    wetToggleBtn->setColour (TextButton::buttonOnColourId, Colours::crimson);
+    wetToggleBtn->setColour (TextButton::textColourOnId, Colour (0xffa8a8a8));
+    wetToggleBtn->setColour (TextButton::textColourOffId, Colour (0xff313131));
 
     addAndMakeVisible (textButton4 = new TextButton ("new button"));
     textButton4->addListener (this);
@@ -346,9 +328,9 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 		ImageCache::getFromMemory(off_png,off_pngSize),
 		ImageCache::getFromMemory(on_red_png,on_red_pngSize)
 		);
-    textButton->setClickingTogglesState(true);
-    textButton2->setClickingTogglesState(true);
-    textButton3->setClickingTogglesState(true);
+    midOnOffBtn->setClickingTogglesState(true);
+    wetToggleBtn->setClickingTogglesState(true);
+    dryOnButton->setClickingTogglesState(true);
     //[/Constructor]
 }
 
@@ -358,7 +340,6 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
 	//deleteAllChildren ();
     //[/Destructor_pre]
 
-    dryOnOffBtn = nullptr;
     labelReverb2 = nullptr;
     panSlider = nullptr;
     delaySlider = nullptr;
@@ -381,11 +362,9 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
     roomDampSlider = nullptr;
     lpfSlider = nullptr;
     hpfHeader3 = nullptr;
-    wetOnOffBtn = nullptr;
     midOnOffBtn = nullptr;
-    textButton = nullptr;
-    textButton3 = nullptr;
-    textButton2 = nullptr;
+    dryOnButton = nullptr;
+    wetToggleBtn = nullptr;
     textButton4 = nullptr;
 
 
@@ -414,7 +393,6 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    dryOnOffBtn->setBounds (24, 14, 56, 12);
     labelReverb2->setBounds (320, 145, 60, 15);
     panSlider->setBounds (140, 45, 60, 50);
     delaySlider->setBounds (440, 45, 60, 50);
@@ -437,11 +415,9 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     roomDampSlider->setBounds (320, 95, 60, 50);
     lpfSlider->setBounds (260, 45, 60, 70);
     hpfHeader3->setBounds (260, 35, 60, 10);
-    wetOnOffBtn->setBounds (24, 33, 56, 12);
-    midOnOffBtn->setBounds (120, 128, 40, 12);
-    textButton->setBounds (100, 100, 20, 12);
-    textButton3->setBounds (160, 112, 20, 12);
-    textButton2->setBounds (128, 104, 20, 12);
+    midOnOffBtn->setBounds (100, 100, 20, 12);
+    dryOnButton->setBounds (40, 16, 20, 12);
+    wetToggleBtn->setBounds (40, 32, 20, 12);
     textButton4->setBounds (240, 160, 64, 24);
     //[UserResized] Add your own custom resize handling here..
 	//resizer->setBounds(getWidth() - 16, getHeight() - 16, 16, 16);
@@ -449,73 +425,6 @@ void JuceDemoPluginAudioProcessorEditor::resized()
 	getProcessor()->lastUIWidth = getWidth();
 	getProcessor()->lastUIHeight = getHeight();
     //[/UserResized]
-}
-
-void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
-{
-    //[UserbuttonClicked_Pre]
-    //[/UserbuttonClicked_Pre]
-
-    if (buttonThatWasClicked == dryOnOffBtn)
-    {
-        //[UserButtonCode_dryOnOffBtn] -- add your button handler code here..
-        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::DRYON, (dryOnOffBtn->getToggleState() == true) ? 1.0f : 0.0f);
-
-        //[/UserButtonCode_dryOnOffBtn]
-    }
-    else if (buttonThatWasClicked == lnf3Btn)
-    {
-        //[UserButtonCode_lnf3Btn] -- add your button handler code here..
-		LookAndFeel::setDefaultLookAndFeel(&lookAndFeelV3);
-        //[/UserButtonCode_lnf3Btn]
-    }
-    else if (buttonThatWasClicked == guilafBtn)
-    {
-        //[UserButtonCode_guilafBtn] -- add your button handler code here..
-		LookAndFeel::setDefaultLookAndFeel(&guilaf);
-        //[/UserButtonCode_guilafBtn]
-    }
-    else if (buttonThatWasClicked == guilaf2Btn)
-    {
-        //[UserButtonCode_guilaf2Btn] -- add your button handler code here..
-		LookAndFeel::setDefaultLookAndFeel(&guilaf2);
-        //[/UserButtonCode_guilaf2Btn]
-    }
-    else if (buttonThatWasClicked == wetOnOffBtn)
-    {
-        //[UserButtonCode_wetOnOffBtn] -- add your button handler code here..
-        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::WETON, (wetOnOffBtn->getToggleState() == true) ? 1.0f : 0.0f);
-        //[/UserButtonCode_wetOnOffBtn]
-    }
-    else if (buttonThatWasClicked == midOnOffBtn)
-    {
-        //[UserButtonCode_midOnOffBtn] -- add your button handler code here..
-        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::MIDON, (midOnOffBtn->getToggleState() == true) ? 1.0f : 0.0f);
-        //[/UserButtonCode_midOnOffBtn]
-    }
-    else if (buttonThatWasClicked == textButton)
-    {
-        //[UserButtonCode_textButton] -- add your button handler code here..
-        //[/UserButtonCode_textButton]
-    }
-    else if (buttonThatWasClicked == textButton3)
-    {
-        //[UserButtonCode_textButton3] -- add your button handler code here..
-        //[/UserButtonCode_textButton3]
-    }
-    else if (buttonThatWasClicked == textButton2)
-    {
-        //[UserButtonCode_textButton2] -- add your button handler code here..
-        //[/UserButtonCode_textButton2]
-    }
-    else if (buttonThatWasClicked == textButton4)
-    {
-        //[UserButtonCode_textButton4] -- add your button handler code here..
-        //[/UserButtonCode_textButton4]
-    }
-
-    //[UserbuttonClicked_Post]
-    //[/UserbuttonClicked_Post]
 }
 
 void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatWasMoved)
@@ -606,6 +515,64 @@ void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (Slider* sliderThatW
     //[/UsersliderValueChanged_Post]
 }
 
+void JuceDemoPluginAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
+{
+    //[UserbuttonClicked_Pre]
+    //[/UserbuttonClicked_Pre]
+
+    if (buttonThatWasClicked == lnf3Btn)
+    {
+        //[UserButtonCode_lnf3Btn] -- add your button handler code here..
+		LookAndFeel::setDefaultLookAndFeel(&lookAndFeelV3);
+        //[/UserButtonCode_lnf3Btn]
+    }
+    else if (buttonThatWasClicked == guilafBtn)
+    {
+        //[UserButtonCode_guilafBtn] -- add your button handler code here..
+		LookAndFeel::setDefaultLookAndFeel(&guilaf);
+        //[/UserButtonCode_guilafBtn]
+    }
+    else if (buttonThatWasClicked == guilaf2Btn)
+    {
+        //[UserButtonCode_guilaf2Btn] -- add your button handler code here..
+		LookAndFeel::setDefaultLookAndFeel(&guilaf2);
+        //[/UserButtonCode_guilaf2Btn]
+    }
+    else if (buttonThatWasClicked == midOnOffBtn)
+    {
+        //[UserButtonCode_midOnOffBtn] -- add your button handler code here..
+        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::MIDON, (midOnOffBtn->getToggleState() == true) ? 1.0f : 0.0f);
+        //[/UserButtonCode_midOnOffBtn]
+    }
+    else if (buttonThatWasClicked == dryOnButton)
+    {
+        //[UserButtonCode_dryOnButton] -- add your button handler code here..
+        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::DRYON, (dryOnButton->getToggleState() == true) ? 1.0f : 0.0f);
+        //[/UserButtonCode_dryOnButton]
+    }
+    else if (buttonThatWasClicked == wetToggleBtn)
+    {
+        //[UserButtonCode_wetToggleBtn] -- add your button handler code here..
+        getProcessor()->setParameterNotifyingHost(JuceDemoPluginAudioProcessor::WETON, (wetToggleBtn->getToggleState() == true) ? 1.0f : 0.0f);
+        if (!wetToggleBtn->getToggleState())
+        {
+            wetGainSlider->setEnabled(false);
+        } else
+        {
+            wetGainSlider->setEnabled(true);
+        }
+        //[/UserButtonCode_wetToggleBtn]
+    }
+    else if (buttonThatWasClicked == textButton4)
+    {
+        //[UserButtonCode_textButton4] -- add your button handler code here..
+        //[/UserButtonCode_textButton4]
+    }
+
+    //[UserbuttonClicked_Post]
+    //[/UserbuttonClicked_Post]
+}
+
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
@@ -616,7 +583,8 @@ void JuceDemoPluginAudioProcessorEditor::timerCallback()
 {
 	JuceDemoPluginAudioProcessor* ourProcessor = getProcessor();
 	wetGainSlider->setValue(ourProcessor->wetGain,dontSendNotification);
-    wetOnOffBtn->setToggleState(ourProcessor->wetOn == 1.0f, dontSendNotification);
+    dryOnButton->setToggleState(ourProcessor->dryOn == 1.0f, dontSendNotification);
+    wetToggleBtn->setToggleState(ourProcessor->wetOn == 1.0f, dontSendNotification);
 	delaySlider->setValue(ourProcessor->delayAmount, dontSendNotification);
 	delayTimeSlider->setValue(ourProcessor->delayTime, dontSendNotification);
 	panSlider->setValue(ourProcessor->pan, dontSendNotification);
@@ -624,7 +592,6 @@ void JuceDemoPluginAudioProcessorEditor::timerCallback()
 	midOnOffBtn->setToggleState(ourProcessor->midOn==1.0f, dontSendNotification);
 	reverbSizeSlider->setValue(ourProcessor->roomSize, dontSendNotification);
 	roomDampSlider->setValue(ourProcessor->roomDamp, dontSendNotification);
-	dryOnOffBtn->setToggleState(ourProcessor->dryOn==1.0f, dontSendNotification);
     hpfSlider->setValue(ourProcessor->hpfFreq,dontSendNotification);
     saturationSlider->setValue(ourProcessor->saturationAmount,dontSendNotification);
     lpfSlider->setValue(ourProcessor->lpfFreqValue,dontSendNotification);
@@ -650,10 +617,6 @@ BEGIN_JUCER_METADATA
   <BACKGROUND backgroundColour="ff313131">
     <RECT pos="10 29 530 1" fill="solid: ff575757" hasStroke="0"/>
   </BACKGROUND>
-  <TOGGLEBUTTON name="new toggle button" id="6efaa6a011701a9d" memberName="dryOnOffBtn"
-                virtualName="" explicitFocusOrder="0" pos="24 14 56 12" txtcol="ffababab"
-                buttonText="dry" connectedEdges="0" needsCallback="1" radioGroupId="0"
-                state="1"/>
   <LABEL name="new label" id="3c6e767fb7f8dbd7" memberName="labelReverb2"
          virtualName="" explicitFocusOrder="0" pos="320 145 60 15" textCol="ffa8a8a8"
          edTextCol="ff000000" edBkgCol="0" labelText="damp" editableSingleClick="0"
@@ -760,24 +723,16 @@ BEGIN_JUCER_METADATA
          edTextCol="ff000000" edBkgCol="0" labelText="lpf" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="12" bold="0" italic="0" justification="36"/>
-  <TOGGLEBUTTON name="new toggle button" id="977f086178cc7578" memberName="wetOnOffBtn"
-                virtualName="" explicitFocusOrder="0" pos="24 33 56 12" txtcol="ffababab"
-                buttonText="wet" connectedEdges="0" needsCallback="1" radioGroupId="0"
-                state="1"/>
-  <TOGGLEBUTTON name="new toggle button" id="d7b5b3aef09aa1a5" memberName="midOnOffBtn"
-                virtualName="" explicitFocusOrder="0" pos="120 128 40 12" txtcol="ffababab"
-                buttonText="mid" connectedEdges="0" needsCallback="1" radioGroupId="0"
-                state="1"/>
-  <TEXTBUTTON name="new button" id="f6e9c00d6dfb3a37" memberName="textButton"
+  <TEXTBUTTON name="new button" id="f6e9c00d6dfb3a37" memberName="midOnOffBtn"
               virtualName="" explicitFocusOrder="0" pos="100 100 20 12" bgColOff="7dffff48"
               bgColOn="ffdc143c" textCol="ffa8a8a8" textColOn="ff313131" buttonText="mid"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
-  <TEXTBUTTON name="new button" id="1e4e33d2149de345" memberName="textButton3"
-              virtualName="" explicitFocusOrder="0" pos="160 112 20 12" bgColOff="ff7fffd4"
+  <TEXTBUTTON name="new button" id="1e4e33d2149de345" memberName="dryOnButton"
+              virtualName="" explicitFocusOrder="0" pos="40 16 20 12" bgColOff="ffffeab8"
               bgColOn="ffdc143c" textCol="ffa8a8a8" textColOn="ff313131" buttonText="dry"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
-  <TEXTBUTTON name="new button" id="55e598d305767f9a" memberName="textButton2"
-              virtualName="" explicitFocusOrder="0" pos="128 104 20 12" bgColOff="ffff7f50"
+  <TEXTBUTTON name="new button" id="55e598d305767f9a" memberName="wetToggleBtn"
+              virtualName="" explicitFocusOrder="0" pos="40 32 20 12" bgColOff="ffff7f50"
               bgColOn="ffdc143c" textCol="ffa8a8a8" textColOn="ff313131" buttonText="wet"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <TEXTBUTTON name="new button" id="803eac4b33cea359" memberName="textButton4"

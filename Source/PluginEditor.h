@@ -40,8 +40,8 @@
 */
 class JuceDemoPluginAudioProcessorEditor  : public AudioProcessorEditor,
                                             public Timer,
-                                            public ButtonListener,
-                                            public SliderListener
+                                            public SliderListener,
+                                            public ButtonListener
 {
 public:
     //==============================================================================
@@ -56,8 +56,8 @@ public:
 
     void paint (Graphics& g);
     void resized();
-    void buttonClicked (Button* buttonThatWasClicked);
     void sliderValueChanged (Slider* sliderThatWasMoved);
+    void buttonClicked (Button* buttonThatWasClicked);
 
     // Binary resources:
     static const char* chickknob_png;
@@ -100,7 +100,6 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<ToggleButton> dryOnOffBtn;
     ScopedPointer<Label> labelReverb2;
     ScopedPointer<Slider> panSlider;
     ScopedPointer<Slider> delaySlider;
@@ -123,11 +122,9 @@ private:
     ScopedPointer<Slider> roomDampSlider;
     ScopedPointer<Slider> lpfSlider;
     ScopedPointer<Label> hpfHeader3;
-    ScopedPointer<ToggleButton> wetOnOffBtn;
-    ScopedPointer<ToggleButton> midOnOffBtn;
-    ScopedPointer<TextButton> textButton;
-    ScopedPointer<TextButton> textButton3;
-    ScopedPointer<TextButton> textButton2;
+    ScopedPointer<TextButton> midOnOffBtn;
+    ScopedPointer<TextButton> dryOnButton;
+    ScopedPointer<TextButton> wetToggleBtn;
     ScopedPointer<TextButton> textButton4;
 
 
