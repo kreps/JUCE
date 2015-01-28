@@ -8,6 +8,7 @@ It contains the basic startup code for a Juce application.
 author: kreps
 yea
 more
+and then
 ==============================================================================
 */
 
