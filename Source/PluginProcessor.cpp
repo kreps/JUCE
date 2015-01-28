@@ -20,13 +20,14 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 const float wetOnDefault = 1.0f;
 const float dryOnDefault = 1.0f;
 const float wetGainDefault = 0.2f;
-const float delayDefault = 0.0f;
+const float delayAmountDefault = 0.0f;
 const float delayTimeDefault = 0.01f;
+const float delayFeedbackDefault = 0.5f;
 const float panDefault = 0.5f;
 const float widthDefault = 1.0f;
 //const float hpfQDefaultValue = 0.001f;
 const float hpfFreqDefaultValue = 0.01f;
-const int delayBufferMaxLength = 1024;
+const int delayBufferMaxLength = 8192;
 const float midOnDefault = 1.0f;
 const float roomsizeDefault = 0.1f;
 const float roomDampDefault = 0.5f;
@@ -40,8 +41,9 @@ JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
 {
     // Set up some default values..
     wetGain = wetGainDefault;
-    delayAmount = delayDefault;
+    delayAmount = delayAmountDefault;
     delayTime = delayTimeDefault;
+    delayFeedbackAmount = delayFeedbackDefault;
     pan = panDefault;
     wetOn = wetOnDefault;
     dryOn = dryOnDefault;
@@ -93,6 +95,8 @@ float JuceDemoPluginAudioProcessor::getParameter(int index)
             return wetGain;
         case DELAYAMOUNT:
             return delayAmount;
+        case DELAYFEEDBACK:
+            return delayFeedbackAmount;
         case DELAYTIME:
             return delayTime;
         case PAN:
@@ -140,6 +144,9 @@ void JuceDemoPluginAudioProcessor::setParameter(int index, float newValue)
         case DELAYTIME:
             delayTime = newValue;
             break;
+        case DELAYFEEDBACK:
+            delayFeedbackAmount = newValue;
+            break;
         case PAN:
             pan = newValue;
             break;
@@ -182,18 +189,18 @@ float JuceDemoPluginAudioProcessor::getParameterDefaultValue(int index)
         case WETON: return wetOnDefault;
         case DRYON: return dryOnDefault;
         case WETAMOUNT:     return wetGainDefault;
-        case DELAYAMOUNT:    return delayDefault;
+        case DELAYAMOUNT:    return delayAmountDefault;
         case DELAYTIME:    return delayTimeDefault;
+        case DELAYFEEDBACK:    return delayFeedbackDefault;
         case PAN:    return panDefault;
         case WIDTH:    return widthDefault;
 		case MIDON: return midOnDefault;
         case SATURATION: return saturationDefault;
         case HPFFREQ: return hpfFreqDefaultValue;
-        //case HPFQ: return hpfQDefaultValue;
-		case ROOMSIZE: return roomsizeDefault;
+        		case ROOMSIZE: return roomsizeDefault;
 		case ROOMDAMP: return roomDampDefault;
         case LPFFREQ:return lpfFreqDefaultValue;
-        //case LPFQ: return lpfQDefaultValue;
+     
         default:            break;
     }
 
@@ -207,8 +214,9 @@ const String JuceDemoPluginAudioProcessor::getParameterName(int index)
         case WETON:		return "bypass";
         case DRYON:		return "dry on";
         case WETAMOUNT:			return "gain";
-        case DELAYAMOUNT:		return "delay";
+        case DELAYAMOUNT:		return "delay amount";
         case DELAYTIME:    return "delay time";
+        case DELAYFEEDBACK:    return "delay feedback";
         case PAN:			return "pan";
         case WIDTH:		return "mid/side";
 		case MIDON: return "mid on";
@@ -347,14 +355,19 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
 
         leftData[i] = distortion((m - s)*lGain*wetGain*5.0f, saturationAmount);
         rightData[i] = distortion((m + s)*rGain*wetGain*5.0f, saturationAmount);
-
+        /*const float in = channelData[i];
+        channelData[i] += delayData[dp];
+        delayData[dp] = (delayData[dp] + in) * delay;
+        if (++dp >= delayBuffer.getNumSamples())
+            dp = 0;*/
         const float inLeft = leftData[i];
         leftData[i] += leftDelayData[dp];
-        leftDelayData[dp] = (inLeft)* delayAmount;
+        leftDelayData[dp] = (leftDelayData[dp]*delayFeedbackAmount+ inLeft)* delayAmount;
 
         const float inRight = rightData[i];
         rightData[i] += rightDelayData[dp];
-        rightDelayData[dp] = (inRight)* delayAmount;
+        rightDelayData[dp] = (rightDelayData[dp] * delayFeedbackAmount + inRight)* delayAmount;
+       
 
         if (dryOn == 1.0f)
         {
@@ -398,6 +411,7 @@ void JuceDemoPluginAudioProcessor::getStateInformation(MemoryBlock& destData)
     xml.setAttribute("wetGain", wetGain);
     xml.setAttribute("delayAmount", delayAmount);
     xml.setAttribute("delayTime", delayTime);
+    xml.setAttribute("delayFeedback", delayFeedbackAmount);
     xml.setAttribute("pan", pan);
     xml.setAttribute("dryOn", dryOn);
     xml.setAttribute("midSide", midSide);
@@ -433,6 +447,7 @@ void JuceDemoPluginAudioProcessor::setStateInformation(const void* data, int siz
             wetGain = (float)xmlState->getDoubleAttribute("wetGain", wetGain);
             delayAmount = (float)xmlState->getDoubleAttribute("delayAmount", delayAmount);
             delayTime = (float)xmlState->getDoubleAttribute("delayTime", delayTime);
+            delayFeedbackAmount = (float)xmlState->getDoubleAttribute("delayFeedback", delayFeedbackAmount);
             pan = (float)xmlState->getDoubleAttribute("pan", pan);
             dryOn = (float)xmlState->getDoubleAttribute("dryOn", dryOn);
             midSide = (float)xmlState->getDoubleAttribute("midSide", midSide);

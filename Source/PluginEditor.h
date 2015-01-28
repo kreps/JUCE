@@ -100,6 +100,7 @@ private:
     //[/UserVariables]
 
     //==============================================================================
+    ScopedPointer<Label> label2;
     ScopedPointer<Label> labelReverb2;
     ScopedPointer<Slider> panSlider;
     ScopedPointer<Slider> delaySlider;
@@ -114,9 +115,6 @@ private:
     ScopedPointer<Slider> reverbSizeSlider;
     ScopedPointer<Label> labelReverb;
     ScopedPointer<Label> delayAmountHeader;
-    ScopedPointer<TextButton> lnf3Btn;
-    ScopedPointer<TextButton> guilafBtn;
-    ScopedPointer<TextButton> guilaf2Btn;
     ScopedPointer<Slider> wetGainSlider;
     ScopedPointer<Label> label;
     ScopedPointer<Slider> roomDampSlider;
@@ -124,7 +122,20 @@ private:
     ScopedPointer<TextButton> midOnOffBtn;
     ScopedPointer<TextButton> dryOnButton;
     ScopedPointer<TextButton> wetToggleBtn;
-    ScopedPointer<TextButton> textButton4;
+    ScopedPointer<TextButton> panWidthDryOn;
+    ScopedPointer<TextButton> filterDryBtn;
+    ScopedPointer<Label> label3;
+    ScopedPointer<Label> hpfHeader2;
+    ScopedPointer<Label> label4;
+    ScopedPointer<TextButton> drySaturationOnBtn;
+    ScopedPointer<Slider> hpfSlider2;
+    ScopedPointer<Label> hpfHeader3;
+    ScopedPointer<Label> hpfHeader4;
+    ScopedPointer<Slider> hpfSlider3;
+    ScopedPointer<Slider> hpfSlider4;
+    ScopedPointer<Label> hpfHeader5;
+    ScopedPointer<Label> delayFeedbackLabel;
+    ScopedPointer<Slider> delayFeedbackSlider;
 
 
     //==============================================================================

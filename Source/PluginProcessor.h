@@ -128,6 +128,7 @@ public:
 		WETAMOUNT,
 		DELAYAMOUNT,
 		DELAYTIME,
+        DELAYFEEDBACK,
 		PAN,
 		WIDTH,
 		MIDON,
@@ -150,7 +151,7 @@ public:
 	};
 
 	float wetOn, dryOn, wetGain, delayAmount, pan,delayTime,midSide,midOn,saturationAmount,hpfFreq,hpfQ,roomSize,roomDamp,
-        lpfFreqValue,lpfQValue;
+        lpfFreqValue,lpfQValue,delayFeedbackAmount;
 	juce::IIRFilter hpfLeft,hpfRight;
 	juce::IIRCoefficients hpfCoefs;
     juce::IIRFilter lpfL, lpfR;

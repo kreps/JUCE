@@ -21,13 +21,13 @@ public:
     ~VectorLookAndFeel();
     void drawRotarySlider(Graphics& g, int x, int y, int width, int height, float sliderPos,
                                           float rotaryStartAngle, float rotaryEndAngle, Slider& slider) override;
-    void drawTickBox(Graphics& g, Component& component,
+    /*void drawTickBox(Graphics& g, Component& component,
                                       float x, float y, float w, float h,
                                       const bool ticked,
                                       const bool isEnabled,
                                       const bool isMouseOverButton,
-                                      const bool isButtonDown);
-    void drawToggleButton(Graphics&, ToggleButton&, bool isMouseOverButton, bool isButtonDown) override;
+                                      const bool isButtonDown);*/
+    //void drawToggleButton(Graphics&, ToggleButton&, bool isMouseOverButton, bool isButtonDown) override;
     void drawButtonBackground(Graphics&, Button&, const Colour& backgroundColour,
                               bool isMouseOverButton, bool isButtonDown) override;
     void drawButtonText(Graphics&, TextButton&, bool isMouseOverButton, bool isButtonDown) override;

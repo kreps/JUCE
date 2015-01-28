@@ -62,60 +62,60 @@ void VectorLookAndFeel::drawRotarySlider(Graphics& g, int x, int y, int width, i
     Rectangle<float> r2(0.0f, 0.0f, 2.0f + f*0.25f, f*3.5f);
     needle.addRectangle(r2.withPosition(Point<float>(r.getCentreX() - (r2.getWidth() / 2.0f), r.getY())));
 
-    g.setColour(slider.findColour(Slider::rotarySliderOutlineColourId).contrasting(0.5f).darker(0.5f));
+    g.setColour(Colour(0xff19140d));
     g.fillPath(needle, AffineTransform::rotation(angle, r.getCentreX(), r.getCentreY()));
 }
 
-void VectorLookAndFeel::drawToggleButton(Graphics& g, ToggleButton& button,
-                                      bool isMouseOverButton, bool isButtonDown)
-{
-    const bool isMouseOver = button.isMouseOverOrDragging() && button.isEnabled();
-    if (isMouseOver)
-        button.setMouseCursor(MouseCursor::PointingHandCursor);
+//void VectorLookAndFeel::drawToggleButton(Graphics& g, ToggleButton& button,
+//                                      bool isMouseOverButton, bool isButtonDown)
+//{
+//    const bool isMouseOver = button.isMouseOverOrDragging() && button.isEnabled();
+//    if (isMouseOver)
+//        button.setMouseCursor(MouseCursor::PointingHandCursor);
+//
+//    float fontSize = 10.0f;
+//    const float tickWidth = button.getHeight()-4.0f;
+//
+//    VectorLookAndFeel::drawTickBox(g, button, 
+//                                 0.0f, //x 
+//                                 1.0f, //y
+//                tickWidth*1.5f, //w 
+//                tickWidth,    //h
+//                button.getToggleState(),
+//                button.isEnabled(),
+//                isMouseOverButton,
+//                isButtonDown);
+//
+//    g.setColour(button.findColour(ToggleButton::textColourId));
+//    g.setFont(fontSize);
+//
+//    if (!button.isEnabled())
+//        g.setOpacity(0.5f);
+//
+//    const int textX = (int)tickWidth + 5;
+//
+//    g.drawFittedText(button.getButtonText(),
+//                     tickWidth*1.5f +2.0f,
+//                     0,
+//                     button.getWidth() - textX - 2, button.getHeight(),
+//                     Justification::centredLeft, 10.0f);
+//}
 
-    float fontSize = 10.0f;
-    const float tickWidth = button.getHeight()-4.0f;
-
-    VectorLookAndFeel::drawTickBox(g, button, 
-                                 0.0f, //x 
-                                 1.0f, //y
-                tickWidth*1.5f, //w 
-                tickWidth,    //h
-                button.getToggleState(),
-                button.isEnabled(),
-                isMouseOverButton,
-                isButtonDown);
-
-    g.setColour(button.findColour(ToggleButton::textColourId));
-    g.setFont(fontSize);
-
-    if (!button.isEnabled())
-        g.setOpacity(0.5f);
-
-    const int textX = (int)tickWidth + 5;
-
-    g.drawFittedText(button.getButtonText(),
-                     tickWidth*1.5f +2.0f,
-                     0,
-                     button.getWidth() - textX - 2, button.getHeight(),
-                     Justification::centredLeft, 10.0f);
-}
-
-void VectorLookAndFeel::drawTickBox(Graphics& g, Component& component,
-                                 float x, float y, float w, float h,
-                                 const bool ticked,
-                                 const bool isEnabled,
-                                 const bool isMouseOverButton,
-                                 const bool isButtonDown)
-{
-    float alpha = 0.4f;
-    if (ticked)
-        alpha = 1.0f;
-    Path box;
-    box.addRoundedRectangle(x, y, w, h, 2.0f, 2.0f);
-    g.setColour(component.findColour(Slider::rotarySliderFillColourId).withAlpha(alpha));
-    g.fillPath(box);
-}
+//void VectorLookAndFeel::drawTickBox(Graphics& g, Component& component,
+//                                 float x, float y, float w, float h,
+//                                 const bool ticked,
+//                                 const bool isEnabled,
+//                                 const bool isMouseOverButton,
+//                                 const bool isButtonDown)
+//{
+//    float alpha = 0.4f;
+//    if (ticked)
+//        alpha = 1.0f;
+//    Path box;
+//    box.addRoundedRectangle(x, y, w, h, 2.0f, 2.0f);
+//    g.setColour(component.findColour(Slider::rotarySliderFillColourId).withAlpha(alpha));
+//    g.fillPath(box);
+//}
 
 void VectorLookAndFeel::drawButtonBackground(Graphics& g, Button& button, const Colour& backgroundColour,
                                           bool isMouseOverButton, bool isButtonDown)
@@ -145,12 +145,12 @@ void VectorLookAndFeel::drawButtonBackground(Graphics& g, Button& button, const 
         
         if (button.getToggleState())
         {
-            g.setColour(button.findColour(TextButton::buttonColourId).withAlpha(0.7f));
+            g.setColour(button.findColour(TextButton::buttonColourId).withAlpha(0.6f));
         } else { 
             if (isMouseOver)
-                g.setColour(button.findColour(TextButton::buttonColourId).withAlpha(0.25f));
+                g.setColour(button.findColour(TextButton::buttonColourId).withAlpha(0.15f));
             else
-                g.setColour(button.findColour(TextButton::buttonColourId).withAlpha(0.2f));
+                g.setColour(button.findColour(TextButton::buttonColourId).withAlpha(0.1f));
         }
         
         g.fillPath(outline);
