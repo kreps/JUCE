@@ -150,7 +150,6 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     midsideHeader->setFont (Font ("Aharoni", 10.00f, Font::plain));
     midsideHeader->setJustificationType (Justification::centred);
     midsideHeader->setEditable (false, false, false);
-    midsideHeader->setColour (Label::textColourId, Colour (0xffababab));
     midsideHeader->setColour (TextEditor::textColourId, Colours::black);
     midsideHeader->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
@@ -162,7 +161,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     saturationSlider->addListener (this);
 
     addAndMakeVisible (hpfHeader = new Label ("new label",
-                                              TRANS("hpf")));
+                                              TRANS("filter")));
     hpfHeader->setFont (Font ("Aharoni", 12.00f, Font::plain));
     hpfHeader->setJustificationType (Justification::centred);
     hpfHeader->setEditable (false, false, false);
@@ -174,7 +173,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     hpfSlider->setTooltip (TRANS("hi pass filter (hz)"));
     hpfSlider->setRange (1e-005, 1, 0);
     hpfSlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    hpfSlider->setTextBoxStyle (Slider::TextBoxBelow, true, 80, 20);
+    hpfSlider->setTextBoxStyle (Slider::NoTextBox, true, 80, 20);
     hpfSlider->setColour (Slider::rotarySliderOutlineColourId, Colour (0xffff8af4));
     hpfSlider->setColour (Slider::textBoxTextColourId, Colour (0xffababab));
     hpfSlider->setColour (Slider::textBoxBackgroundColourId, Colour (0x00ffffff));
@@ -265,15 +264,6 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
     lpfSlider->addListener (this);
     lpfSlider->setSkewFactor (0.5);
 
-    addAndMakeVisible (hpfHeader3 = new Label ("new label",
-                                               TRANS("lpf")));
-    hpfHeader3->setFont (Font ("Aharoni", 12.00f, Font::plain));
-    hpfHeader3->setJustificationType (Justification::centred);
-    hpfHeader3->setEditable (false, false, false);
-    hpfHeader3->setColour (Label::textColourId, Colour (0xffababab));
-    hpfHeader3->setColour (TextEditor::textColourId, Colours::black);
-    hpfHeader3->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
     addAndMakeVisible (midOnOffBtn = new TextButton ("new button"));
     midOnOffBtn->setButtonText (TRANS("mid"));
     midOnOffBtn->addListener (this);
@@ -361,7 +351,6 @@ JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor()
     label = nullptr;
     roomDampSlider = nullptr;
     lpfSlider = nullptr;
-    hpfHeader3 = nullptr;
     midOnOffBtn = nullptr;
     dryOnButton = nullptr;
     wetToggleBtn = nullptr;
@@ -402,8 +391,8 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     midSideSlider->setBounds (80, 45, 60, 50);
     midsideHeader->setBounds (80, 35, 60, 10);
     saturationSlider->setBounds (380, 45, 60, 50);
-    hpfHeader->setBounds (200, 35, 60, 10);
-    hpfSlider->setBounds (200, 45, 60, 70);
+    hpfHeader->setBounds (200, 35, 120, 10);
+    hpfSlider->setBounds (200, 45, 60, 50);
     reverbSizeSlider->setBounds (320, 45, 60, 50);
     labelReverb->setBounds (320, 35, 60, 10);
     delayAmountHeader->setBounds (440, 35, 60, 10);
@@ -414,7 +403,6 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     label->setBounds (380, 35, 60, 10);
     roomDampSlider->setBounds (320, 95, 60, 50);
     lpfSlider->setBounds (260, 45, 60, 70);
-    hpfHeader3->setBounds (260, 35, 60, 10);
     midOnOffBtn->setBounds (100, 100, 20, 12);
     dryOnButton->setBounds (40, 16, 20, 12);
     wetToggleBtn->setBounds (40, 32, 20, 12);
@@ -653,25 +641,25 @@ BEGIN_JUCER_METADATA
           style="RotaryVerticalDrag" textBoxPos="NoTextBox" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="fcf994bed06bf6ab" memberName="midsideHeader"
-         virtualName="" explicitFocusOrder="0" pos="80 35 60 10" textCol="ffababab"
-         edTextCol="ff000000" edBkgCol="0" labelText="width" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
-         fontsize="10" bold="0" italic="0" justification="36"/>
+         virtualName="" explicitFocusOrder="0" pos="80 35 60 10" edTextCol="ff000000"
+         edBkgCol="0" labelText="width" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Aharoni" fontsize="10" bold="0"
+         italic="0" justification="36"/>
   <SLIDER name="mid/side slider" id="2a577f0fc0372cc6" memberName="saturationSlider"
           virtualName="" explicitFocusOrder="0" pos="380 45 60 50" rotaryslideroutline="ff9bb0ff"
           min="0.001" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="f53c45ed3e69f449" memberName="hpfHeader"
-         virtualName="" explicitFocusOrder="0" pos="200 35 60 10" textCol="ffababab"
-         edTextCol="ff000000" edBkgCol="0" labelText="hpf" editableSingleClick="0"
+         virtualName="" explicitFocusOrder="0" pos="200 35 120 10" textCol="ffababab"
+         edTextCol="ff000000" edBkgCol="0" labelText="filter" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="12" bold="0" italic="0" justification="36"/>
   <SLIDER name="hpfSlider_violet" id="253b421224cbac37" memberName="hpfSlider"
-          virtualName="" explicitFocusOrder="0" pos="200 45 60 70" tooltip="hi pass filter (hz)"
+          virtualName="" explicitFocusOrder="0" pos="200 45 60 50" tooltip="hi pass filter (hz)"
           rotaryslideroutline="ffff8af4" textboxtext="ffababab" textboxbkgd="ffffff"
           textboxoutline="808080" min="1.0000000000000004e-005" max="1"
-          int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
-          textBoxEditable="0" textBoxWidth="80" textBoxHeight="20" skewFactor="0.5"/>
+          int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox" textBoxEditable="0"
+          textBoxWidth="80" textBoxHeight="20" skewFactor="0.5"/>
   <SLIDER name="new slider" id="81b8a5f3e2f90d2e" memberName="reverbSizeSlider"
           virtualName="" explicitFocusOrder="0" pos="320 45 60 50" rotaryslideroutline="ff00ffff"
           textboxtext="ffababab" min="0" max="1" int="0" style="RotaryVerticalDrag"
@@ -718,11 +706,6 @@ BEGIN_JUCER_METADATA
           textboxoutline="808080" min="1.0000000000000004e-005" max="1"
           int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
           textBoxEditable="0" textBoxWidth="80" textBoxHeight="20" skewFactor="0.5"/>
-  <LABEL name="new label" id="d2867cf399201cc0" memberName="hpfHeader3"
-         virtualName="" explicitFocusOrder="0" pos="260 35 60 10" textCol="ffababab"
-         edTextCol="ff000000" edBkgCol="0" labelText="lpf" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
-         fontsize="12" bold="0" italic="0" justification="36"/>
   <TEXTBUTTON name="new button" id="f6e9c00d6dfb3a37" memberName="midOnOffBtn"
               virtualName="" explicitFocusOrder="0" pos="100 100 20 12" bgColOff="7dffff48"
               bgColOn="ffdc143c" textCol="ffa8a8a8" textColOn="ff313131" buttonText="mid"

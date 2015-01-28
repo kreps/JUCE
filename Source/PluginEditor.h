@@ -14,10 +14,6 @@
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
   Copyright 2004-13 by Raw Material Software Ltd.
 
-  gdfg
-
-  github
-
   ==============================================================================
 */
 
@@ -125,7 +121,6 @@ private:
     ScopedPointer<Label> label;
     ScopedPointer<Slider> roomDampSlider;
     ScopedPointer<Slider> lpfSlider;
-    ScopedPointer<Label> hpfHeader3;
     ScopedPointer<TextButton> midOnOffBtn;
     ScopedPointer<TextButton> dryOnButton;
     ScopedPointer<TextButton> wetToggleBtn;
