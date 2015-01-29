@@ -100,6 +100,7 @@ private:
     //[/UserVariables]
 
     //==============================================================================
+    ScopedPointer<Slider> hpfSlider4;
     ScopedPointer<Label> label2;
     ScopedPointer<Label> labelReverb2;
     ScopedPointer<Slider> panSlider;
@@ -132,7 +133,6 @@ private:
     ScopedPointer<Label> hpfHeader3;
     ScopedPointer<Label> hpfHeader4;
     ScopedPointer<Slider> hpfSlider3;
-    ScopedPointer<Slider> hpfSlider4;
     ScopedPointer<Label> hpfHeader5;
     ScopedPointer<Label> delayFeedbackLabel;
     ScopedPointer<Slider> delayFeedbackSlider;
