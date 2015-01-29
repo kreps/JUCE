@@ -509,7 +509,7 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    hpfSlider4->setBounds (155, 96, 40, 40);
+    hpfSlider4->setBounds (145, 96, 30, 30);
     label2->setBounds (58, 11, 39, 2);
     labelReverb2->setBounds (320, 145, 60, 15);
     panSlider->setBounds (80, 95, 60, 40);
@@ -535,14 +535,14 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     panWidthDryOn->setBounds (100, 6, 20, 12);
     filterDryBtn->setBounds (165, 6, 20, 12);
     label3->setBounds (128, 11, 34, 2);
-    hpfHeader2->setBounds (145, 140, 30, 10);
+    hpfHeader2->setBounds (160, 125, 30, 10);
     label4->setBounds (188, 11, 33, 2);
     drySaturationOnBtn->setBounds (229, 6, 20, 12);
-    hpfSlider2->setBounds (145, 150, 30, 30);
+    hpfSlider2->setBounds (160, 135, 30, 30);
     hpfHeader3->setBounds (175, 35, 30, 10);
-    hpfHeader4->setBounds (175, 140, 30, 10);
-    hpfSlider3->setBounds (175, 150, 30, 30);
-    hpfHeader5->setBounds (145, 85, 60, 10);
+    hpfHeader4->setBounds (175, 85, 30, 10);
+    hpfSlider3->setBounds (175, 96, 30, 30);
+    hpfHeader5->setBounds (145, 85, 30, 10);
     delayFeedbackLabel->setBounds (472, 47, 60, 10);
     delayFeedbackSlider->setBounds (472, 55, 60, 50);
     //[UserResized] Add your own custom resize handling here..
@@ -753,7 +753,7 @@ BEGIN_JUCER_METADATA
                  initialWidth="550" initialHeight="200">
   <BACKGROUND backgroundColour="ff19140d"/>
   <SLIDER name="hpfSlider_violet" id="dfdf0dad36959c74" memberName="hpfSlider4"
-          virtualName="" explicitFocusOrder="0" pos="155 96 40 40" tooltip="hi pass filter (hz)"
+          virtualName="" explicitFocusOrder="0" pos="145 96 30 30" tooltip="hi pass filter (hz)"
           rotaryslideroutline="ffff8af4" textboxtext="ffababab" textboxbkgd="ffffff"
           textboxoutline="808080" min="1.0000000000000004e-005" max="1"
           int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox" textBoxEditable="0"
@@ -880,7 +880,7 @@ BEGIN_JUCER_METADATA
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="254c37ba674e34d6" memberName="hpfHeader2"
-         virtualName="" explicitFocusOrder="0" pos="145 140 30 10" textCol="ffababab"
+         virtualName="" explicitFocusOrder="0" pos="160 125 30 10" textCol="ffababab"
          edTextCol="ff000000" edBkgCol="0" labelText="q" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
@@ -894,7 +894,7 @@ BEGIN_JUCER_METADATA
               bgColOn="ffdc143c" textCol="ffa8a8a8" textColOn="ff313131" buttonText="on"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <SLIDER name="hpfSlider_violet" id="46797b9b24cb24cb" memberName="hpfSlider2"
-          virtualName="" explicitFocusOrder="0" pos="145 150 30 30" tooltip="hi pass filter (hz)"
+          virtualName="" explicitFocusOrder="0" pos="160 135 30 30" tooltip="hi pass filter (hz)"
           rotaryslideroutline="ffff8af4" textboxtext="ffababab" textboxbkgd="ffffff"
           textboxoutline="808080" min="1.0000000000000004e-005" max="1"
           int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox" textBoxEditable="0"
@@ -905,18 +905,18 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <LABEL name="new label" id="fb6ae7b0551225f1" memberName="hpfHeader4"
-         virtualName="" explicitFocusOrder="0" pos="175 140 30 10" textCol="ffababab"
+         virtualName="" explicitFocusOrder="0" pos="175 85 30 10" textCol="ffababab"
          edTextCol="ff000000" edBkgCol="0" labelText="gain" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
   <SLIDER name="hpfSlider_violet" id="7c0ce8e836cc9d12" memberName="hpfSlider3"
-          virtualName="" explicitFocusOrder="0" pos="175 150 30 30" tooltip="hi pass filter (hz)"
+          virtualName="" explicitFocusOrder="0" pos="175 96 30 30" tooltip="hi pass filter (hz)"
           rotaryslideroutline="ffff8af4" textboxtext="ffababab" textboxbkgd="ffffff"
           textboxoutline="808080" min="1.0000000000000004e-005" max="1"
           int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox" textBoxEditable="0"
           textBoxWidth="80" textBoxHeight="20" skewFactor="0.5"/>
   <LABEL name="new label" id="ce8fbe0c2c5e0cd6" memberName="hpfHeader5"
-         virtualName="" explicitFocusOrder="0" pos="145 85 60 10" textCol="ffababab"
+         virtualName="" explicitFocusOrder="0" pos="145 85 30 10" textCol="ffababab"
          edTextCol="ff000000" edBkgCol="0" labelText="peak" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Aharoni"
          fontsize="10" bold="0" italic="0" justification="36"/>
