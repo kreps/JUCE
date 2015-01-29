@@ -129,8 +129,8 @@ void VectorLookAndFeel::drawButtonBackground(Graphics& g, Button& button, const 
     const bool flatOnTop = button.isConnectedOnTop();
     const bool flatOnBottom = button.isConnectedOnBottom();
 
-    const float width = button.getWidth();
-    const float height = button.getHeight();
+    const float width = static_cast<float>(button.getWidth());
+    const float height = static_cast<float>(button.getHeight());
 
     if (width > 0 && height > 0)
     {

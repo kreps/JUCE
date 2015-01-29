@@ -59,23 +59,6 @@ public:
     void sliderValueChanged (Slider* sliderThatWasMoved);
     void buttonClicked (Button* buttonThatWasClicked);
 
-    // Binary resources:
-    static const char* chickknob_png;
-    static const int chickknob_pngSize;
-    static const char* uibg_png;
-    static const int uibg_pngSize;
-    static const char* dry_on_png;
-    static const int dry_on_pngSize;
-    static const char* dry_off_png;
-    static const int dry_off_pngSize;
-    static const char* wet_off_png;
-    static const int wet_off_pngSize;
-    static const char* wet_on_png;
-    static const int wet_on_pngSize;
-    static const char* off_png;
-    static const int off_pngSize;
-    static const char* on_red_png;
-    static const int on_red_pngSize;
 
 
 private:
