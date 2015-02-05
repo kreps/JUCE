@@ -426,10 +426,9 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 	wetGainSlider->setDoubleClickReturnValue(true,0.2f);
 	panSlider->setDoubleClickReturnValue(true,0.5f);
 	midSideSlider->setDoubleClickReturnValue(true,0.5f);
-	LookAndFeel::setDefaultLookAndFeel(&guilaf2);
-	setupCustomLookAndFeelColours(guilaf);
-	setupCustomLookAndFeelColours(guilaf2);
-    guilaf2.setDefaultSansSerifTypefaceName("Aharoni");
+	LookAndFeel::setDefaultLookAndFeel(&vLaf);
+	setupCustomLookAndFeelColours(vLaf);
+    vLaf.setDefaultSansSerifTypefaceName("Aharoni");
     /*guilaf.setImages(
 		ImageCache::getFromMemory(chickknob_png,chickknob_pngSize),
 		ImageCache::getFromMemory(off_png,off_pngSize),

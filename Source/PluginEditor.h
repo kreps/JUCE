@@ -73,11 +73,7 @@ private:
     }
 
     //CustomLookAndFeel laf;
-    GuiLookAndFeel guilaf;
-	VectorLookAndFeel guilaf2;
-    LookAndFeel_V1 lookAndFeelV1;
-    LookAndFeel_V2 lookAndFeelV2;
-    LookAndFeel_V3 lookAndFeelV3;
+    VectorLookAndFeel vLaf;
     TooltipWindow tooltipWindow;
 
     //[/UserVariables]

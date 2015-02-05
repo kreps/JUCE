@@ -12,7 +12,6 @@
 #ifndef GUILOOKANDFEEL2_H_INCLUDED
 #define GUILOOKANDFEEL2_H_INCLUDED
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "GuiLookAndFeel.h"
 //==============================================================================
 class JUCE_API VectorLookAndFeel : public LookAndFeel_V2
 {
