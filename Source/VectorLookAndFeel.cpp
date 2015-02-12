@@ -59,7 +59,7 @@ void VectorLookAndFeel::drawRotarySlider(Graphics& g, int x, int y, int width, i
 
     Rectangle<float> r(rx + f, ry + f, rw - 2.0f*f, rw - 2 * f);
     
-    Rectangle<float> r2(0.0f, 0.0f, 2.0f + f*0.25f, f*3.5f);
+    Rectangle<float> r2(0.0f, 0.0f, 2.0f + f*0.25f, (rw - 2 * f)/3.0f);
     needle.addRectangle(r2.withPosition(Point<float>(r.getCentreX() - (r2.getWidth() / 2.0f), r.getY())));
 
     g.setColour(Colour(0xff19140d));

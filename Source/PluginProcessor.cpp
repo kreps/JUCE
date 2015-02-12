@@ -323,20 +323,18 @@ void JuceDemoPluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiB
     float* rightDelayData = delayBuffer.getWritePointer(1);
     dp = delayPosition;
 	
-    //m_ic = juce::IIRCoefficients::makeHighPass (getSampleRate(), hpfFrequency);
-   /* m_ic = juce::IIRCoefficients::makeLowShelf(getSampleRate(), hpfFreq,hpfQ,0.001f);
-    m_filterL.setCoefficients( m_ic );
-    m_filterR.setCoefficients( m_ic );
-    m_filterL.processSamples(leftData,numSamples);
-    m_filterR.processSamples(rightData,numSamples);*/
-
     hpfCoefs = juce::IIRCoefficients::makeHighPass(getSampleRate(), hpfFreq*15000.0f);
     hpfLeft.setCoefficients(hpfCoefs);
     hpfRight.setCoefficients(hpfCoefs);
     hpfLeft.processSamples(leftData, numSamples);
     hpfRight.processSamples(rightData, numSamples);
 
-    lpfCoefs = juce::IIRCoefficients::makeLowPass(getSampleRate(), lpfFreqValue*15000.0f);
+    float lpfF = lpfFreqValue*15000.0f;
+    if (lpfF < 100.0f)
+    {
+        lpfF = 100.0f;
+    }
+    lpfCoefs = juce::IIRCoefficients::makeLowPass(getSampleRate(), lpfF);
     lpfL.setCoefficients(lpfCoefs);
     lpfR.setCoefficients(lpfCoefs);
     lpfL.processSamples(leftData, numSamples);
